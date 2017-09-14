@@ -2,6 +2,7 @@ import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import Permalink from '../../../components/permalink';
+import { remote_preview_url } from '../../../remote_media_detector';
 
 export default class MediaItem extends ImmutablePureComponent {
 
@@ -20,7 +21,7 @@ export default class MediaItem extends ImmutablePureComponent {
     }
 
     if (!status.get('sensitive')) {
-      style = { backgroundImage: `url(${media.get('preview_url')})` };
+      style = { backgroundImage: `url(${remote_preview_url(media)})` };
     }
 
     return (

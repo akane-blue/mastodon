@@ -7,6 +7,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import IconButton from '../../../components/icon_button';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import ImageLoader from './image_loader';
+import { remote_type, remote_url, remote_image } from '../../../remote_media_detector';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },
@@ -79,6 +80,8 @@ export default class MediaModal extends ImmutablePureComponent {
         return <ImageLoader previewSrc={image.get('preview_url')} src={image.get('url')} width={width} height={height} key={image.get('preview_url')} />;
       } else if (image.get('type') === 'gifv') {
         return <ExtendedVideoPlayer src={image.get('url')} muted controls={false} width={width} height={height} key={image.get('preview_url')} />;
+      } else if (remote_type(image) === 'image') {
+        return <ImageLoader previewSrc={remote_url(image)} src={remote_url(image)} width={remote_image(image).naturalWidth} height={remote_image(image).naturalHeight} key={remote_url(image)} />;
       }
 
       return null;
