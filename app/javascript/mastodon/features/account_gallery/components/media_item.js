@@ -20,9 +20,7 @@ export default class MediaItem extends ImmutablePureComponent {
       content = <span className='media-gallery__gifv__label'>GIF</span>;
     }
 
-    if (!status.get('sensitive')) {
-      style = { backgroundImage: `url(${remote_preview_url(media)})` };
-    }
+    style = { backgroundImage: `url(${remote_preview_url(media)})` };
 
     return (
       <div className='account-gallery__item'>
