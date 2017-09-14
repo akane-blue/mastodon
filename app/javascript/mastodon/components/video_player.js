@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import IconButton from './icon_button';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { isIOS } from '../is_mobile';
+import { remote_type, remote_url, remote_preview_url } from '../remote_media_detector';
 
 const messages = defineMessages({
   toggle_sound: { id: 'video_player.toggle_sound', defaultMessage: 'Toggle sound' },
@@ -134,13 +135,6 @@ export default class VideoPlayer extends React.PureComponent {
     }
 
     let muteButton = '';
-    let media_src = '';
-    
-    if (media.get('type') === 'unknown') {
-      media_src = media.get('remote_url');
-    } else {
-      media_src = media.get('url');
-    }
 
     if (this.state.hasAudio) {
       muteButton = (
@@ -172,7 +166,7 @@ export default class VideoPlayer extends React.PureComponent {
 
     if (this.state.preview && !autoplay) {
       return (
-        <button className='media-spoiler-video' style={{ width: `${width}px`, height: `${height}px`, backgroundImage: `url(${media.get('preview_url')})` }} onClick={this.handleOpen}>
+        <button className='media-spoiler-video' style={{ width: `${width}px`, height: `${height}px`, backgroundImage: `url(${remote_preview_url(media)})` }} onClick={this.handleOpen}>
           {spoilerButton}
           <div className='media-spoiler-video-play-icon'><i className='fa fa-play' /></div>
         </button>
@@ -198,7 +192,7 @@ export default class VideoPlayer extends React.PureComponent {
           role='button'
           tabIndex='0'
           ref={this.setRef}
-          src={media_src}
+          src={remote_url(media)}
           autoPlay={!isIOS()}
           loop
           muted={this.state.muted}

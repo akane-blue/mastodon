@@ -11,7 +11,7 @@ import { FormattedDate, FormattedNumber } from 'react-intl';
 import CardContainer from '../containers/card_container';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import Video from '../../video';
-import { unknown_media_detection } from '../../../unknown_media_detection';
+import { remote_type, remote_url, remote_preview_url } from '../../../remote_media_detector';
 
 export default class DetailedStatus extends ImmutablePureComponent {
 
@@ -46,15 +46,15 @@ export default class DetailedStatus extends ImmutablePureComponent {
     let applicationLink = '';
 
     if (status.get('media_attachments').size > 0) {
-      if (status.get('media_attachments').some(item => item.get('type') === 'unknown') && status.get('media_attachments').some(item => unknown_media_detection(item.get('remote_url')) === 'unknown')) {
+      if (status.get('media_attachments').some(item => remote_type(item) === 'unknown')) {
         media = <AttachmentList media={status.get('media_attachments')} />;
-      } else if (status.getIn(['media_attachments', 0, 'type']) === 'video' || unknown_media_detection(status.getIn(['media_attachments', 0]).get('remote_url')) === 'video') {
+      } else if (remote_type(status.getIn(['media_attachments', 0])) === 'video') {
         const video = status.getIn(['media_attachments', 0]);
 
         media = (
           <Video
-            preview={video.get('preview_url')}
-            src={video.get('url')}
+            preview={remote_preview_url(video)}
+            src={remote_url(video)}
             width={300}
             height={150}
             onOpenVideo={this.handleOpenVideo}

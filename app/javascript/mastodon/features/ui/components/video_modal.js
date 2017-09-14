@@ -3,6 +3,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import Video from '../../video';
 import ImmutablePureComponent from 'react-immutable-pure-component';
+import { remote_type, remote_url, remote_preview_url } from '../../../remote_media_detector';
 
 export default class VideoModal extends ImmutablePureComponent {
 
@@ -19,8 +20,8 @@ export default class VideoModal extends ImmutablePureComponent {
       <div className='modal-root__modal media-modal'>
         <div>
           <Video
-            preview={media.get('preview_url')}
-            src={media.get('url')}
+            preview={remote_preview_url(media)}
+            src={remote_url(media)}
             startTime={time}
             onCloseVideo={onClose}
           />

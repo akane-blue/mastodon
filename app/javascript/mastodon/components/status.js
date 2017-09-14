@@ -10,7 +10,7 @@ import StatusActionBar from './status_action_bar';
 import { FormattedMessage } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { MediaGallery, Video } from '../features/ui/util/async-components';
-import { unknown_media_detection } from '../unknown_media_detection';
+import { remote_type, remote_url, remote_preview_url } from '../remote_media_detector';
 
 // We use the component (and not the container) since we do not want
 // to use the progress bar to show download progress
@@ -129,16 +129,16 @@ export default class Status extends ImmutablePureComponent {
     }
 
     if (status.get('media_attachments').size > 0 && !this.props.muted) {
-      if (status.get('media_attachments').some(item => item.get('type') === 'unknown') && status.get('media_attachments').some(item => unknown_media_detection(item.get('remote_url')) === 'unknown')) {
+      if (status.get('media_attachments').some(item => remote_type(item) === 'unknown')) {
 
-      } else if (status.getIn(['media_attachments', 0, 'type']) === 'video' || unknown_media_detection(status.getIn(['media_attachments', 0]).get('remote_url')) === 'video') {
+      } else if (remote_type(status.getIn(['media_attachments', 0])) === 'video') {
         const video = status.getIn(['media_attachments', 0]);
 
         media = (
           <Bundle fetchComponent={Video} loading={this.renderLoadingVideoPlayer} >
             {Component => <Component
-              preview={video.get('preview_url')}
-              src={video.get('url')}
+              preview={remote_preview_url(video)}
+              src={remote_url(video)}
               width={239}
               height={110}
               sensitive={status.get('sensitive')}
