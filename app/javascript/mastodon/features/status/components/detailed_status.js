@@ -11,7 +11,7 @@ import { FormattedDate, FormattedNumber } from 'react-intl';
 import CardContainer from '../containers/card_container';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import Video from '../../video';
-import { remote_type, remote_url, remote_preview_url } from '../../../remote_media_detector';
+import { remote_type } from '../../../remote_media_detector';
 
 export default class DetailedStatus extends ImmutablePureComponent {
 
@@ -53,8 +53,8 @@ export default class DetailedStatus extends ImmutablePureComponent {
 
         media = (
           <Video
-            preview={remote_preview_url(video)}
-            src={remote_url(video)}
+            preview={video.get('preview_url')}
+            src={video.get('url')}
             width={300}
             height={150}
             onOpenVideo={this.handleOpenVideo}

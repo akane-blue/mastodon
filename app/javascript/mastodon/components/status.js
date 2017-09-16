@@ -10,7 +10,7 @@ import StatusActionBar from './status_action_bar';
 import { FormattedMessage } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { MediaGallery, Video } from '../features/ui/util/async-components';
-import { remote_type, remote_url, remote_preview_url } from '../remote_media_detector';
+import { remote_type } from '../remote_media_detector';
 
 // We use the component (and not the container) since we do not want
 // to use the progress bar to show download progress
@@ -137,8 +137,8 @@ export default class Status extends ImmutablePureComponent {
         media = (
           <Bundle fetchComponent={Video} loading={this.renderLoadingVideoPlayer} >
             {Component => <Component
-              preview={remote_preview_url(video)}
-              src={remote_url(video)}
+              preview={video.get('preview_url')}
+              src={video.get('url')}
               width={239}
               height={110}
               sensitive={status.get('sensitive')}

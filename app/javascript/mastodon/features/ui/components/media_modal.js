@@ -7,7 +7,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import IconButton from '../../../components/icon_button';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import ImageLoader from './image_loader';
-import { remote_type, remote_url, remote_image } from '../../../remote_media_detector';
+import { remote_type, attr_image } from '../../../remote_media_detector';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },
@@ -73,15 +73,15 @@ export default class MediaModal extends ImmutablePureComponent {
     const rightNav = media.size > 1 && <button tabIndex='0' className='modal-container__nav  modal-container__nav--right' onClick={this.handleNextClick} aria-label={intl.formatMessage(messages.next)}><i className='fa fa-fw fa-chevron-right' /></button>;
 
     const content = media.map((image) => {
-      const width  = image.getIn(['meta', 'original', 'width']) || null;
-      const height = image.getIn(['meta', 'original', 'height']) || null;
+      const width  = image.getIn(['meta', 'original', 'width']) || attr_image(image).naturalWidth;
+      const height = image.getIn(['meta', 'original', 'height']) || attr_image(image).naturalHeight;
 
       if (image.get('type') === 'image') {
         return <ImageLoader previewSrc={image.get('preview_url')} src={image.get('url')} width={width} height={height} key={image.get('preview_url')} />;
       } else if (image.get('type') === 'gifv') {
         return <ExtendedVideoPlayer src={image.get('url')} muted controls={false} width={width} height={height} key={image.get('preview_url')} />;
       } else if (remote_type(image) === 'image') {
-        return <ImageLoader previewSrc={remote_url(image)} src={remote_url(image)} width={remote_image(image).naturalWidth} height={remote_image(image).naturalHeight} key={remote_url(image)} />;
+        return <ImageLoader previewSrc={image.get('preview_url')} src={image.get('url')} width={width} height={height} key={image.get('preview_url')} />;
       }
 
       return null;

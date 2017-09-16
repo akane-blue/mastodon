@@ -15,28 +15,8 @@ export function remote_type(item) {
     return item.get('type');
 };
 
-export function remote_url(item) {
-    let remote_url = item.get('remote_url');
-    if (item.get('type') === 'unknown' && remote_url) {
-        return remote_url;
-    } else {
-        return item.get('url');
-    }
-};
-
-export function remote_preview_url(item) {
-    let remote_url = item.get('remote_url');
-    if (item.get('type') === 'unknown' && remote_url) {
-        return remote_url;
-    } else if (remote_type(item) === 'video') {
-        return null;
-    } else {
-        return item.get('preview_url');
-    }
-};
-
-export function remote_image(item) {
+export function attr_image(item) {
     let image = new Image();
-    image.src = item.get('remote_url');
+    image.src = item.get('url');
     return image;
 };
