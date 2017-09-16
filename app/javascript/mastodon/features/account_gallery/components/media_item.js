@@ -2,7 +2,6 @@ import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import Permalink from '../../../components/permalink';
-import { remote_preview_url } from '../../../remote_media_detector';
 
 export default class MediaItem extends ImmutablePureComponent {
 
@@ -20,7 +19,7 @@ export default class MediaItem extends ImmutablePureComponent {
       content = <span className='media-gallery__gifv__label'>GIF</span>;
     }
 
-    style = { backgroundImage: `url(${remote_preview_url(media)})` };
+    style = { backgroundImage: `url(${media.get('preview_url')})` };
 
     return (
       <div className='account-gallery__item'>

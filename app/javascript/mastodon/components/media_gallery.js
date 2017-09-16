@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import IconButton from './icon_button';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { isIOS } from '../is_mobile';
-import { remote_type, remote_url } from '../remote_media_detector';
+import { remote_type } from '../remote_media_detector';
 
 const messages = defineMessages({
   toggle_visible: { id: 'media_gallery.toggle_visible', defaultMessage: 'Toggle visibility' },
@@ -154,16 +154,19 @@ class Item extends React.PureComponent {
         </div>
       );
     } else if (remote_type(attachment) === 'image') {
-      const sizes = `(min-width: 1025px) ${320 * (width / 100)}px, ${width}vw`;
+      const previewUrl = attachment.get('preview_url');
+
+      const originalUrl = attachment.get('url');
+
       thumbnail = (
         <a
           className='media-gallery__item-thumbnail'
-          href={remote_url(attachment)}
+          href={attachment.get('remote_url') || originalUrl}
           onClick={this.handleClick}
           target='_blank'
         >
-          <img src={attachment.get('remote_url')} sizes={sizes} alt='' />  
-      </a>
+          <img src={previewUrl} alt='' />
+        </a>
       );
     }
 
