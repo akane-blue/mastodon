@@ -55,7 +55,7 @@ class Status < ApplicationRecord
   has_one :notification, as: :activity, dependent: :destroy
   has_one :stream_entry, as: :activity, inverse_of: :status
 
-  validates :uri, uniqueness: true, unless: :local?
+  validates :uri, uniqueness: true, presence: true, unless: :local?
   validates :text, presence: true, unless: :reblog?
   validates_with StatusLengthValidator
   validates :reblog, uniqueness: { scope: :account }, if: :reblog?
@@ -129,6 +129,10 @@ class Status < ApplicationRecord
 
   def non_sensitive_with_media?
     !sensitive? && media_attachments.any?
+  end
+
+  def emojis
+    CustomEmoji.from_text(text, account.domain)
   end
 
   after_create :store_uri, if: :local?
