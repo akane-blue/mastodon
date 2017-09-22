@@ -77,7 +77,7 @@ export default class Header extends ImmutablePureComponent {
 
   static propTypes = {
     account: ImmutablePropTypes.map,
-    me: PropTypes.string.isRequired,
+    me: PropTypes.number.isRequired,
     onFollow: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
     autoPlayGif: PropTypes.bool.isRequired,

@@ -7,10 +7,6 @@ class REST::AccountSerializer < ActiveModel::Serializer
              :note, :url, :avatar, :avatar_static, :header, :header_static,
              :followers_count, :following_count, :statuses_count
 
-  def id
-    object.id.to_s
-  end
-
   def note
     Formatter.instance.simplified_format(object)
   end
