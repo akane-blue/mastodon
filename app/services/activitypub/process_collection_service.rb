@@ -7,9 +7,9 @@ class ActivityPub::ProcessCollectionService < BaseService
     @account = account
     @json    = Oj.load(body, mode: :strict)
 
-    return if @account.suspended? || !supported_context?
-
-    verify_account! if different_actor?
+    return unless supported_context?
+    return if different_actor? && verify_account!.nil?
+    return if @account.suspended? || @account.local?
 
     case @json['type']
     when 'Collection', 'CollectionPage'
@@ -43,7 +43,6 @@ class ActivityPub::ProcessCollectionService < BaseService
   end
 
   def verify_account!
-    account  = ActivityPub::LinkedDataSignature.new(@json).verify_account!
-    @account = account unless account.nil?
+    @account = ActivityPub::LinkedDataSignature.new(@json).verify_account!
   end
 end

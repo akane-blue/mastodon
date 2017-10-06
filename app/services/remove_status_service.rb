@@ -4,7 +4,7 @@ class RemoveStatusService < BaseService
   include StreamEntryRenderer
 
   def call(status)
-    @payload      = Oj.dump(event: :delete, payload: status.id)
+    @payload      = Oj.dump(event: :delete, payload: status.id.to_s)
     @status       = status
     @account      = status.account
     @tags         = status.tags.pluck(:name).to_a
@@ -14,6 +14,7 @@ class RemoveStatusService < BaseService
 
     remove_from_self if status.account.local?
     remove_from_followers
+    remove_from_affected
     remove_reblogs
     remove_from_hashtags
     remove_from_public
@@ -21,8 +22,6 @@ class RemoveStatusService < BaseService
     @status.destroy!
 
     return unless @account.local?
-
-    @stream_entry = @stream_entry.reload
 
     remove_from_remote_followers
     remove_from_remote_affected
@@ -37,6 +36,12 @@ class RemoveStatusService < BaseService
   def remove_from_followers
     @account.followers.local.find_each do |follower|
       unpush(:home, follower, @status)
+    end
+  end
+
+  def remove_from_affected
+    @mentions.map(&:account).select(&:local?).each do |account|
+      Redis.current.publish("timeline:#{account.id}", @payload)
     end
   end
 
@@ -55,14 +60,14 @@ class RemoveStatusService < BaseService
     end
 
     # ActivityPub
-    ActivityPub::DeliveryWorker.push_bulk(target_accounts.select(&:activitypub?).uniq(&:inbox_url)) do |inbox_url|
-      [signed_activity_json, @account.id, inbox_url]
+    ActivityPub::DeliveryWorker.push_bulk(target_accounts.select(&:activitypub?).uniq(&:inbox_url)) do |target_account|
+      [signed_activity_json, @account.id, target_account.inbox_url]
     end
   end
 
   def remove_from_remote_followers
     # OStatus
-    Pubsubhubbub::DistributionWorker.perform_async(@stream_entry.id)
+    Pubsubhubbub::RawDistributionWorker.perform_async(salmon_xml, @account.id)
 
     # ActivityPub
     ActivityPub::DeliveryWorker.push_bulk(@account.followers.inboxes) do |inbox_url|
@@ -97,16 +102,12 @@ class RemoveStatusService < BaseService
   end
 
   def unpush(type, receiver, status)
-    if status.reblog? && !redis.zscore(FeedManager.instance.key(type, receiver.id), status.reblog_of_id).nil?
-      redis.zadd(FeedManager.instance.key(type, receiver.id), status.reblog_of_id, status.reblog_of_id)
-    else
-      redis.zremrangebyscore(FeedManager.instance.key(type, receiver.id), status.id, status.id)
-    end
-
-    Redis.current.publish("timeline:#{receiver.id}", @payload)
+    FeedManager.instance.unpush(type, receiver, status)
   end
 
   def remove_from_hashtags
+    return unless @status.public_visibility?
+
     @tags.each do |hashtag|
       Redis.current.publish("timeline:hashtag:#{hashtag}", @payload)
       Redis.current.publish("timeline:hashtag:#{hashtag}:local", @payload) if @status.local?
@@ -114,6 +115,8 @@ class RemoveStatusService < BaseService
   end
 
   def remove_from_public
+    return unless @status.public_visibility?
+
     Redis.current.publish('timeline:public', @payload)
     Redis.current.publish('timeline:public:local', @payload) if @status.local?
   end

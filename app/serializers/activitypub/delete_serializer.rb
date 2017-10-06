@@ -2,8 +2,7 @@
 
 class ActivityPub::DeleteSerializer < ActiveModel::Serializer
   class TombstoneSerializer < ActiveModel::Serializer
-    attributes :id, :type
-    attribute :atom_uri, key: '_:atomUri'
+    attributes :id, :type, :atom_uri
 
     def id
       ActivityPub::TagManager.instance.uri_for(object)
@@ -14,7 +13,7 @@ class ActivityPub::DeleteSerializer < ActiveModel::Serializer
     end
 
     def atom_uri
-      ::TagManager.instance.uri_for(object)
+      OStatus::TagManager.instance.uri_for(object)
     end
   end
 

@@ -19,7 +19,7 @@ class ActivityPub::LinkedDataSignature
     return unless type == 'RsaSignature2017'
 
     creator   = ActivityPub::TagManager.instance.uri_to_resource(creator_uri, Account)
-    creator ||= ActivityPub::FetchRemoteKeyService.new.call(creator_uri)
+    creator ||= ActivityPub::FetchRemoteKeyService.new.call(creator_uri, id: false)
 
     return if creator.nil?
 
@@ -45,7 +45,7 @@ class ActivityPub::LinkedDataSignature
 
     signature = Base64.strict_encode64(creator.keypair.sign(OpenSSL::Digest::SHA256.new, to_be_signed))
 
-    @json.merge('@context' => merge_context(@json['@context'], CONTEXT), 'signature' => options.merge('signatureValue' => signature))
+    @json.merge('signature' => options.merge('signatureValue' => signature))
   end
 
   private

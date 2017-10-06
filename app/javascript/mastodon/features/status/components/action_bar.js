@@ -16,6 +16,7 @@ const messages = defineMessages({
   share: { id: 'status.share', defaultMessage: 'Share' },
   pin: { id: 'status.pin', defaultMessage: 'Pin on profile' },
   unpin: { id: 'status.unpin', defaultMessage: 'Unpin from profile' },
+  embed: { id: 'status.embed', defaultMessage: 'Embed' },
 });
 
 @injectIntl
@@ -34,7 +35,8 @@ export default class ActionBar extends React.PureComponent {
     onMention: PropTypes.func.isRequired,
     onReport: PropTypes.func,
     onPin: PropTypes.func,
-    me: PropTypes.number.isRequired,
+    onEmbed: PropTypes.func,
+    me: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
   };
 
@@ -73,13 +75,23 @@ export default class ActionBar extends React.PureComponent {
     });
   }
 
+  handleEmbed = () => {
+    this.props.onEmbed(this.props.status);
+  }
+
   render () {
     const { status, me, intl } = this.props;
 
+    const publicStatus = ['public', 'unlisted'].includes(status.get('visibility'));
+
     let menu = [];
 
+    if (publicStatus) {
+      menu.push({ text: intl.formatMessage(messages.embed), action: this.handleEmbed });
+    }
+
     if (me === status.getIn(['account', 'id'])) {
-      if (['public', 'unlisted'].indexOf(status.get('visibility')) !== -1) {
+      if (publicStatus) {
         menu.push({ text: intl.formatMessage(status.get('pinned') ? messages.unpin : messages.pin), action: this.handlePinClick });
       }
 

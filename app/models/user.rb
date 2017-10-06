@@ -110,6 +110,10 @@ class User < ApplicationRecord
     settings.noindex
   end
 
+  def setting_theme
+    settings.theme
+  end
+
   def token_for_app(a)
     return nil if a.nil? || a.owner != self
     Doorkeeper::AccessToken
@@ -124,7 +128,7 @@ class User < ApplicationRecord
   def activate_session(request)
     session_activations.activate(session_id: SecureRandom.hex,
                                  user_agent: request.user_agent,
-                                 ip: request.ip).session_id
+                                 ip: request.remote_ip).session_id
   end
 
   def exclusive_session(id)

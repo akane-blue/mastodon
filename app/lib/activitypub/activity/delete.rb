@@ -2,22 +2,36 @@
 
 class ActivityPub::Activity::Delete < ActivityPub::Activity
   def perform
-    status   = Status.find_by(uri: object_uri, account: @account)
-    status ||= Status.find_by(uri: @object['_:atomUri'], account: @account) if @object.is_a?(Hash) && @object['_:atomUri'].present?
-
-    if status.nil?
-      delete_later!(object_uri)
+    if @account.uri == object_uri
+      delete_person
     else
-      forward_for_reblogs(status)
-      delete_now!(status)
+      delete_note
     end
   end
 
   private
 
+  def delete_person
+    SuspendAccountService.new.call(@account)
+  end
+
+  def delete_note
+    status   = Status.find_by(uri: object_uri, account: @account)
+    status ||= Status.find_by(uri: @object['atomUri'], account: @account) if @object.is_a?(Hash) && @object['atomUri'].present?
+
+    delete_later!(object_uri)
+
+    return if status.nil?
+
+    forward_for_reblogs(status)
+    delete_now!(status)
+  end
+
   def forward_for_reblogs(status)
-    ActivityPub::RawDistributionWorker.push_bulk(status.reblogs.includes(:account).references(:account).merge(Account.local).pluck(:account_id)) do |account|
-      [payload, account.id]
+    return if @json['signature'].blank?
+
+    ActivityPub::RawDistributionWorker.push_bulk(status.reblogs.includes(:account).references(:account).merge(Account.local).pluck(:account_id)) do |account_id|
+      [payload, account_id]
     end
   end
 
