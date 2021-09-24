@@ -31,7 +31,7 @@ jobs:
         id: set_tag
         run: |
           cd mastodon
-          DOCKER_TAG="$(git rev-parse --abbrev-ref HEAD | sed 's/hota\///g' | sed 's/testing\///g' | sed 's/-/_/g')"
+          DOCKER_TAG="$(echo ${GITHUB_REF} | sed 's/refs\/heads\/hota\///g' | sed 's/testing\///g' | sed 's/-/_/g')"
           echo "::set-output name=docker_tag::${DOCKER_TAG}"
       -
         name: Build and push to Docker Registry
