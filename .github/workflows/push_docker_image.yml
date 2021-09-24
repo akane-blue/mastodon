@@ -28,12 +28,11 @@ jobs:
           path: mastodon
       -
         name: Get latest branch name
-        id: branch_name
+        id: set_tag
         run: |
           cd mastodon
-          LATEST_BRANCH="$(git branch --sort=-committerdate | sed -n 1p | sed 's/* //g')"
-          git switch ${LATEST_BRANCH}
-          DOCKER_TAG="$(echo ${LATEST_BRANCH} | sed 's/hota\///g' | sed 's/testing\///g' | sed 's/-/_/g')"
+          CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+          DOCKER_TAG="$(echo ${CURRENT_BRANCH} | sed 's/hota\///g' | sed 's/testing\///g' | sed 's/-/_/g')"
           echo "::set-output name=docker_tag::${DOCKER_TAG}"
       -
         name: Build and push to Docker Registry
@@ -41,4 +40,4 @@ jobs:
         with:
           context: mastodon
           push: true
-          tags: ${{ secrets.REGISTRY_USERNAME }}/${{ secrets.REGISTRY_REPO }}:${{steps.branch_name.outputs.docker_tag}}
+          tags: ${{ secrets.REGISTRY_USERNAME }}/${{ secrets.REGISTRY_REPO }}:${{steps.set_tag.outputs.docker_tag}}
