@@ -7,8 +7,8 @@ $blurple-600: #2075b1; // Iris
 $blurple-500: #2b90d9; // Brand blue
 $blurple-400: #56a7e1; // Medium slate blue
 $blurple-300: #82bee9; // Faded Blue
-$grey-600: hsl(240deg, 8%, 33%); // Trout
-$grey-100: hsl(240deg, 51%, 90%); // Topaz
+$grey-600: hsl(208deg, 8%, 33%); // Trout
+$grey-100: hsl(208deg, 51%, 90%); // Topaz
 
 $success-green: #79bd9a !default; // Padua
 $error-red: $red-500 !default; // Cerise
@@ -18,9 +18,9 @@ $gold-star: #ca8f04 !default; // Dark Goldenrod
 $red-bookmark: $warning-red;
 
 // Values from the classic Mastodon UI
-$classic-base-color: hsl(240deg, 16%, 19%);
+$classic-base-color: hsl(215deg, 16%, 19%);
 $classic-primary-color: hsl(215deg, 29%, 70%);
-$classic-secondary-color: hsl(255deg, 25%, 88%);
+$classic-secondary-color: hsl(205deg, 25%, 88%);
 $classic-highlight-color: $blurple-500;
 
 // Variables for defaults in UI
@@ -60,7 +60,7 @@ $ui-button-destructive-background-color: $red-500 !default;
 $ui-button-destructive-focus-background-color: $red-600 !default;
 
 $ui-button-icon-focus-outline: $ui-button-focus-outline !default;
-$ui-button-icon-hover-background-color: rgba(140, 141, 255, 40%) !default;
+$ui-button-icon-hover-background-color: rgba(138, 200, 255, 40%) !default;
 
 // Variables for texts
 $primary-text-color: $white !default;
