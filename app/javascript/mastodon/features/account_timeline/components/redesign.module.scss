@@ -9,11 +9,7 @@
 
 .barWrapper {
   border-bottom: none;
-  padding-inline: 24px;
-
-  @container (width < 500px) {
-    padding-inline: 16px;
-  }
+  padding-inline: 16px;
 }
 
 .avatarWrapper {
@@ -21,20 +17,30 @@
   padding-top: 0;
 }
 
-.nameWrapper {
+.displayNameWrapper {
   display: flex;
   align-items: start;
   gap: 16px;
 }
 
-.name {
+.nameWrapper {
   flex-grow: 1;
+}
+
+.name {
+  display: flex;
+  gap: 2px;
+  align-items: baseline;
 
   > h1 {
     font-size: 22px;
     line-height: normal;
     white-space: initial;
   }
+}
+
+.followerBadgeIcon {
+  color: var(--color-text-secondary);
 }
 
 .username {
@@ -169,38 +175,6 @@ $button-fallback-breakpoint: $button-breakpoint + 55px;
   font-size: 15px;
 }
 
-.badge {
-  background-color: var(--color-bg-secondary);
-  border: none;
-  color: var(--color-text-secondary);
-  font-weight: 500;
-  padding: 4px;
-  font-size: 13px;
-
-  :global(.account__header__badges) > & {
-    line-height: 1;
-  }
-
-  > span {
-    font-weight: unset;
-    opacity: 1;
-  }
-}
-
-.badgeMuted {
-  background-color: var(--color-bg-inverted);
-  color: var(--color-text-inverted);
-}
-
-.badgeBlocked {
-  background-color: var(--color-bg-error-base);
-  color: var(--color-text-on-error-base);
-}
-
-svg.badgeIcon {
-  opacity: 1;
-}
-
 .note {
   margin-bottom: 16px;
 }
@@ -324,7 +298,7 @@ svg.badgeIcon {
 }
 
 .modalFieldsList {
-  padding: 24px;
+  padding: 16px;
 }
 
 .modalFieldItem {
@@ -355,15 +329,17 @@ svg.badgeIcon {
   }
 }
 
-.tabs {
+.tabs,
+.noTabs {
   border-bottom: 1px solid var(--color-border-primary);
+}
+
+.tabs {
   display: flex;
   gap: 12px;
-  padding: 0 24px;
+  padding: 0 16px;
 
   @container (width < 500px) {
-    padding: 0 16px;
-
     a {
       flex: 1 1 0px;
       text-align: center;
@@ -390,6 +366,11 @@ svg.badgeIcon {
     border-bottom: 4px solid var(--color-border-brand);
     padding-bottom: 14px;
   }
+}
+
+.noTabs {
+  width: 100%;
+  border-width: 0 0 1px;
 }
 
 .bannerBase {

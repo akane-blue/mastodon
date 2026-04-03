@@ -8,6 +8,8 @@ import { NavLink } from 'react-router-dom';
 import { useAccount } from '@/mastodon/hooks/useAccount';
 import { useAccountId } from '@/mastodon/hooks/useAccountId';
 
+import { areCollectionsEnabled } from '../../collections/utils';
+
 import classes from './redesign.module.scss';
 
 const isActive: Required<NavLinkProps>['isActive'] = (match, location) =>
@@ -19,10 +21,13 @@ export const AccountTabs: FC = () => {
   const account = useAccount(accountId);
 
   if (!account) {
-    return null;
+    return <hr className={classes.noTabs} />;
   }
 
   const { acct, show_featured, show_media } = account;
+  if (!show_featured && !show_media) {
+    return <hr className={classes.noTabs} />;
+  }
 
   return (
     <div className={classes.tabs}>
@@ -36,7 +41,14 @@ export const AccountTabs: FC = () => {
       )}
       {show_featured && (
         <NavLink exact to={`/@${acct}/featured`}>
-          <FormattedMessage id='account.featured' defaultMessage='Featured' />
+          {areCollectionsEnabled() ? (
+            <FormattedMessage
+              id='account.featured.collections'
+              defaultMessage='Collections'
+            />
+          ) : (
+            <FormattedMessage id='account.featured' defaultMessage='Featured' />
+          )}
         </NavLink>
       )}
     </div>
