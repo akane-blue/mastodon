@@ -9,6 +9,8 @@ ja:
   accounts:
     followers:
       other: フォロワー
+    following:
+      other: フォロー中
     instance_actor_flash: このアカウントは、個々のユーザーではなく、サーバー自体を表すために使用される仮想のユーザーです。 連合のために使用されるため、停止しないで下さい。
     last_active: 最後の活動
     link_verified_on: このリンクの所有権は%{date}に確認されました
@@ -833,6 +835,9 @@ ja:
         moderation_recommandation: 登録受付を開始する前に、迅速かつ適切にモデレーションを行うチームを編成しましょう！
         preamble: あなたのサーバー上でアカウントを作成できるユーザーを制御します。
         title: アカウント作成
+        deletion:
+          desc_html: 誰でも自身のアカウントを削除できるようになります
+          title: アカウントの削除を許可する
       registrations_mode:
         modes:
           approved: 登録には承認が必要
@@ -1276,6 +1281,13 @@ ja:
     hint_html: 以後1時間はパスワードの再入力を求めません
     invalid_password: パスワードが間違っています
     prompt: 続行するにはパスワードを入力してください
+  color_scheme:
+    auto: 自動
+    dark: ダーク
+    light: ライト
+  contrast:
+    auto: 自動
+    high: 高コントラスト
   crypto:
     errors:
       invalid_key: 有効なEd25519またはCurve25519キーではありません
@@ -1628,6 +1640,12 @@ ja:
       title: 新たな返信
     poll:
       subject: "%{name} さんの投票が終了しました"
+    quote:
+      body: '%{name}さんに引用されました:'
+      subject: "%{name}さんに引用されました"
+      title: 新たな引用
+    quoted_update:
+      subject: "あなたが引用した投稿を%{name}さんが編集しました"
     reblog:
       body: "%{name}さんにブーストされた、あなたの投稿があります:"
       subject: "%{name}さんにブーストされました"
@@ -1831,6 +1849,9 @@ ja:
         other: "%{count}本の動画"
     boosted_from_html: "%{acct_link}からブースト"
     content_warning: '閲覧注意: %{warning}'
+    content_warnings:
+      hide: 内容を隠す
+      show: 続きを表示
     default_language: UIの表示言語
     disallowed_hashtags:
       other: '許可されていないハッシュタグが含まれています: %{tags}'
@@ -1859,9 +1880,11 @@ ja:
     enabled: 古い投稿を自動的に削除する
     enabled_hint: 設定した期間を過ぎた投稿は、以下の例外に該当しない限り、自動的に削除されます
     exceptions: 例外
+    explanation: 自動削除は優先度の低い処理として扱われます。設定した期間に達してから削除されるまでに時間がかかる場合があります。
     ignore_favs: 設定しない
     ignore_reblogs: 設定しない
     interaction_exceptions: インタラクションに基づく例外
+    interaction_exceptions_explanation: お気に入りやブーストが一時的に基準値を超えた投稿は、その後基準値を下回っても保持される場合があります。
     keep_direct: ダイレクトメッセージを保持
     keep_direct_hint: ダイレクトメッセージを削除せずに残します
     keep_media: メディア付きの投稿を保持
@@ -2071,6 +2094,7 @@ ja:
       error: セキュリティキーの削除中に問題が発生しました。もう一度お試しください。
       success: セキュリティキーを削除しました。
     invalid_credential: セキュリティキーが間違っています
+    nickname: セキュリティキーの名前
     nickname_hint: セキュリティキーの名前を入力してください
     not_enabled: まだセキュリティキーを有効にしていません
     not_supported: このブラウザはセキュリティキーに対応していないようです
