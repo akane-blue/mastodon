@@ -140,6 +140,7 @@ class InitialStateSerializer < ActiveModel::Serializer
       wider_column: object_account_user.setting_wider_column,
       hide_translate_button: object_account_user.setting_hide_translate_button,
       crop_attachment_thumbnails_on_timeline: object_account_user.setting_crop_attachment_thumbnails_on_timeline,
+      use_absolute_time: object_account_user.setting_use_absolute_time,
       reverse_nav: object_account_user.setting_reverse_nav,
       emoji_style: object_account_user.settings['web.emoji_style'],
       wrapstodon: wrapstodon,

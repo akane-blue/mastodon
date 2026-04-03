@@ -24,7 +24,7 @@ import Card from '../features/status/components/card';
 import Bundle from '../features/ui/components/bundle';
 import { MediaGallery, Video, Audio } from '../features/ui/util/async-components';
 import { SensitiveMediaContext } from '../features/ui/util/sensitive_media_context';
-import { cropAttachmentThumbnailsOnTimeline, displayMedia } from '../initial_state';
+import { cropAttachmentThumbnailsOnTimeline, displayMedia, useAbsoluteTime } from '../initial_state';
 
 import { injectIntl } from './intl';
 import { StatusHeader } from './status/header'
@@ -33,6 +33,7 @@ import { getHashtagBarForStatus } from './hashtag_bar';
 import StatusActionBar from './status_action_bar';
 import StatusContent from './status_content';
 import { StatusThreadLabel } from './status_thread_label';
+import { FormattedDateWrapper } from './formatted_date';
 
 const domParser = new DOMParser();
 
@@ -616,6 +617,27 @@ class Status extends ImmutablePureComponent {
                   {children}
                 </>
               )}
+
+            {useAbsoluteTime && (
+              <div className='mods_status__meta'>
+                <Permalink
+                  className='mods_status__datetime'
+                  href={status.get('url')}
+                  to={`/@${status.getIn(['account', 'acct'])}/${status.get('id')}`}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  <FormattedDateWrapper
+                    value={new Date(status.get('created_at'))}
+                    year='numeric'
+                    month='short'
+                    day='2-digit'
+                    hour='2-digit'
+                    minute='2-digit'
+                  />
+                </Permalink>
+              </div>
+            )}
 
             {(showActions && !isQuotedPost) &&
               <StatusActionBar scrollKey={scrollKey} status={status} account={account}  {...other} />

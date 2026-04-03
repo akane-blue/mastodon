@@ -276,6 +276,7 @@ en:
         setting_theme: Site theme
         setting_trends: Show today's trends
         setting_unfollow_modal: Show confirmation dialog before unfollowing someone
+        setting_use_absolute_time: Use absolute time format
         setting_use_blurhash: Show colorful gradients for hidden media
         setting_use_pending_items: Slow mode
         setting_bigger_publish: Use bigger publish button

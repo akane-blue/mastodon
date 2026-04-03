@@ -10,6 +10,7 @@ import {
   StatusVisibility,
 } from '@/mastodon/components/status/header';
 import type { Account } from '@/mastodon/models/account';
+import { useAbsoluteTime } from '@/mastodon/initial_state';
 
 export const AccountStatusHeader: FC<StatusHeaderProps> = ({
   status,
@@ -36,10 +37,11 @@ export const AccountStatusHeader: FC<StatusHeaderProps> = ({
         className='status__relative-time'
       >
         <StatusVisibility visibility={status.get('visibility')} />
+                {!useAbsoluteTime && (
         <RelativeTimestamp
           timestamp={status.get('created_at') as string}
           noFuture
-        />
+        />)}
         {editedAt && <StatusEditedAt editedAt={editedAt} />}
       </Link>
 

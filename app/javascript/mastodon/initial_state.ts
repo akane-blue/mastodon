@@ -51,6 +51,7 @@ interface InitialStateMeta {
   wider_column: boolean;
   status_page_url: string;
   terms_of_service_enabled: boolean;
+  use_absolute_time: boolean;
   emoji_style?: string;
   wrapstodon?: InitialWrapstodonState | null;
 }
@@ -144,6 +145,7 @@ export const criticalUpdatesPending = initialState?.critical_updates_pending;
 export const statusPageUrl = getMeta('status_page_url');
 export const sso_redirect = getMeta('sso_redirect');
 export const termsOfServiceEnabled = getMeta('terms_of_service_enabled');
+export const useAbsoluteTime = getMeta('use_absolute_time');
 export const wrapstodon = getMeta('wrapstodon');
 
 const displayNames =

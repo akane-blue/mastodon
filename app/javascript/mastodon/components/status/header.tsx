@@ -15,6 +15,7 @@ import type { DisplayNameProps } from '../display_name';
 import { LinkedDisplayName } from '../display_name';
 import { RelativeTimestamp } from '../relative_timestamp';
 import { VisibilityIcon } from '../visibility_icon';
+import { useAbsoluteTime } from '@/mastodon/initial_state';
 
 export interface StatusHeaderProps {
   status: Status;
@@ -56,10 +57,11 @@ export const StatusHeader: FC<StatusHeaderProps> = ({
         className='status__relative-time'
       >
         <StatusVisibility visibility={status.get('visibility')} />
+        {!useAbsoluteTime && (
         <RelativeTimestamp
           timestamp={status.get('created_at') as string}
           noFuture
-        />
+        />)}
         {editedAt && <StatusEditedAt editedAt={editedAt} />}
       </Link>
 

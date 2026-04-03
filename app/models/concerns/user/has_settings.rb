@@ -182,4 +182,8 @@ module User::HasSettings
   def setting_crop_attachment_thumbnails_on_timeline
     settings['web.crop_attachment_thumbnails_on_timeline']
   end
+
+  def setting_use_absolute_time
+    settings['web.use_absolute_time']
+  end
 end
