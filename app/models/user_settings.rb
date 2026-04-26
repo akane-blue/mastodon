@@ -35,7 +35,7 @@ class UserSettings
     setting :missing_alt_text_modal, default: true
     setting :reduce_motion, default: false
     setting :expand_content_warnings, default: false
-    setting :display_media, default: 'default', in: %w(default show_all hide_all)
+    setting :display_media, default: 'default', in: %w(hide_all default show_all)
     setting :auto_play, default: false
     setting :mod_bigger_publish, default: false
     setting :mod_wider_column, default: false

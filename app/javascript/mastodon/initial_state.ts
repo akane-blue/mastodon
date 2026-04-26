@@ -61,6 +61,7 @@ interface Role {
   permissions: string;
   color: string;
   highlighted: boolean;
+  collection_limit: number;
 }
 
 interface InitialWrapstodonState {

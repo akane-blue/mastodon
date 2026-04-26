@@ -10,40 +10,60 @@ import CollectionsFilledIcon from '@/material-icons/400-24px/category-fill.svg?r
 import SquigglyArrow from '@/svg-icons/squiggly_arrow.svg?react';
 import { Column } from 'mastodon/components/column';
 import { ColumnHeader } from 'mastodon/components/column_header';
+import { DisplayNameSimple } from 'mastodon/components/display_name/simple';
 import { Icon } from 'mastodon/components/icon';
 import {
   ItemList,
   Scrollable,
 } from 'mastodon/components/scrollable_list/components';
+import { useAccount } from 'mastodon/hooks/useAccount';
+import { useAccountId, useCurrentAccountId } from 'mastodon/hooks/useAccountId';
 import {
   fetchAccountCollections,
   selectAccountCollections,
 } from 'mastodon/reducers/slices/collections';
 import { useAppSelector, useAppDispatch } from 'mastodon/store';
 
-import { CollectionListItem } from './detail/collection_list_item';
-import { messages as editorMessages } from './editor';
+import { CollectionListItem } from './components/collection_list_item';
+import {
+  messages as editorMessages,
+  MaxCollectionsCallout,
+  userCollectionLimit,
+} from './editor';
+import { areCollectionsEnabled } from './utils';
 
 const messages = defineMessages({
-  heading: { id: 'column.collections', defaultMessage: 'My collections' },
+  headingMe: { id: 'column.my_collections', defaultMessage: 'My collections' },
+  headingOther: {
+    id: 'column.other_collections',
+    defaultMessage: 'Collections by {name}',
+  },
 });
+
+export function useAccountCollections(accountId: string | null | undefined) {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (accountId && areCollectionsEnabled()) {
+      void dispatch(fetchAccountCollections({ accountId }));
+    }
+  }, [dispatch, accountId]);
+
+  return useAppSelector((state) => selectAccountCollections(state, accountId));
+}
 
 export const Collections: React.FC<{
   multiColumn?: boolean;
 }> = ({ multiColumn }) => {
-  const dispatch = useAppDispatch();
   const intl = useIntl();
-  const me = useAppSelector((state) => state.meta.get('me') as string);
-  const { collections, status } = useAppSelector((state) =>
-    selectAccountCollections(state, me),
-  );
+  const me = useCurrentAccountId();
+  const accountId = useAccountId();
+  const account = useAccount(accountId);
 
-  useEffect(() => {
-    void dispatch(fetchAccountCollections({ accountId: me }));
-  }, [dispatch, me]);
+  const { collections, status } = useAccountCollections(accountId);
 
   const emptyMessage =
-    status === 'error' ? (
+    status === 'error' || !accountId ? (
       <FormattedMessage
         id='collections.error_loading_collections'
         defaultMessage='There was an error when trying to load your collections.'
@@ -67,29 +87,46 @@ export const Collections: React.FC<{
       </>
     );
 
+  const canCreateMoreCollections = collections.length < userCollectionLimit;
+  const isOwnCollection = accountId === me;
+  const titleMessage = isOwnCollection
+    ? messages.headingMe
+    : messages.headingOther;
+
+  const pageTitle = intl.formatMessage(titleMessage, {
+    name: account?.get('display_name'),
+  });
+  const pageTitleHtml = intl.formatMessage(titleMessage, {
+    name: <DisplayNameSimple account={account} />,
+  });
+
   return (
-    <Column
-      bindToDocument={!multiColumn}
-      label={intl.formatMessage(messages.heading)}
-    >
+    <Column bindToDocument={!multiColumn} label={pageTitle}>
       <ColumnHeader
-        title={intl.formatMessage(messages.heading)}
+        title={pageTitleHtml}
         icon='collections'
         iconComponent={CollectionsFilledIcon}
         multiColumn={multiColumn}
         extraButton={
-          <Link
-            to='/collections/new'
-            className='column-header__button'
-            title={intl.formatMessage(editorMessages.create)}
-            aria-label={intl.formatMessage(editorMessages.create)}
-          >
-            <Icon id='plus' icon={AddIcon} />
-          </Link>
+          isOwnCollection &&
+          status === 'idle' &&
+          canCreateMoreCollections && (
+            <Link
+              to='/collections/new'
+              className='column-header__button'
+              title={intl.formatMessage(editorMessages.create)}
+              aria-label={intl.formatMessage(editorMessages.create)}
+            >
+              <Icon id='plus' icon={AddIcon} />
+            </Link>
+          )
         }
       />
 
       <Scrollable>
+        {status === 'idle' && !canCreateMoreCollections && (
+          <MaxCollectionsCallout />
+        )}
         <ItemList emptyMessage={emptyMessage} isLoading={status === 'loading'}>
           {collections.map((item, index) => (
             <CollectionListItem
@@ -105,7 +142,7 @@ export const Collections: React.FC<{
       </Scrollable>
 
       <Helmet>
-        <title>{intl.formatMessage(messages.heading)}</title>
+        <title>{pageTitle}</title>
         <meta name='robots' content='noindex' />
       </Helmet>
     </Column>
