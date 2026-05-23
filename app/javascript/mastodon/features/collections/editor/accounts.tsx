@@ -6,16 +6,17 @@ import { useHistory } from 'react-router-dom';
 
 import type { Map as ImmutableMap } from 'immutable';
 
-import { useComboboxItemProps } from '@/mastodon/components/form_fields/combobox_field';
 import type { ApiMutedAccountJSON } from 'mastodon/api_types/accounts';
 import type { ApiCollectionJSON } from 'mastodon/api_types/collections';
 import { AccountListItem } from 'mastodon/components/account_list_item';
 import { Avatar } from 'mastodon/components/avatar';
+import { PendingBadge } from 'mastodon/components/badge';
 import { Button } from 'mastodon/components/button';
 import { DisplayName } from 'mastodon/components/display_name';
 import { useAccountHandle } from 'mastodon/components/display_name/default';
 import { EmptyState } from 'mastodon/components/empty_state';
 import { FormStack, ComboboxField } from 'mastodon/components/form_fields';
+import { useComboboxItemProps } from 'mastodon/components/form_fields/combobox_field';
 import {
   ListItemContent,
   ListItemWrapper,
@@ -31,21 +32,25 @@ import { domain } from 'mastodon/initial_state';
 import type { Relationship } from 'mastodon/models/relationship';
 import {
   addCollectionItem,
-  getCollectionItemIds,
+  getEditorCollectionItems,
   removeCollectionItem,
   updateCollectionEditorField,
 } from 'mastodon/reducers/slices/collections';
 import { useAppDispatch, useAppSelector } from 'mastodon/store';
 
+import { PendingNote } from '../detail';
+import { canAccountBeAdded, canAccountBeAddedByFollowers } from '../utils';
+
 import classes from './styles.module.scss';
 import { WizardStepTitle } from './wizard_step_title';
 
-const MAX_ACCOUNT_COUNT = 25;
+export const MAX_COLLECTION_ACCOUNT_COUNT = 25;
 
 const AddedAccountItem: React.FC<{
   accountId: string;
+  pending?: boolean;
   onRemove: (id: string) => void;
-}> = ({ accountId, onRemove }) => {
+}> = ({ accountId, pending, onRemove }) => {
   const handleRemoveAccount = useCallback(() => {
     onRemove(accountId);
   }, [accountId, onRemove]);
@@ -62,7 +67,13 @@ const AddedAccountItem: React.FC<{
     [handleRemoveAccount],
   );
 
-  return <AccountListItem accountId={accountId} renderButton={renderButton} />;
+  return (
+    <AccountListItem
+      accountId={accountId}
+      badge={pending && <PendingBadge />}
+      renderButton={renderButton}
+    />
+  );
 };
 
 const SuggestedAccountItem: React.FC<{ id: string }> = ({ id }) => {
@@ -89,9 +100,6 @@ const renderAccountItem = (account: ApiMutedAccountJSON) => (
 
 type GroupKey = 'available' | 'mustFollow' | 'disabled';
 
-const canAccountBeAdded = (account: ApiMutedAccountJSON) =>
-  ['automatic', 'manual'].includes(account.feature_approval.current_user);
-
 function groupSuggestions(
   accounts: ApiMutedAccountJSON[],
   relationships: ImmutableMap<string, Relationship>,
@@ -103,12 +111,8 @@ function groupSuggestions(
         return 'available';
       }
 
-      const canAccountBeAddedByFollowers =
-        account.feature_approval.automatic.includes('followers') ||
-        account.feature_approval.manual.includes('followers');
-
       if (
-        canAccountBeAddedByFollowers &&
+        canAccountBeAddedByFollowers(account) &&
         !relationships.get(account.id)?.following
       ) {
         return 'mustFollow';
@@ -183,22 +187,26 @@ export const CollectionAccounts: React.FC<{
   const { id, items: collectionItems } = collection ?? {};
   const isEditMode = !!id;
 
-  const addedAccountIds = useAppSelector(
-    (state) => state.collections.editor.accountIds,
+  const editorItemsFromState = useAppSelector(
+    (state) => state.collections.editor.items,
   );
 
-  // In edit mode, we're bypassing state and just return collection items directly,
-  // since they're edited "live", saving after each addition/deletion
-  const accountIds = useMemo(
+  // In edit mode, we're bypassing our Redux state and just work on the
+  // collection items directly since they're edited "live", saving right
+  // after each addition/deletion
+  const editorItems = useMemo(
     () =>
-      isEditMode ? getCollectionItemIds(collectionItems) : addedAccountIds,
-    [isEditMode, collectionItems, addedAccountIds],
+      isEditMode
+        ? getEditorCollectionItems(collectionItems)
+        : editorItemsFromState,
+    [isEditMode, collectionItems, editorItemsFromState],
   );
+  const hasPendingItems = editorItems.some((item) => item.state === 'pending');
 
   const [searchValue, setSearchValue] = useState('');
 
-  const hasAccounts = accountIds.length > 0;
-  const hasMaxAccounts = accountIds.length === MAX_ACCOUNT_COUNT;
+  const hasItems = editorItems.length > 0;
+  const hasMaxItems = editorItems.length === MAX_COLLECTION_ACCOUNT_COUNT;
 
   const {
     accounts: suggestedAccounts,
@@ -208,7 +216,8 @@ export const CollectionAccounts: React.FC<{
   } = useSearchAccounts({
     withRelationships: true,
     // Don't suggest accounts that were already added
-    filterResults: (account) => !accountIds.includes(account.id),
+    filterResults: (account) =>
+      !editorItems.find((item) => item.account_id === account.id),
   });
 
   const relationships = useAppSelector((state) => state.relationships);
@@ -236,24 +245,33 @@ export const CollectionAccounts: React.FC<{
     (accountId: string) => {
       dispatch(
         updateCollectionEditorField({
-          field: 'accountIds',
-          value: accountIds.filter((id) => id !== accountId),
+          field: 'items',
+          value: editorItems.filter((item) => item.account_id !== accountId),
         }),
       );
     },
-    [accountIds, dispatch],
+    [editorItems, dispatch],
   );
 
   const addAccountItem = useCallback(
     (item: ApiMutedAccountJSON) => {
       dispatch(
         updateCollectionEditorField({
-          field: 'accountIds',
-          value: [...accountIds, item.id],
+          field: 'items',
+          value: [
+            ...editorItems,
+            {
+              account_id: item.id,
+              state:
+                item.feature_approval.current_user === 'manual'
+                  ? 'pending'
+                  : 'accepted',
+            },
+          ],
         }),
       );
     },
-    [accountIds, dispatch],
+    [editorItems, dispatch],
   );
 
   const instantRemoveAccountItem = useCallback(
@@ -319,12 +337,10 @@ export const CollectionAccounts: React.FC<{
       e.preventDefault();
 
       if (!id) {
-        history.push(`/collections/new/details`, {
-          account_ids: accountIds,
-        });
+        history.push('/collections/new/details');
       }
     },
-    [id, history, accountIds],
+    [id, history],
   );
 
   const inputId = useId();
@@ -345,16 +361,17 @@ export const CollectionAccounts: React.FC<{
               }
             />
           )}
+          {hasPendingItems && <PendingNote />}
           <ComboboxField
             id={inputId}
             label={intl.formatMessage({
               id: 'collections.search_accounts_label',
               defaultMessage: 'Search for an account to add',
             })}
-            value={hasMaxAccounts ? '' : searchValue}
+            value={hasMaxItems ? '' : searchValue}
             onChange={handleSearchValueChange}
             onKeyDown={handleSearchKeyDown}
-            disabled={hasMaxAccounts}
+            disabled={hasMaxItems}
             isLoading={isLoadingSuggestions}
             items={groupedItems}
             getItemId={getItemId}
@@ -363,7 +380,7 @@ export const CollectionAccounts: React.FC<{
             renderGroupTitle={renderGroupTitle}
             onSelectItem={handleSelectItem}
             status={
-              hasMaxAccounts
+              hasMaxItems
                 ? {
                     variant: 'warning',
                     message: intl.formatMessage({
@@ -378,12 +395,15 @@ export const CollectionAccounts: React.FC<{
         </header>
 
         <div>
-          {hasAccounts && (
+          {hasItems && (
             <AccountsHeadingElement className={classes.listHeading}>
               <FormattedMessage
                 id='collections.hints.accounts_counter'
                 defaultMessage='{count}/{max} accounts'
-                values={{ count: accountIds.length, max: MAX_ACCOUNT_COUNT }}
+                values={{
+                  count: editorItems.length,
+                  max: MAX_COLLECTION_ACCOUNT_COUNT,
+                }}
               />
             </AccountsHeadingElement>
           )}
@@ -403,21 +423,22 @@ export const CollectionAccounts: React.FC<{
                       id='collections.accounts.empty_description'
                       defaultMessage='Add up to {count} accounts'
                       values={{
-                        count: MAX_ACCOUNT_COUNT,
+                        count: MAX_COLLECTION_ACCOUNT_COUNT,
                       }}
                     />
                   }
                 />
               }
             >
-              {accountIds.map((accountId, index) => (
+              {editorItems.map(({ account_id, state }, index) => (
                 <Article
-                  key={accountId}
+                  key={account_id}
                   aria-posinset={index}
-                  aria-setsize={accountIds.length}
+                  aria-setsize={editorItems.length}
                 >
                   <AddedAccountItem
-                    accountId={accountId}
+                    accountId={account_id}
+                    pending={state === 'pending'}
                     onRemove={handleRemoveAccountItem}
                   />
                 </Article>
@@ -426,7 +447,7 @@ export const CollectionAccounts: React.FC<{
           </Scrollable>
         </div>
       </FormStack>
-      {!isEditMode && hasAccounts && (
+      {!isEditMode && hasItems && (
         <div className={classes.stickyFooter}>
           <Button type='submit'>
             {id ? (

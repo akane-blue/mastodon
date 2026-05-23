@@ -290,7 +290,7 @@ class Request
 
         addresses = []
         begin
-          addresses = [IPAddr.new(host)]
+          addresses = [IPAddr.new(host).to_s]
         rescue IPAddr::InvalidAddressError
           resolvers = [Resolv::Hosts.new, Resolv::DNS.new.tap { |dns| dns.timeouts = 5 }]
           addresses = Resolv.new(resolvers).getaddresses(host)
@@ -303,7 +303,7 @@ class Request
         addresses.each do |address|
           check_private_address(address, host)
 
-          sock     = ::Socket.new(address.is_a?(Resolv::IPv6) ? ::Socket::AF_INET6 : ::Socket::AF_INET, ::Socket::SOCK_STREAM, 0)
+          sock     = ::Socket.new(address.match?(Resolv::IPv6::Regex) ? ::Socket::AF_INET6 : ::Socket::AF_INET, ::Socket::SOCK_STREAM, 0)
           sockaddr = ::Socket.pack_sockaddr_in(port, address.to_s)
 
           sock.setsockopt(::Socket::IPPROTO_TCP, ::Socket::TCP_NODELAY, 1)

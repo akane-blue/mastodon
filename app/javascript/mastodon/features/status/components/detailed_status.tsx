@@ -273,7 +273,12 @@ export const DetailedStatus: React.FC<{
       );
 
     if (taggedCollection) {
-      media = <CollectionPreviewCard collection={taggedCollection} />;
+      media = (
+        <CollectionPreviewCard
+          collection={taggedCollection.toJS()}
+          headingLevel='h2'
+        />
+      );
     } else {
       media = (
         <Card
@@ -287,7 +292,10 @@ export const DetailedStatus: React.FC<{
     const firstLinkedCollection = status.get('tagged_collections').first();
     if (firstLinkedCollection) {
       media = (
-        <CollectionPreviewCard collection={firstLinkedCollection.toJS()} />
+        <CollectionPreviewCard
+          collection={firstLinkedCollection.toJS()}
+          headingLevel='h2'
+        />
       );
     }
   }
