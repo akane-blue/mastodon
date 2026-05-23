@@ -2886,13 +2886,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kurkle/color@npm:^0.3.0":
-  version: 0.3.2
-  resolution: "@kurkle/color@npm:0.3.2"
-  checksum: a9e8e3e35dcd59dec4dd4f0105919c05e24823a96347bcf152965c29e48d6290b66d5fb96c071875db752e10930724c48ce6d338fefbd65e0ce5082d5c78970e
-  languageName: node
-  linkType: hard
-
 "@keyv/bigmap@npm:^1.3.1":
   version: 1.3.1
   resolution: "@keyv/bigmap@npm:1.3.1"
@@ -2970,8 +2963,6 @@ __metadata:
     axios: "npm:^1.4.0"
     babel-plugin-transform-react-remove-prop-types: "npm:^0.4.24"
     blurhash: "npm:^2.0.5"
-    chart.js: "npm:~4.2.1"
-    chartjs-adapter-moment: "npm:^1.0.1"
     chromatic: "npm:^16.0.0"
     classnames: "npm:^2.3.2"
     cocoon-js-vanilla: "npm:^1.5.1"
@@ -3012,7 +3003,6 @@ __metadata:
     lint-staged: "npm:^17.0.0"
     lodash: "npm:^4.17.21"
     marky: "npm:^1.2.5"
-    moment: "npm:^2.29.4"
     msw: "npm:^2.12.1"
     msw-storybook-addon: "npm:^2.0.6"
     oxfmt: "npm:^0.47.0"
@@ -3022,7 +3012,6 @@ __metadata:
     prop-types: "npm:^15.8.1"
     punycode: "npm:^2.3.0"
     react: "npm:^18.2.0"
-    react-chartjs-2: "npm:^5.2.0"
     react-dom: "npm:^18.2.0"
     react-easy-crop: "npm:^5.5.6"
     react-immutable-proptypes: "npm:^2.2.0"
@@ -6806,25 +6795,6 @@ __metadata:
   version: 1.0.2
   resolution: "char-regex@npm:1.0.2"
   checksum: 10c0/57a09a86371331e0be35d9083ba429e86c4f4648ecbe27455dbfb343037c16ee6fdc7f6b61f433a57cc5ded5561d71c56a150e018f40c2ffb7bc93a26dae341e
-  languageName: node
-  linkType: hard
-
-"chart.js@npm:~4.2.1":
-  version: 4.2.1
-  resolution: "chart.js@npm:4.2.1"
-  dependencies:
-    "@kurkle/color": "npm:^0.3.0"
-  checksum: 8d6aeece5fe1537b04065d1695d2aee70f0347c91c53644acb702fd3b17465eeaf0723ee1b1ff2aec1ae86b69167d390e167bfc865fdbcbd47b7f2ea1062c1b3
-  languageName: node
-  linkType: hard
-
-"chartjs-adapter-moment@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "chartjs-adapter-moment@npm:1.0.1"
-  peerDependencies:
-    chart.js: ">=3.0.0"
-    moment: ^2.10.2
-  checksum: 9c7ddc6ebf5741c334464bb6a72629afce7b1fa1480e39d926f836bc03f9bb21cd99edc74acb6a8a7faeb3ea06afa8904af95d2f571912ce65f35c5c014b5b03
   languageName: node
   linkType: hard
 
@@ -11038,13 +11008,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.29.4":
-  version: 2.29.4
-  resolution: "moment@npm:2.29.4"
-  checksum: 844c6f3ce42862ac9467c8ca4f5e48a00750078682cc5bda1bc0e50cc7ca88e2115a0f932d65a06e4a90e26cb78892be9b3ca3dd6546ca2c4d994cebb787fc2b
-  languageName: node
-  linkType: hard
-
 "mlly@npm:^1.7.2, mlly@npm:^1.7.4":
   version: 1.8.2
   resolution: "mlly@npm:1.8.2"
@@ -12894,16 +12857,6 @@ __metadata:
     iconv-lite: "npm:~0.7.0"
     unpipe: "npm:~1.0.0"
   checksum: 10c0/d266678d08e1e7abea62c0ce5864344e980fa81c64f6b481e9842c5beaed2cdcf975f658a3ccd67ad35fc919c1f6664ccc106067801850286a6cbe101de89f29
-  languageName: node
-  linkType: hard
-
-"react-chartjs-2@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "react-chartjs-2@npm:5.2.0"
-  peerDependencies:
-    chart.js: ^4.1.1
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 437e443a268b7eebab3f1a6f0f5d936e58caf650fca55f568a612a46c563d22af683a64185eac8005aa644e4960a5a72cc1075a2574b89ec46c7653aaf4025e2
   languageName: node
   linkType: hard
 

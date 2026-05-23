@@ -244,8 +244,6 @@ Rails.application.routes.draw do
   get '/about',      to: 'about#show'
   get '/about/more', to: redirect('/about')
 
-  get '/instance-stats/:domain', to: 'instance_stats#show', constraints: { domain: /[^\/]+/ }
-
   get '/privacy-policy',   to: 'privacy#show', as: :privacy_policy
   get '/terms-of-service', to: 'terms_of_service#show', as: :terms_of_service
   get '/terms-of-service/:date', to: 'terms_of_service#show', as: :terms_of_service_version

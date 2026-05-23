@@ -8,7 +8,6 @@ import { accountsFamiliarFollowersReducer } from './accounts_familiar_followers'
 import { accountsMapReducer } from './accounts_map';
 import { alertsReducer } from './alerts';
 import announcements from './announcements';
-import instance_stats from './instance_stats';
 import { composeReducer } from './compose';
 import { contextsReducer } from './contexts';
 import conversations from './conversations';
@@ -60,7 +59,6 @@ const reducers = {
   settings,
   push_notifications,
   server: serverReducer,
-  instance_stats,
   contexts: contextsReducer,
   compose: composeReducer,
   search: searchReducer,
