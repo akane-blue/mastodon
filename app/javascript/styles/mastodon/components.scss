@@ -1370,6 +1370,7 @@ body > [data-popper-placement] {
   // this element inherits a text direction that is opposite to its own,
   // the start of this element's text is cut off.
 
+  // Posts on the timeline
   .status:not(.status--is-quote)
     > .status__content
     > .status__content__text:lang(#{$lang}),
@@ -1384,6 +1385,7 @@ body > [data-popper-placement] {
     overflow-x: hidden; // read more
   }
 
+  // Post editor
   .autosuggest-textarea > .autosuggest-textarea__textarea:lang(#{$lang}) {
     writing-mode: vertical-lr;
     min-height: 209px; // writable
@@ -1392,6 +1394,18 @@ body > [data-popper-placement] {
     scrollbar-color: unset;
   }
 
+  // Alt text editor
+  .dialog-modal__content__form
+    > .input
+    > .label_input
+    > textarea#description:lang(#{$lang}) {
+    writing-mode: vertical-lr;
+    min-height: 150px; // writable
+    max-height: 150px; // suppress autosizing by react-textarea-autosize
+    overflow-x: auto;
+  }
+
+  // Detailed posts
   .detailed-status > .status__content > .status__content__text:lang(#{$lang}) {
     writing-mode: vertical-lr;
     width: 100%; // detecting overflow
@@ -1622,7 +1636,6 @@ body > [data-popper-placement] {
   font-size: 15px;
   line-height: 22px;
   height: 40px;
-  order: 2;
   flex: 0 0 auto;
   color: var(--color-text-secondary);
 }
@@ -1675,7 +1688,6 @@ body > [data-popper-placement] {
 
 .status__quote-cancel {
   align-self: self-start;
-  order: 5;
 }
 
 .status__info {
@@ -3391,8 +3403,7 @@ a.account__display-name {
 
     .column-header,
     .column-back-button,
-    .scrollable,
-    .error-column {
+    .scrollable {
       border-radius: 0 !important;
     }
 
@@ -5306,51 +5317,6 @@ a.status-card {
 .follow_requests-unlocked_explanation {
   margin: 16px;
   margin-bottom: 0;
-}
-
-.error-column {
-  padding: 20px;
-  border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
-  display: flex;
-  flex: 1 1 auto;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  cursor: default;
-
-  &__image {
-    width: 70%;
-    max-width: 350px;
-    margin-top: -50px;
-  }
-
-  &__message {
-    text-align: center;
-    color: var(--color-text-secondary);
-    font-size: 15px;
-    line-height: 22px;
-
-    h1 {
-      font-size: 28px;
-      line-height: 33px;
-      font-weight: 700;
-      margin-bottom: 15px;
-      color: var(--color-text-primary);
-    }
-
-    p {
-      max-width: 48ch;
-    }
-
-    &__actions {
-      margin-top: 30px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      justify-content: center;
-    }
-  }
 }
 
 @keyframes heartbeat {
@@ -10802,6 +10768,7 @@ noscript {
     -webkit-box-orient: vertical;
     max-height: 2 * 20px;
     overflow: hidden;
+    overflow-wrap: anywhere;
 
     p {
       margin-bottom: 0;
