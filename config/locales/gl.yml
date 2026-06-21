@@ -4,6 +4,7 @@ gl:
     about_mastodon_html: 'A rede social do futuro: Sen publicidade, sen seguimento por empresas, deseño ético e descentralización! En Mastodon ti posúes os teus datos!'
     contact_missing: Non establecido
     contact_unavailable: Non dispoñíbel
+    default_thumbnail_description: Dous mastodóns sorrintes debuxados (que semellan elefantes) tiran un avión de papel polo aire entre eles. De fondo vese o ceo azul con planetas flotando entre árbores e máis mastodóns neles.
     hosted_on: Mastodon aloxado en %{domain}
     title: Sobre
   accounts:
@@ -500,13 +501,26 @@ gl:
     email_subscriptions:
       accounts:
         account: Conta
-        active: Activa
         empty:
           hint: Aínda non hai contas con subscritoras.
           no_lists_yet: Aínda non hai listas
-        inactive: Inactiva
         last_email: Último correo
         lead: Aquí móstranse as contas que activaron esta ferramenta e teñen subscritoras.
+        show:
+          confirm_disable_feature: Desactivar o boletín para %{name}? Non se van enviar máis novidades desta conta por correo. A usuaria poderá reactivar esta ferramenta nos axustes da súa conta. Para quitar de xeito permanente o acceso á ferramenta, edita os permisos da conta en Roles.
+          confirm_remove_subscriber: "%{email} non vai seguir recibindo correos de %{name}. Esta acción non é reversible."
+          consent: As subscritoras consentiron exclusivamente recibir no correo as publicacións. Non uses esta lista para outros propósitos.
+          date: Data da subscrición
+          disable_feature: Desactivar a ferramenta
+          disabled: Esta ferramenta desactivouse e non se van seguir enviando correos a esta lista.
+          email: Enderezo de correo
+          empty:
+            hint: Aínda non hai subscricións a esta conta.
+            no_subscribers_yet: Sen subscricións
+          enable_feature: Activar a ferramenta
+          no_access_html: Esta conta xa non ten os permisos requeridos para activar a ferramenta. Cambiaos en <a href="%{roles_path}">Roles</a>.
+          title: Boletín por correo de %{name}
+          view_account: Ver conta
         status: Estado
         subscribers: Subscritoras
         title: Listas de correo
@@ -716,6 +730,8 @@ gl:
       new:
         title: Crear nova regra IP
       no_ip_block_selected: Non se cambiou ningunha regra iP porque non seleccionaches ningunha
+      reset: Restablecer
+      search: Buscar
       title: Regras IP
     relationships:
       title: Relacións de %{acct}
@@ -1501,6 +1517,7 @@ gl:
       your_appeal_rejected: A apelación foi rexeitada
   edit_profile:
     other: Outros
+    privacy_redesign_body: A opción para mostrar a quen segues e quen te segue agora está no teu perfil.
     redesign_body: Agora podes acceder á edición do perfil directamente desde a páxina do perfil.
     redesign_button: Ir á edición
     redesign_title: Hai novidades no xeito en que podes editar o perfil
@@ -1533,7 +1550,9 @@ gl:
         success_html: Vas comezar a recibir correos cando %{name} publique novas publicacións. Engade %{sender} á túa libreta de enderezos para que os correos non vaian directamente ao cartafol de Spam.
         title: Subscribícheste
         unsubscribe: Anular subscrición
+    disabled: Desactivado
     inactive: Inactiva
+    no_access: Sen acceso
     status: Estado
     subscribers: Subscritoras
   emoji_styles:
@@ -1649,7 +1668,9 @@ gl:
       empty: Ficheiro CSV de baleiro
       incompatible_type: Non é compatible co tipo de importación seleccionado
       invalid_csv_file: 'Ficheiro CSV non válido. Erro: %{error}'
+      invalid_json_file: 'Ficheiro JSON non válido. Erro: %{error}'
       over_rows_processing_limit: contén máis de %{count} filas
+      status_not_found_warning: Algún dos teus filtros oculta publicacións concretas que non son coñecidas por este servidor. Estas publicacións non se van filtrar automaticamente se son descubertas máis tarde polo servidor.
       too_large: O ficheiro é demasiado grande
     failures: Erros
     imported: Importado
@@ -1666,6 +1687,9 @@ gl:
       bookmarks_html:
         one: Vas <strong>substituír os marcadores</strong> por <strong>%{count} publicación</strong> desde <strong>%{filename}</strong>.
         other: Vas <strong>substituír os marcadores</strong> por <strong>%{count} publicacións</strong> desde <strong>%{filename}</strong>.
+      custom_filters_html:
+        one: Vas <strong>substituír os teus filtros</strong> co contido de <strong>%{filename}</strong>. Vaise engadir só <strong>%{count} filtro</strong> aos novos filtros.
+        other: Vas <strong>substituír os teus filtros</strong> co contido de <strong>%{filename}</strong>. Vaise engadir <strong>%{count} filtros</strong> aos novos filtros.
       domain_blocking_html:
         one: Vas <strong>substituír a lista de dominios bloqueados</strong> por <strong>%{count} dominio</strong> desde <strong>%{filename}</strong>.
         other: Vas <strong>substituír a lista de dominios bloqueados</strong> por <strong>%{count} dominios</strong> desde <strong>%{filename}</strong>.
@@ -1685,6 +1709,9 @@ gl:
       bookmarks_html:
         one: Vas engadir <strong>%{count} publicación</strong> desde <strong>%{filename}</strong> aos teus <strong>marcadores</strong>.
         other: Vas engadir <strong>%{count} publicacións</strong> desde <strong>%{filename}</strong> aos teus <strong>marcadores</strong>.
+      custom_filters_html:
+        one: Vas a engadir <strong>%{count} filtro</strong> desde <strong>%{filename}</strong> aos teus <strong>filtros</strong>.
+        other: Vas a engadir <strong>%{count} filtros</strong> desde <strong>%{filename}</strong> aos teus <strong>filtros</strong>.
       domain_blocking_html:
         one: Vas <strong>bloquear</strong> a <strong>%{count} dominio</strong> desde <strong>%{filename}</strong>.
         other: Vas <strong>bloquear</strong> a <strong>%{count} dominios</strong> desde <strong>%{filename}</strong>.
@@ -1721,6 +1748,7 @@ gl:
     types:
       blocking: Lista de bloqueo
       bookmarks: Marcadores
+      custom_filters: Filtros
       domain_blocking: Lista de bloqueo de dominios
       following: Lista de seguimento
       lists: Listas

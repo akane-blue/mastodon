@@ -22,6 +22,7 @@ import { changeUploadCompose } from 'mastodon/actions/compose_typed';
 import { Button } from 'mastodon/components/button';
 import { GIFV } from 'mastodon/components/gifv';
 import { LoadingIndicator } from 'mastodon/components/loading_indicator';
+import { NavigationFocusTarget } from 'mastodon/components/navigation_focus_target';
 import { Skeleton } from 'mastodon/components/skeleton';
 import { Audio } from 'mastodon/features/audio';
 import { CharacterCounter } from 'mastodon/features/compose/components/character_counter';
@@ -54,7 +55,8 @@ const messages = defineMessages({
   },
 });
 
-const MAX_LENGTH = 1500;
+// TODO: use `description_limit` from the `/api/v2/instance` response
+const MAX_LENGTH = 10000;
 
 type FocalPoint = [number, number];
 
@@ -411,12 +413,15 @@ export const AltTextModal = forwardRef<ModalRef, Props & Partial<RestoreProps>>(
             )}
           </Button>
 
-          <span className='dialog-modal__header__title'>
+          <NavigationFocusTarget
+            as='h1'
+            className='dialog-modal__header__title'
+          >
             <FormattedMessage
               id='alt_text_modal.add_alt_text'
               defaultMessage='Add alt text'
             />
-          </span>
+          </NavigationFocusTarget>
 
           <Button secondary onClick={onClose}>
             <FormattedMessage

@@ -12,7 +12,7 @@ nan-TW:
     followers:
       other: 跟tuè ê
     following:
-      other: 伊跟tuè ê
+      other: Leh跟tuè
     instance_actor_flash: Tsit ê口座是虛ê，用來代表tsit臺服侍器，毋是個人用者ê。伊用來做聯邦ê路用，毋好kā伊ê權限停止。
     last_active: 頂kái活動ê時間
     link_verified_on: Tsit ê連結ê所有權佇 %{date} 受檢查
@@ -75,7 +75,7 @@ nan-TW:
       enable_sign_in_token_auth: 啟用電子phue ê token認證
       enabled: 啟用ah
       enabled_msg: 成功kā %{username} ê口座退冰
-      followers: 跟tuè伊ê
+      followers: 跟tuè ê
       follows: 伊跟tuè ê
       header: 封面ê圖
       inbox_url: 收件kheh-á ê URL
@@ -490,13 +490,23 @@ nan-TW:
     email_subscriptions:
       accounts:
         account: 口座
-        active: 有效ê
         empty:
           hint: Iáu無半ê口座有訂ê lâng。
           no_lists_yet: Iáu無列單
-        inactive: 停止使用ah
         last_email: 上新ê電子phue箱
         lead: 有啟用tsit ê功能koh有訂ê lâng ê口座ē展示佇下kha。
+        show:
+          confirm_disable_feature: Kám beh kā %{name} 停止電子報？電子phue更新ē buē koh對 tsit ê口座送出。Tsit ê用者猶原通佇in ê口座設定內底重啟用tsit ê功能。Beh永永禁止接近使用tsit ê功能，請佇角色內底編tsit ê口座ê權限。
+          confirm_remove_subscriber: "%{email} 會無法度收著uì %{name} 來ê電子批。Tsit ê功能bē當復原。"
+          consent: 訂ê lâng kan-ta同意通過電子phue收著PO文。請毋通kā tsit ê列單用做別途。
+          date: 註冊日
+          disable_feature: Kā功能停止使用
+          disabled: Tsit ê功能停用ah，而且電子phue buē當koh送kàu tsit ê列單。
+          email: 電子phue地址
+          empty:
+            hint: Iáu無半个lâng訂tsit ê口座。
+            no_subscribers_yet: Iáu無訂ê lâng
+          enable_feature: 啟用功能
         status: 狀態
         subscribers: 訂ê lâng
         title: 電子phue列單
@@ -732,6 +742,7 @@ nan-TW:
       action_log: 審查日誌
       action_taken_by: 操作由
       actions:
+        delete_description_html: 受檢舉ê PO文（以及／á是）收藏ē thâi掉，而且ē用tsi̍t ue̍h橫tsuā記錄，幫tsān lí提升kâng tsi̍t ê用戶未來ê違規。
         mark_as_sensitive_description_html: 受檢舉ê PO文內ê媒體ē標做敏感，而且ē用tsi̍t ue̍h橫tsuā記錄，幫tsān lí提升kâng tsi̍t ê用戶未來ê違規。
         other_description_html: 看其他控制tsit ê口座ê所行，kap自訂聯絡受檢舉ê口座ê選項。
         resolve_description_html: Buē用行動控制受檢舉ê口座，mā無用橫tsuā記錄，而且tsit ê報告ē關掉。
@@ -758,6 +769,7 @@ nan-TW:
       confirm: 確認
       confirm_action: 確認kā %{acct} 管理ê動作
       created_at: 檢舉tī
+      delete_and_resolve: Thâi掉內容
       forwarded: 轉送ah
       forwarded_replies_explanation: 本報告是tuì別站ê用者送ê，關係別站ê內容。本報告轉hōo lí，因為受檢舉ê內容是回應lí ê服侍器ê用者。
       forwarded_to: 有轉送kàu %{domain}
@@ -937,6 +949,10 @@ nan-TW:
           authenticated: Kan-ta hōo登入ê用者
           disabled: 愛特別ê用者角色
           public: Ta̍k lâng
+      landing_page:
+        hints:
+          about_html: 關係tsit臺服侍器ê敘述、聯絡資訊、規則kap其他資訊ê頁。
+          local_feed_html: 展示tsit臺服侍器用者ê上新PO文ê即時內容。
       registrations:
         moderation_recommandation: 佇開放hōo ta̍k ê lâng註冊進前，請確認lí有夠額koh主動反應ê管理團隊！
         preamble: 控制ē當佇lí ê服侍器註冊ê人。
@@ -1654,7 +1670,7 @@ nan-TW:
       blocking: Teh輸入封鎖ê口座
       bookmarks: Teh輸入冊籤
       domain_blocking: Teh輸入封鎖ê域名
-      following: Teh輸入leh跟tuè ê口座
+      following: Teh輸入跟tuè ê口座
       lists: Teh輸入列單
       muting: Teh輸入消音ê口座
     type: 輸入類型
@@ -1665,7 +1681,7 @@ nan-TW:
       blocking: 封鎖ê列單
       bookmarks: 冊籤
       domain_blocking: 域名封鎖列單
-      following: Leh跟tuè ê列單
+      following: Leh跟tuè ê ê列單
       lists: 列單
       muting: 消音ê列單
     upload: 傳上去
@@ -1876,8 +1892,8 @@ nan-TW:
     dormant: Teh歇睏
     follow_failure: Bē當跟tuè一寡所揀ê口座。
     follow_selected_followers: 跟tuè所揀ê跟tuè者
-    followers: 跟tuè伊ê
-    following: 伊跟tuè ê
+    followers: 跟tuè ê
+    following: Leh跟tuè
     invited: 邀請ah
     last_active: 上尾ê活動
     most_recent: 最近來ê

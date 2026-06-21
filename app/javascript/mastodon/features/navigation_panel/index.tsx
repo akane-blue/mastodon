@@ -265,7 +265,7 @@ export const NavigationPanel: React.FC<{ multiColumn?: boolean }> = ({
             {!multiColumn && (
               <li>
                 <ColumnLink
-                  to='/publish'
+                  to={{ pathname: '/publish', state: { focusTarget: false } }}
                   icon='plus'
                   iconComponent={EditIcon}
                   activeIconComponent={EditIcon}

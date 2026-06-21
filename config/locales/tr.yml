@@ -4,6 +4,7 @@ tr:
     about_mastodon_html: 'Geleceğin sosyal ağı: Reklam yok, kurumsal gözetim yok, etik tasarım ve merkeziyetsizlik! Mastodon ile verilerinizin sahibi olun!'
     contact_missing: Ayarlanmadı
     contact_unavailable: Bulunamadı
+    default_thumbnail_description: İki gülümseyen (fil gibi görünen) çizgi film mastodonu aralarında bir kağıt uçak atıp tutuyorlar. Etraflarını parlak mavi bir gökyüzü ve üzerinde ağaçlar ile başka mastodonlar bulunan süzülen gezegenler çevreliyor.
     hosted_on: Mastodon %{domain} üzerinde barındırılıyor
     title: Hakkında
   accounts:
@@ -500,13 +501,26 @@ tr:
     email_subscriptions:
       accounts:
         account: Hesap
-        active: Etkin
         empty:
           hint: Henüz hiçbir hesabın abonesi yok.
           no_lists_yet: Henüz liste yok
-        inactive: Etkin değil
         last_email: Son e-posta
         lead: Bu özelliği etkinleştirmiş ve abonesi olan hesaplar aşağıda gösterilecektir.
+        show:
+          confirm_disable_feature: "%{name} için e-posta bültenlerini devre dışı bırakmak ister misiniz? Bu hesap için artık e-posta güncellemeleri gönderilmeyecektir. Kullanıcı, hesap ayarlarından bu özelliği yeniden etkinleştirebilir. Bu özelliğe erişimi kalıcı olarak kaldırmak için, Roller bölümünden hesabın izinlerini düzenleyin."
+          confirm_remove_subscriber: "%{email} artık %{name}'den e-posta almayacaktır. Bu işlem geri alınamaz."
+          consent: Aboneler yalnızca e-posta yoluyla mesaj almayı kabul etmişlerdir. Bu listeyi başka amaçlarla kullanmayınız.
+          date: Kayıt tarihi
+          disable_feature: Özelliği devre dışı bırak
+          disabled: Bu özellik devre dışı bırakıldı ve artık bu listeye e-posta gönderilmiyor.
+          email: E-posta adresi
+          empty:
+            hint: Henüz kimse bu hesaba abone olmamış.
+            no_subscribers_yet: Henüz abone yok
+          enable_feature: Özelliği etkinleştir
+          no_access_html: Bu hesap, özelliği etkinleştirmek için gereken izinlere artık sahip değil. Bu ayarı <a href="%{roles_path}">Roller</a> bölümünden değiştirin.
+          title: "%{name}'in e-posta bültenleri"
+          view_account: Hesabı görüntüle
         status: Durum
         subscribers: Aboneler
         title: E-posta listeleri
@@ -1501,6 +1515,7 @@ tr:
       your_appeal_rejected: İtirazınız reddedildi
   edit_profile:
     other: Diğer
+    privacy_redesign_body: Takip ettiğiniz kişileri ve takipçilerinizi gösterme seçeneği artık doğrudan profilinizden yapılmaktadır.
     redesign_body: Profil düzenlemeye şimdi doğrudan profil sayfasından da erişilebilir.
     redesign_button: Git
     redesign_title: Yeni bir profile düzenleme deneyimi var
@@ -1533,7 +1548,9 @@ tr:
         success_html: "%{name} yeni bir yazı yayınladığında artık e-posta almaya başlayacaksınız. Bu yazılar spam klasörüne düşmesin diye %{sender}'ı kişi listenize ekleyin."
         title: Abone oldunuz
         unsubscribe: Abonelikten çık
+    disabled: Devre dışı
     inactive: Etkin değil
+    no_access: Erişim yok
     status: Durum
     subscribers: Aboneler
   emoji_styles:
@@ -1649,7 +1666,9 @@ tr:
       empty: Boş CSV Dosyası
       incompatible_type: Seçilen içe aktarma türüyle uyumsuz
       invalid_csv_file: 'Geçersiz CSV dosyası. Hata: %{error}'
+      invalid_json_file: 'Geçersiz JSON dosyası. Hata: %{error}'
       over_rows_processing_limit: "%{count} satırdan fazlasını içeriyor"
+      status_not_found_warning: Filtrelerinizden bazıları, bu sunucu tarafından tanınmayan belirli gönderileri gizler. Bu gönderiler, daha sonra sunucu tarafından tespit edildiklerinde otomatik olarak filtrelenmeyecektir.
       too_large: Dosya çok büyük
     failures: Başarısızlıklar
     imported: İçe aktarılan
@@ -1666,6 +1685,9 @@ tr:
       bookmarks_html:
         one: "<strong>Yerimlerinizi</strong>, <strong>%{filename}</strong> dosyasından <strong>%{count} gönderi</strong> ile değiştirmek üzeresiniz."
         other: "<strong>Yerimlerinizi</strong>, <strong>%{filename}</strong> dosyasından <strong>%{count} gönderi</strong> ile değiştirmek üzeresiniz."
+      custom_filters_html:
+        one: "<strong>Filtrelerinizi</strong> <strong>%{filename}</strong> dosyasının içeriğiyle değiştirmek üzeresiniz. Yeni filtrelere en fazla <strong>%{count} filtre</strong> eklenecektir."
+        other: "<strong>Filtrelerinizi</strong> <strong>%{filename}</strong> dosyasının içeriğiyle değiştirmek üzeresiniz. Yeni filtrelere en fazla <strong>%{count} filtre</strong> eklenecektir."
       domain_blocking_html:
         one: "<strong>Alan adı engelleme listenizi</strong>, <strong>%{filename}</strong> dosyasından <strong>%{count} alan adı</strong> ile değiştirmek üzeresiniz."
         other: "<strong>Alan adı engelleme listenizi</strong>, <strong>%{filename}</strong> dosyasından <strong>%{count} alan adı</strong> ile değiştirmek üzeresiniz."
@@ -1685,6 +1707,9 @@ tr:
       bookmarks_html:
         one: "<strong>Yerimlerinize</strong>, <strong>%{filename}</strong> dosyasından <strong>%{count} gönderi</strong> eklemek üzeresiniz."
         other: "<strong>Yerimlerinize</strong>, <strong>%{filename}</strong> dosyasından <strong>%{count} gönderi</strong> eklemek üzeresiniz."
+      custom_filters_html:
+        one: "<strong>%{filename}</strong> dosyasındaki <strong>%{count} adet </strong> filtresini <strong>filters</strong> listenize eklemek üzeresiniz."
+        other: "<strong>%{filename}</strong> dosyasındaki <strong>%{count} adet </strong> filtresini <strong>filters</strong> listenize eklemek üzeresiniz."
       domain_blocking_html:
         one: "<strong>%{filename}</strong> dosyasından <strong>%{count} alan adı</strong> <strong>engellemek</strong> üzeresiniz."
         other: "<strong>%{filename}</strong> dosyasından <strong>%{count} alan adı</strong> <strong>engellemek</strong> üzeresiniz."
@@ -1721,6 +1746,7 @@ tr:
     types:
       blocking: Engellenenler listesi
       bookmarks: Yer imleri
+      custom_filters: Filtreler
       domain_blocking: Alan adı engelleme listesi
       following: Takip edilenler listesi
       lists: Listeler

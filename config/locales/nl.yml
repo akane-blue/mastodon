@@ -4,6 +4,7 @@ nl:
     about_mastodon_html: 'Het sociale netwerk van de toekomst: geen reclame, geen meekijkende bedrijven, ethisch ontwerp, en gedecentraliseerd! Met Mastodon ben je baas over je eigen gegevens!'
     contact_missing: Niet ingesteld
     contact_unavailable: n.v.t
+    default_thumbnail_description: Twee glimlachende getekende mastodonten (die op olifanten lijken) gooien een papieren vliegtuigje tussen elkaar in. Ze zijn omringd door een heldere blauwe lucht en zwevende planeten met bomen en meer mastodonten erop.
     hosted_on: Mastodon op %{domain}
     title: Over
   accounts:
@@ -500,13 +501,26 @@ nl:
     email_subscriptions:
       accounts:
         account: Account
-        active: Actief
         empty:
           hint: Geen enkel account heeft nog abonnees.
           no_lists_yet: Nog geen lijsten
-        inactive: Inactief
         last_email: Meest recente e-mail
         lead: Accounts die deze functionaliteit hebben ingeschakeld en abonnees hebben, worden hieronder getoond.
+        show:
+          confirm_disable_feature: E-mailnieuwsbrieven voor %{name} uitschakelen? E-mailupdates voor dit account worden niet langer verzonden. De gebruiker kan deze functionaliteit nog steeds in diens accountinstellingen inschakelen. Om de toegang tot deze functie permanent te verwijderen, wijzig dan de rechten van het account onder 'Beheer > rollen'.
+          confirm_remove_subscriber: "%{email} ontvangt niet langer e-mails van %{name}. Deze actie kan niet ongedaan worden gemaakt."
+          consent: Abonnees hebben alleen toestemming gegeven om berichten via e-mail te ontvangen. Gebruik deze lijst niet voor andere doeleinden.
+          date: Datum van abonneren
+          disable_feature: Functionaliteit uitschakelen
+          disabled: De functionaliteit is uitgeschakeld en e-mails worden niet meer naar deze lijst verzonden.
+          email: E-mailadres
+          empty:
+            hint: Niemand heeft zich nog op dit account geabonneerd.
+            no_subscribers_yet: Nog geen abonnees
+          enable_feature: Functionaliteit inschakelen
+          no_access_html: Dit account is niet langer gemachtigd om de functionaliteit in te schakelen. Wijzig dit onder 'Beheer > <a href="%{roles_path}">rollen</a>'.
+          title: E-mailnieuwsbrieven van %{name}
+          view_account: Account bekijken
         status: Status
         subscribers: Abonnees
         title: Mailinglijsten
@@ -716,6 +730,8 @@ nl:
       new:
         title: Nieuwe IP-regel aanmaken
       no_ip_block_selected: Er zijn geen IP-regels veranderd, omdat er geen een was geselecteerd
+      reset: Opnieuw
+      search: Zoeken
       title: IP-regels
     relationships:
       title: Volgrelaties van %{acct}
@@ -1501,6 +1517,7 @@ nl:
       your_appeal_rejected: Jouw bezwaar is afgewezen
   edit_profile:
     other: Overige
+    privacy_redesign_body: Je kunt nu direct op je profiel de keuze maken om jouw volgers en wie jij volgt wel of niet te tonen.
     redesign_body: Het bewerken van je profiel is nu toegankelijk vanaf de profielpagina.
     redesign_button: Ga erheen
     redesign_title: Er is een nieuwe manier om je profiel te bewerken
@@ -1533,7 +1550,9 @@ nl:
         success_html: Je ontvangt nu e-mails wanneer %{name} nieuwe berichten publiceert. Voeg %{sender} toe aan je contactpersonen, zodat deze berichten niet in je spam terechtkomen.
         title: Je bent ingeschreven
         unsubscribe: Afmelden
+    disabled: Uitgeschakeld
     inactive: Inactief
+    no_access: Geen toegang
     status: Status
     subscribers: Abonnees
   emoji_styles:
@@ -1649,7 +1668,9 @@ nl:
       empty: Leeg CSV-bestand
       incompatible_type: Incompatibel met het geselecteerde importtype
       invalid_csv_file: 'Ongeldig CSV-bestand. Fout: %{error}'
+      invalid_json_file: 'Ongeldig JSON-bestand. Foutmelding: %{error}'
       over_rows_processing_limit: bevat meer dan %{count} rijen
+      status_not_found_warning: Sommige van je filters verbergen specifieke berichten die niet bekend zijn bij deze server. Deze berichten worden niet automatisch gefilterd wanneer ze later alsnog door de server worden ontdekt.
       too_large: Bestand is te groot
     failures: Fouten
     imported: Geïmporteerd
@@ -1666,6 +1687,9 @@ nl:
       bookmarks_html:
         one: Je staat op het punt om vanuit <strong>%{filename}</strong> je <strong>bladwijzers te vervangen</strong> met in het totaal <strong>%{count} bericht</strong>.
         other: Je staat op het punt om vanuit <strong>%{filename}</strong> je <strong>bladwijzers te vervangen</strong> met in het totaal <strong>%{count} berichten</strong>.
+      custom_filters_html:
+        one: Je staat op het punt om met de inhoud van <strong>%{filename}</strong> je <strong>filters te vervangen</strong>. In totaal wordt <strong>%{count} filter</strong> aan de nieuwe filters toegevoegd.
+        other: Je staat op het punt om met de inhoud van <strong>%{filename}</strong> je <strong>filters te vervangen</strong>. In totaal worden <strong>%{count} filters</strong> aan de nieuwe filters toegevoegd.
       domain_blocking_html:
         one: Je staat op het punt om vanuit <strong>%{filename}</strong> je <strong>lijst met geblokkeerde domeinen te vervangen</strong> met in het totaal <strong>%{count} domein</strong>.
         other: Je staat op het punt om vanuit <strong>%{filename}</strong> je <strong>lijst met geblokkeerde domeinen te vervangen</strong> met in het totaal <strong>%{count} domeinen</strong>.
@@ -1685,6 +1709,9 @@ nl:
       bookmarks_html:
         one: Je staat op het punt om vanuit <strong>%{filename}</strong> in het totaal <strong>%{count} bericht</strong> aan je <strong>bladwijzers</strong> toe te voegen.
         other: Je staat op het punt om vanuit <strong>%{filename}</strong> in het totaal <strong>%{count} berichten</strong> aan je <strong>bladwijzers</strong> toe te voegen.
+      custom_filters_html:
+        one: Je staat op het punt om vanuit <strong>%{filename}</strong> in totaal <strong>%{count} filter</strong> aan je <strong>filters</strong> toe te voegen.
+        other: Je staat op het punt om vanuit <strong>%{filename}</strong> in het totaal <strong>%{count} filters</strong> aan je <strong>filters</strong> toe te voegen.
       domain_blocking_html:
         one: Je staat op het punt om vanuit <strong>%{filename}</strong> in het totaal <strong>%{count} domein te blokkeren</strong>.
         other: Je staat op het punt om vanuit <strong>%{filename}</strong> in het totaal <strong>%{count} domeinen te blokkeren</strong>.
@@ -1721,6 +1748,7 @@ nl:
     types:
       blocking: Geblokkeerde accounts
       bookmarks: Bladwijzers
+      custom_filters: Filters
       domain_blocking: Geblokkeerde domeinen
       following: Gevolgde accounts
       lists: Lijsten

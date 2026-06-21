@@ -4,6 +4,7 @@ es:
     about_mastodon_html: 'La red social del futuro: ¡Sin anuncios, sin vigilancia corporativa, diseño ético, y descentralización! ¡Sé dueño de tu información con Mastodon!'
     contact_missing: No establecido
     contact_unavailable: N/D
+    default_thumbnail_description: Dos dibujos de mastodontes sonrientes (que se parecen a elefantes) se lanzan un avión de papel el uno al otro. A su alrededor, un cielo azul claro y planetas flotando con árboles y más mastodontes en ellos.
     hosted_on: Mastodon alojado en %{domain}
     title: Acerca de
   accounts:
@@ -500,13 +501,28 @@ es:
     email_subscriptions:
       accounts:
         account: Cuenta
-        active: Activa
         empty:
           hint: Aún no hay cuentas con suscriptores.
           no_lists_yet: Aún no hay listas
-        inactive: Inactiva
         last_email: Último correo electrónico
         lead: Las cuentas que han habilitado la función y tienen suscriptores se mostrarán a continuación.
+        show:
+          confirm_disable_feature: |-
+            ¿Desactivar boletines de correo electrónico de %{name}? No se enviarán actualizaciones por correo electrónico para esta cuenta. El usuario aún podrá reactivar esta función en los ajustes de su cuenta.
+            Para eliminar el acceso a esta función permanentemente, modifica los permisos de la cuenta en Roles.
+          confirm_remove_subscriber: "%{email} no recibirá más correos electrónicos de %{name}. Esta acción no se puede deshacer."
+          consent: Los subscriptores solo han autorizado recibir publicaciones por email. No utilices esta lista para otros propósitos.
+          date: Fecha de suscripción
+          disable_feature: Desactivar función
+          disabled: La función ha sido desactivada y ya no se enviarán correos electrónicos a esta lista.
+          email: Dirección de correo electrónico
+          empty:
+            hint: Nadie se ha suscrito a esta cuenta aún.
+            no_subscribers_yet: Sin suscriptores aún
+          enable_feature: Activar función
+          no_access_html: Esta cuenta ya no tiene los permisos necesarios para activar la función. Modifica esto en <a href="%{roles_path}">Roles</a>.
+          title: Boletines de correo electrónico de %{name}
+          view_account: Ver cuenta
         status: Estado
         subscribers: Suscriptores
         title: Listas de correo
@@ -716,6 +732,8 @@ es:
       new:
         title: Crear nueva regla IP
       no_ip_block_selected: No se han cambiado reglas IP, ya que no se ha seleccionado ninguna
+      reset: Restablecer
+      search: Buscar
       title: Reglas IP
     relationships:
       title: Relaciones de %{acct}
@@ -1501,6 +1519,7 @@ es:
       your_appeal_rejected: Tu apelación ha sido rechazada
   edit_profile:
     other: Otros
+    privacy_redesign_body: La opción de mostrar a quién sigues y tus seguidores ahora está directamente en tu perfil.
     redesign_body: Ahora puedes acceder a la edición del perfil desde la propia página de perfil.
     redesign_button: Llévame allí
     redesign_title: Hay una nueva experiencia de edición de perfil
@@ -1533,7 +1552,9 @@ es:
         success_html: Ahora empezarás a recibir correos electrónicos cuando %{name} publique algo nuevo. Añade %{sender} a tus contactos para que estas publicaciones no terminen en tu carpeta de Spam.
         title: Estás suscrito
         unsubscribe: Cancelar suscripición
+    disabled: Desactivado
     inactive: Inactiva
+    no_access: Sin acceso
     status: Estado
     subscribers: Suscriptores
   emoji_styles:
@@ -1649,7 +1670,9 @@ es:
       empty: Archivo CSV vacío
       incompatible_type: Incompatible con el tipo de importación seleccionado
       invalid_csv_file: 'Archivo CSV no válido. Error: %{error}'
+      invalid_json_file: 'Fichero JSON no válido. Error: %{error}'
       over_rows_processing_limit: contiene más de %{count} filas
+      status_not_found_warning: Algunos de tus filtros ocultan publicaciones específicas que no son conocidas por este servidor. Estas publicaciones no se filtrarán automáticamente si más tarde son descubiertas por el servidor.
       too_large: El archivo es demasiado grande
     failures: Fallos
     imported: Importado
@@ -1685,6 +1708,9 @@ es:
       bookmarks_html:
         one: Está a punto de añadir <strong>%{count} publicación</strong> proveniente de <strong>%{filename}</strong> a tus <strong>marcadores</strong>.
         other: Está a punto de añadir hasta <strong>%{count} publicaciones</strong> provenientes de <strong>%{filename}</strong> a tus <strong>marcadores</strong>.
+      custom_filters_html:
+        one: Estás a punto de añadir hasta <strong>%{count} filtro</strong> desde <strong>%{filename}</strong> a tus <strong>filtros</strong>.
+        other: Estás a punto de añadir hasta <strong>%{count} filtros</strong> desde <strong>%{filename}</strong> a tus <strong>filtros</strong>.
       domain_blocking_html:
         one: Estás a punto de <strong>bloquear</strong> <strong>%{count} dominio</strong> proveniente de <strong>%{filename}</strong>.
         other: Estás a punto de <strong>bloquear</strong> hasta <strong>%{count} dominios</strong> provenientes de <strong>%{filename}</strong>.
@@ -1721,6 +1747,7 @@ es:
     types:
       blocking: Lista de bloqueados
       bookmarks: Marcadores
+      custom_filters: Filtros
       domain_blocking: Lista de dominios bloqueados
       following: Lista de seguidos
       lists: Listas
