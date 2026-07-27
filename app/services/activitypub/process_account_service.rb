@@ -16,30 +16,43 @@ class ActivityPub::ProcessAccountService < BaseService
 
   VALID_URI_SCHEMES = %w(http https).freeze
 
-  # Should be called with confirmed valid JSON
-  # and WebFinger-resolved username and domain
-  def call(username, domain, json, options = {})
-    return if json['inbox'].blank? || unsupported_uri_scheme?(json['id']) || domain_not_allowed?(domain)
+  class Error < StandardError; end
 
-    @options     = options
+  # It is the caller's responsibility to check that `json` is indeed from the origin matching `json['id']`
+  def call(json, request_id: nil, only_key: false, signed_with_known_key: false, account: nil, suppress_errors: true)
+    raise Error, "Actor #{json['id']} has unsupported URI scheme" if unsupported_uri_scheme?(json['id'])
+    raise Error, "Actor #{json['id']} has no inbox" if json['inbox'].blank?
+    raise Error, "Actor #{json['id']} does not correspond to provided Account (#{account.uri})" if account.present? && account.uri != json['id']
+    return if domain_not_allowed?(json['id']) || account&.local?
+
     @json        = json
     @uri         = @json['id']
-    @username    = username
-    @domain      = TagManager.instance.normalize_domain(domain)
+    @account     = account
+    @only_key    = only_key
+    @webfinger_verified = false
+
+    extract_username_and_domain!
+
+    @domain = TagManager.instance.normalize_domain(@domain)
+    return if @account.nil? && domain_not_allowed?(@domain)
+
     @collections = {}
 
     # The key does not need to be unguessable, it just needs to be somewhat unique
-    @options[:request_id] ||= "#{Time.now.utc.to_i}-#{username}@#{domain}"
+    @request_id = request_id || "#{Time.now.utc.to_i}-#{@username}@#{@domain}"
 
     with_redis_lock("process_account:#{@uri}") do
-      if @options[:only_key]
-        # `only_key` is used to update an existing account known by its `uri`.
-        # Lookup by handle and new account creation do not make sense in this case.
-        @account = Account.remote.find_by(uri: @uri)
-        return if @account.nil?
-      else
-        @account = Account.find_remote(@username, @domain)
-      end
+      # Now that Mastodon supports renaming accounts, assume URI is the most
+      # stable/trustworthy identifier.
+      @account ||= Account.remote.find_by(uri: @uri) # rubocop:disable Rails/FindByOrAssignmentMemoization
+
+      # `only_key` is used to update an existing account known by its `uri`.
+      # Lookup by handle and new account creation do not make sense in this case.
+      return if @account.nil? && @only_key
+
+      # Allow accounts to change URIs if they keep the same handle
+      # (typically, losing database or switching ActivityPub server implementation)
+      @account ||= Account.find_remote(@username, @domain) if @webfinger_verified
 
       @old_public_keys = @account.present? ? (@account.keypairs.pluck(:public_key) + [@account.public_key.presence].compact) : []
       @old_protocol = @account&.protocol
@@ -49,27 +62,35 @@ class ActivityPub::ProcessAccountService < BaseService
         with_redis do |redis|
           return nil if redis.pfcount("unique_subdomains_for:#{PublicSuffix.domain(@domain, ignore_private: true)}") >= SUBDOMAINS_RATELIMIT
 
-          discoveries = redis.incr("discovery_per_request:#{@options[:request_id]}")
-          redis.expire("discovery_per_request:#{@options[:request_id]}", 5.minutes.seconds)
+          discoveries = redis.incr("discovery_per_request:#{@request_id}")
+          redis.expire("discovery_per_request:#{@request_id}", 5.minutes.seconds)
           return nil if discoveries > DISCOVERIES_PER_REQUEST
         end
 
         create_account
+      elsif @webfinger_verified
+        # The user has potentially changed handle, update it
+        rename_account!
       end
 
       update_account
       process_tags
 
-      process_duplicate_accounts! if @options[:verified_webfinger]
+      # NOTE: while this case is unlikely due to the `rename_account!` above,
+      # we do not have a uniqueness constraint on URI, so this still needs to run
+      process_duplicate_accounts! if @webfinger_verified
     end
 
     after_protocol_change! if protocol_changed?
-    after_key_change! if all_public_keys_changed? && !@options[:signed_with_known_key]
+
+    # TODO: extend this to an identity change, and do this on `uri` change as well
+    after_key_change! if all_public_keys_changed? && !signed_with_known_key
+
     # TODO: maybe tie tombstones to specific keys? i.e. we don't need to keep tombstones if all keys changed
     clear_tombstones! if all_public_keys_changed?
     after_suspension_change! if suspension_changed?
 
-    unless @options[:only_key] || @account.suspended?
+    unless @only_key || @account.suspended?
       check_featured_collection! if @json['featured'].present?
       check_featured_tags_collection! if @json['featuredTags'].present?
       check_featured_collections_collection! if @json['featuredCollections'].present?
@@ -77,13 +98,88 @@ class ActivityPub::ProcessAccountService < BaseService
     end
 
     @account
-  rescue JSON::ParserError
-    nil
+  rescue JSON::ParserError => e
+    raise Error, "Error parsing JSON for actor #{json['id']}: #{e}" unless suppress_errors
+  rescue Error
+    raise unless suppress_errors
   end
 
   private
 
+  def rename_account!
+    raise 'Attempting to rename an account without having verified its webfinger handle' unless @webfinger_verified
+
+    begin
+      # This will be a no-op if the username and domain haven't changed
+      @account.update!(username: @username, domain: @domain)
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique
+      # This account (identified by ActivityPub `id`) is being renamed to a handle that was
+      # previously known by this Mastodon server as a different account… ignore the renaming for now
+
+      # TODO: better handle this scenario, by e.g. renaming the user to something unique
+      # and scheduling re-discovery
+
+      @account.restore_attributes([:username, :domain])
+    end
+  end
+
+  def extract_username_and_domain!
+    # FEP-2c59 defines a `webfinger` attribute that makes things more explicit and spares an extra request in some cases.
+    # It supersedes `preferredUsername`.
+    @username, @domain = split_acct(@json['webfinger']) if @json['webfinger'].present? && @json['webfinger'].is_a?(String)
+
+    if @username.blank? || @domain.blank?
+      raise Error, "Actor #{@uri} has no `preferredUsername`, and either a bogus or missing `webfinger`, which is a requirement for Mastodon compatibility" if @json['preferredUsername'].blank?
+
+      Rails.logger.debug { "Actor #{@uri} has an invalid `webfinger` value, falling back to `preferredUsername`" } if @json['webfinger'].present?
+      @username = @json['preferredUsername']
+      @domain   = Addressable::URI.parse(@uri).normalized_host
+    end
+
+    if @account.present? && @username == @account.username && @domain == @account.domain
+      # This is an existing account whose handle has not changed, skip webfinger
+      @webfinger_verified = true
+    else
+      # This is either a new account, or an account whose handle has changed
+      check_webfinger! unless @only_key
+    end
+  end
+
+  def check_webfinger!
+    webfinger = Webfinger.new("acct:#{@username}@#{@domain}").perform
+    confirmed_username, confirmed_domain = split_acct(webfinger.subject)
+
+    raise Error, "Unsupported username format in webfinger response for #{@username}@#{@domain}" unless Account::USERNAME_ONLY_RE.match?(confirmed_username)
+
+    if @username.casecmp(confirmed_username).zero? && @domain.casecmp(confirmed_domain).zero?
+      raise Error, "Webfinger response for #{@username}@#{@domain} does not loop back to #{@uri}" if webfinger.self_link_href != @uri
+
+      @webfinger_verified = true
+
+      return
+    end
+
+    webfinger = Webfinger.new("acct:#{confirmed_username}@#{confirmed_domain}").perform
+    @username, @domain = split_acct(webfinger.subject)
+
+    raise Webfinger::RedirectError, "Too many webfinger redirects for URI #{@uri} (stopped at #{@username}@#{@domain})" unless confirmed_username.casecmp(@username).zero? && confirmed_domain.casecmp(@domain).zero?
+    raise Error, "Webfinger response for #{@username}@#{@domain} does not loop back to #{@uri}" if webfinger.self_link_href != @uri
+    raise Error, "Unsupported username format in webfinger response for #{@username}@#{@domain}" unless Account::USERNAME_ONLY_RE.match?(@username)
+
+    @webfinger_verified = true
+  rescue Webfinger::RedirectError => e
+    raise Error, e.message
+  rescue Webfinger::Error => e
+    raise Error, "Webfinger error when resolving #{@username}@#{@domain}: #{e.message}"
+  end
+
+  def split_acct(acct)
+    acct.delete_prefix('acct:').split('@')
+  end
+
   def create_account
+    raise 'Attempting to create an account without having verified its webfinger handle' unless @webfinger_verified
+
     @account = Account.new
     @account.protocol          = :activitypub
     @account.username          = @username
@@ -99,14 +195,17 @@ class ActivityPub::ProcessAccountService < BaseService
   end
 
   def update_account
-    @account.last_webfingered_at = Time.now.utc unless @options[:only_key]
+    # NOTE: `last_webfingered_at` is a misnomer, it is meant to record when
+    # the profile has last been fully updated, which was historically tied to webfinger queries.
+    # Hence why we use `@only_key` and not `@webfinger_verified`
+    @account.last_webfingered_at = Time.now.utc unless @only_key
     @account.protocol            = :activitypub
 
     set_suspension!
     set_immediate_protocol_attributes!
     set_fetchable_key! unless @account.suspended? && @account.suspension_origin_local?
     set_immediate_attributes! unless @account.suspended?
-    set_fetchable_attributes! unless @options[:only_key] || @account.suspended?
+    set_fetchable_attributes! unless @only_key || @account.suspended?
 
     @account.save_with_optional_media!
   end
@@ -214,7 +313,7 @@ class ActivityPub::ProcessAccountService < BaseService
   end
 
   def check_featured_collection!
-    ActivityPub::SynchronizeFeaturedCollectionWorker.perform_async(@account.id, { 'hashtag' => @json['featuredTags'].blank?, 'collection' => @json['featured'], 'request_id' => @options[:request_id] })
+    ActivityPub::SynchronizeFeaturedCollectionWorker.perform_async(@account.id, { 'hashtag' => @json['featuredTags'].blank?, 'collection' => @json['featured'], 'request_id' => @request_id })
   end
 
   def check_featured_tags_collection!
@@ -222,7 +321,7 @@ class ActivityPub::ProcessAccountService < BaseService
   end
 
   def check_featured_collections_collection!
-    ActivityPub::SynchronizeFeaturedCollectionsCollectionWorker.perform_async(@account.id, @options[:request_id])
+    ActivityPub::SynchronizeFeaturedCollectionsCollectionWorker.perform_async(@account.id, @request_id)
   end
 
   def check_links!
@@ -271,7 +370,7 @@ class ActivityPub::ProcessAccountService < BaseService
   end
 
   def public_keys
-    @public_keys ||= fep_521a_public_keys.presence || legacy_public_keys
+    @public_keys ||= (fep_521a_public_keys + legacy_public_keys).uniq { |key| key[:uri] }
   end
 
   def legacy_public_keys
@@ -305,8 +404,6 @@ class ActivityPub::ProcessAccountService < BaseService
   end
 
   def fep_521a_public_keys
-    return if @json['assertionMethod'].blank?
-
     as_array(@json['assertionMethod']).take(MAX_PUBLIC_KEYS).filter_map do |value|
       next if value.nil?
 
@@ -336,21 +433,8 @@ class ActivityPub::ProcessAccountService < BaseService
   end
 
   def key_from_multikey(value)
-    tag, key = Multibase.decode_multicodec(value)
-
-    case tag
-    when :'rsa-pub'
-      [:rsa, OpenSSL::PKey::RSA.new(key).to_pem]
-    when :'ed25519-pub'
-      asn1 = OpenSSL::ASN1::Sequence(
-        [
-          OpenSSL::ASN1::Sequence([OpenSSL::ASN1::ObjectId('ED25519')]),
-          OpenSSL::ASN1::BitString(key),
-        ]
-      )
-      [:ed25519, OpenSSL::PKey.read(asn1.to_der).public_to_pem]
-    end
-  rescue ArgumentError
+    Multibase.decode_key_to_pem(value)
+  rescue Multibase::Error
     nil
   end
 
@@ -418,7 +502,7 @@ class ActivityPub::ProcessAccountService < BaseService
 
   def moved_account
     account   = ActivityPub::TagManager.instance.uri_to_resource(@json['movedTo'], Account)
-    account ||= ActivityPub::FetchRemoteAccountService.new.call(@json['movedTo'], break_on_redirect: true, request_id: @options[:request_id])
+    account ||= ActivityPub::FetchRemoteAccountService.new.call(@json['movedTo'], break_on_redirect: true, request_id: @request_id)
     account
   end
 

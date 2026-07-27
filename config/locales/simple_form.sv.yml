@@ -258,7 +258,7 @@ sv:
         setting_display_media_hide_all: Dölj alla
         setting_display_media_show_all: Visa alla
         setting_emoji_style: Emoji-stil
-        setting_expand_spoilers: Utöka alltid tutningar markerade med innehållsvarningar
+        setting_expand_spoilers: Utöka alltid inlägg markerade med innehållsvarningar
         setting_hide_network: Göm ditt nätverk
         setting_missing_alt_text_modal: Varna mig innan jag gör mediainlägg utan alt-text
         setting_quick_boosting: Aktivera snabb boostning
@@ -345,6 +345,7 @@ sv:
       notification_emails:
         appeal: Någon överklagar ett moderatorbeslut
         digest: Skicka e-postsammandrag
+        end_of_support: Stödet för den nuvarande Mastodon-versionen kommer snart att upphöra
         favourite: Någon favoritmarkerar ditt inlägg
         follow: Någon följt dig
         follow_request: Någon begärt att följa dig

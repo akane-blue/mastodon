@@ -73,7 +73,7 @@ export const RedirectToMobileComposeIfNeeded: React.FC = () => {
 
   useLayoutEffect(() => {
     if (shouldRedirect) {
-      history.push('/publish');
+      history.push('/publish', { focusTarget: false });
     }
   }, [history, shouldRedirect]);
 
