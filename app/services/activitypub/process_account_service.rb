@@ -57,6 +57,7 @@ class ActivityPub::ProcessAccountService < BaseService
       @old_public_keys = @account.present? ? (@account.keypairs.pluck(:public_key) + [@account.public_key.presence].compact) : []
       @old_protocol = @account&.protocol
       @suspension_changed = false
+      @uri_changed = @account.present? && @account.uri != @uri
 
       if @account.nil?
         with_redis do |redis|
@@ -82,9 +83,7 @@ class ActivityPub::ProcessAccountService < BaseService
     end
 
     after_protocol_change! if protocol_changed?
-
-    # TODO: extend this to an identity change, and do this on `uri` change as well
-    after_key_change! if all_public_keys_changed? && !signed_with_known_key
+    after_identity_change! if @uri_changed || (!signed_with_known_key && all_public_keys_changed?)
 
     # TODO: maybe tie tombstones to specific keys? i.e. we don't need to keep tombstones if all keys changed
     clear_tombstones! if all_public_keys_changed?
@@ -114,13 +113,21 @@ class ActivityPub::ProcessAccountService < BaseService
       @account.update!(username: @username, domain: @domain)
     rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique
       # This account (identified by ActivityPub `id`) is being renamed to a handle that was
-      # previously known by this Mastodon server as a different account… ignore the renaming for now
+      # previously known by this Mastodon server as a different account…
 
-      # TODO: better handle this scenario, by e.g. renaming the user to something unique
-      # and scheduling re-discovery
+      rename_conflicting_account!
 
-      @account.restore_attributes([:username, :domain])
+      retry
     end
+  end
+
+  def rename_conflicting_account!
+    conflicting_account = Account.find_remote(@username, @domain)
+    return if conflicting_account.nil? || conflicting_account.local? || conflicting_account.uri == @account.uri
+
+    conflicting_account.invalidate_username!
+
+    AccountRefreshWorker.perform_async(conflicting_account.id, { 'request_id' => @request_id })
   end
 
   def extract_username_and_domain!
@@ -300,7 +307,7 @@ class ActivityPub::ProcessAccountService < BaseService
     ActivityPub::PostUpgradeWorker.perform_async(@account.domain)
   end
 
-  def after_key_change!
+  def after_identity_change!
     RefollowWorker.perform_async(@account.id)
   end
 
