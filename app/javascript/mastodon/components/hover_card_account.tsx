@@ -25,8 +25,8 @@ import Permalink from './permalink';
 
 export const HoverCardAccount = forwardRef<
   HTMLDivElement,
-  { accountId?: string }
->(({ accountId }, ref) => {
+  { accountId?: string; reference?: string }
+>(({ accountId, reference }, ref) => {
   const dispatch = useAppDispatch();
 
   const account = useAppSelector((state) =>
@@ -171,7 +171,10 @@ export const HoverCardAccount = forwardRef<
                 )}
               </div>
 
-              <FollowButton accountId={accountId} />
+              <FollowButton
+                accountId={accountId}
+                reference={reference ?? 'hover_card'}
+              />
             </>
           )}
         </>

@@ -3,10 +3,12 @@ import { useCallback, useRef } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
+import classNames from 'classnames';
+
 import {
   ImageSquareIcon,
-  SmileyIcon,
   ChartBarHorizontalIcon,
+  WarningCircleIcon,
 } from '@phosphor-icons/react';
 
 import { addPoll, uploadCompose } from '@/mastodon/actions/compose';
@@ -17,6 +19,8 @@ import {
   useAppSelector,
 } from '@/mastodon/store';
 
+import type { OnEmojiPick } from './emoji';
+import { ComposeEmojiButton } from './emoji';
 import {
   selectComposeAttachments,
   selectComposeCanSubmit,
@@ -26,7 +30,9 @@ import {
 } from './selectors';
 import classes from './styles.module.scss';
 
-export const ComposeFooter: React.FC = () => {
+export const ComposeFooter: React.FC<{ onEmojiPick: OnEmojiPick }> = ({
+  onEmojiPick,
+}) => {
   const type = useAppSelector(selectComposeType);
   const { current, max } = useAppSelector(selectComposeCharsCount);
   const { hasPoll, quotedStatusId } = useAppSelector(
@@ -47,12 +53,7 @@ export const ComposeFooter: React.FC = () => {
     <footer className={classes.footer}>
       <ComposeUploadButton disabled={hasQuote} />
 
-      <IconButton size='sm' icon={SmileyIcon}>
-        <FormattedMessage
-          id='emoji_button.label'
-          defaultMessage='Insert emoji'
-        />
-      </IconButton>
+      <ComposeEmojiButton onPick={onEmojiPick} />
 
       <IconButton
         size='sm'
@@ -66,30 +67,37 @@ export const ComposeFooter: React.FC = () => {
         />
       </IconButton>
 
-      <span className={classes.counter}>
-        <FormattedMessage
-          id='compose.counter'
-          defaultMessage='{current, number}/{max, number}'
-          values={{ current, max }}
-        />
-      </span>
-
-      <Button
-        color='neutral'
-        type='submit'
-        disabled={!canSubmit}
-        loading={isSubmitting}
-      >
-        {type !== 'message' && (
-          <FormattedMessage id='compose.publish' defaultMessage='Publish' />
-        )}
-        {type === 'message' && (
+      <div className={classes.flexGrowWrap}>
+        <span
+          className={classNames(
+            classes.counter,
+            current > max && classes.counterError,
+          )}
+        >
+          {current > max && <WarningCircleIcon weight='fill' />}
           <FormattedMessage
-            id='compose.message.publish'
-            defaultMessage='Send'
+            id='compose.counter'
+            defaultMessage='{current, number}/{max, number}'
+            values={{ current, max }}
           />
-        )}
-      </Button>
+        </span>
+
+        <Button
+          variant='solid'
+          type='submit'
+          disabled={!canSubmit}
+          loading={isSubmitting}
+        >
+          {type !== 'message' && type !== 'replyPrivate' ? (
+            <FormattedMessage id='compose.publish' defaultMessage='Publish' />
+          ) : (
+            <FormattedMessage
+              id='compose.message.publish'
+              defaultMessage='Send'
+            />
+          )}
+        </Button>
+      </div>
     </footer>
   );
 };
@@ -109,7 +117,7 @@ const selectUpload = createAppSelector(
     (state) => state.compose.get('resetFileKey') as number,
   ],
   (
-    fileTypes,
+    fileTypesList,
     isUploading,
     attachments,
     pendingAttachments,
@@ -120,8 +128,14 @@ const selectUpload = createAppSelector(
       (attachment) =>
         attachment.type === 'audio' || attachment.type === 'video',
     );
+    const hasImages = attachments.some(
+      (attachment) => attachment.type === 'image' || attachment.type === 'gifv',
+    );
+    const fileTypes = (fileTypesList?.toArray() ?? []).filter(
+      (fileType) => !hasImages || fileType.startsWith('image/'),
+    );
     return {
-      accepted: (fileTypes?.toArray() ?? []).join(','),
+      accepted: fileTypes.join(','),
       loading: isUploading || pendingAttachments > 0,
       disabled:
         attachments.length + pendingAttachments >= maxAttachments ||

@@ -1,117 +1,112 @@
 import type React from 'react';
-import { useCallback, useEffect, useId, useRef } from 'react';
+import { useCallback, useEffect, useId } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { LockSimpleOpenIcon } from '@phosphor-icons/react';
-import type { TextareaAutosizeProps } from 'react-textarea-autosize';
+import classNames from 'classnames';
+
+import { FlagIcon, LockSimpleOpenIcon } from '@phosphor-icons/react';
 
 import {
-  changeCompose,
   changeComposeSpoilerness,
   changeComposeSpoilerText,
-  clearComposeSuggestions,
-  fetchComposeSuggestions,
-  selectComposeSuggestion,
+  insertEmojiCompose,
 } from '@/mastodon/actions/compose';
+import { ToggleButton } from '@/mastodon/components/button/redesign';
+import { TextInputField } from '@/mastodon/components/form_fields/redesign';
+import { Icon, useIconWeight } from '@/mastodon/components/icon';
 import {
-  processPasteOrDrop,
-  submitCompose,
-} from '@/mastodon/actions/compose_typed';
-import AutosuggestTextarea from '@/mastodon/components/autosuggest_textarea';
-import {
-  ToggleField,
-  TextInputField,
-} from '@/mastodon/components/form_fields/redesign';
-import { Icon } from '@/mastodon/components/icon';
+  getComposerTextarea,
+  requestComposerFocus,
+  submitComposer,
+} from '@/mastodon/reducers/slices/composer';
 import { useAppDispatch, useAppSelector } from '@/mastodon/store';
 
 import { ComposeAttachments } from './attachments';
+import type { OnEmojiPick } from './emoji';
 import { ComposeFooter } from './footer';
 import { ComposeFormHeader } from './header';
+import { ComposeHints } from './hints';
 import { LanguageButton } from './language';
-import { selectComposeCanSubmit, selectComposeState } from './selectors';
+import { ComposeReply } from './reply';
+import {
+  selectComposeCanSubmit,
+  selectComposeSensitive,
+  selectComposeType,
+} from './selectors';
 import classes from './styles.module.scss';
+import { ComposeTextarea } from './textarea';
 import { ComposeVisibility } from './visibility';
 
 const messages = defineMessages({
-  sensitive: {
-    id: 'compose.sensitive',
-    defaultMessage: 'Sensitive',
-  },
   sensitiveText: {
     id: 'compose.sensitive.text',
     defaultMessage: 'Sensitive content description',
-  },
-  placeholder: {
-    id: 'compose.post.placeholder',
-    defaultMessage: 'What would you like to say?',
-  },
-  messagePlaceholder: {
-    id: 'compose.message.placeholder',
-    defaultMessage: 'Add your recipients and your message.',
   },
 });
 
 interface RedesignComposeFormProps {
   autoFocus?: boolean;
+  className?: string;
+  noMinimize?: boolean;
   redirectOnSuccess?: boolean;
 }
 
-export const RedesignComposeForm: React.FC<RedesignComposeFormProps> = ({
-  autoFocus,
-  redirectOnSuccess,
-}) => {
-  const {
-    type,
-    sensitive,
-    sensitiveText,
-    suggestions,
-    text,
-    lang,
-    isSubmitting,
-  } = useAppSelector(selectComposeState);
+export const RedesignComposeForm: React.FC<
+  RedesignComposeFormProps & React.ComponentPropsWithRef<'form'>
+> = ({ autoFocus, className, noMinimize, redirectOnSuccess, ...props }) => {
+  const type = useAppSelector(selectComposeType);
+  const { sensitive, sensitiveText } = useAppSelector(selectComposeSensitive);
 
-  const {
-    textAreaRef,
-    onSensitiveChange,
-    onSensitiveTextChange,
-    onSubmit,
-    ...handlers
-  } = useHandlers(redirectOnSuccess);
+  const { onSensitiveChange, onSensitiveTextChange, onEmojiPick, onSubmit } =
+    useComposeHandlers(redirectOnSuccess);
 
   const intl = useIntl();
   const titleId = useId();
+
+  const sensitiveIcon = useIconWeight(FlagIcon, sensitive && 'fill');
+
   return (
     <form
+      {...props}
       role='dialog'
       onSubmit={onSubmit}
       aria-labelledby={titleId}
-      className={classes.root}
+      className={classNames(className, classes.root)}
     >
-      <ComposeFormHeader id={titleId} />
+      {(type === 'message' || type === 'replyPrivate') && (
+        <div className={classes.background} />
+      )}
+
+      <ComposeFormHeader id={titleId} noMinimize={noMinimize} />
+
+      <ComposeReply />
+
       <div className={classes.toolbar}>
-        {type !== 'message' && <ComposeVisibility />}
-
-        {type === 'message' && (
-          <p className={classes.toolbarMessage}>
-            <Icon id='lock-open' icon={LockSimpleOpenIcon} />
-            <FormattedMessage
-              id='compose.message.notice'
-              defaultMessage='Messages are not end-to-end encrypted'
-            />
-          </p>
-        )}
-
-        <ToggleField
-          label={intl.formatMessage(messages.sensitive)}
-          checked={sensitive}
-          onChange={onSensitiveChange}
-          size='sm'
-        />
+        <ComposeVisibility className={classes.flexGrowWrap} />
 
         <LanguageButton />
+
+        <ToggleButton
+          size='sm'
+          active={sensitive}
+          onClick={onSensitiveChange}
+          leadingIcon={sensitiveIcon}
+        >
+          <FormattedMessage id='compose.sensitive' defaultMessage='Sensitive' />
+        </ToggleButton>
       </div>
+
+      {type === 'message' && (
+        <p className={classes.toolbarMessage}>
+          <Icon id='lock-open' icon={LockSimpleOpenIcon} />
+          <FormattedMessage
+            id='compose.message.notice'
+            defaultMessage='Messages are not end-to-end encrypted'
+            description='Message refers to a direct message. For languages where this is confusing, "chat" or "direct message" can be used.'
+          />
+        </p>
+      )}
 
       {sensitive && (
         <TextInputField
@@ -124,59 +119,36 @@ export const RedesignComposeForm: React.FC<RedesignComposeFormProps> = ({
       )}
 
       <ComposeTextarea
-        ref={textAreaRef}
-        value={text}
-        className={classes.textarea}
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus={autoFocus}
-        lang={lang}
-        placeholder={intl.formatMessage(
-          type === 'message'
-            ? messages.messagePlaceholder
-            : messages.placeholder,
-        )}
-        disabled={isSubmitting}
-        suggestions={suggestions}
-        {...handlers}
-      />
+        onSubmit={onSubmit}
+      >
+        <ComposeAttachments className={classes.attachments} />
+      </ComposeTextarea>
 
-      <ComposeAttachments />
+      <ComposeHints />
 
-      <ComposeFooter />
+      <ComposeFooter onEmojiPick={onEmojiPick} />
     </form>
   );
 };
 
-type SuggestSelectedHandler = (
-  position: number,
-  token: string,
-  suggestion: unknown,
-) => void;
+const allowedAroundShortCode =
+  '><\u0085\u0020\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u2028\u2029\u0009\u000a\u000b\u000c\u000d';
 
-const ComposeTextarea = AutosuggestTextarea as React.ForwardRefExoticComponent<
-  {
-    suggestions: Immutable.List<unknown>;
-    onSuggestionSelected: SuggestSelectedHandler;
-    onSuggestionsClearRequested: () => void;
-    onSuggestionsFetchRequested: (token: string) => void;
-  } & TextareaAutosizeProps &
-    React.RefAttributes<HTMLTextAreaElement>
->;
-
-function useHandlers(redirectOnSuccess?: boolean) {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+function useComposeHandlers(redirectOnSuccess?: boolean) {
+  const text = useAppSelector((state) => state.compose.get('text') as string);
 
   const dispatch = useAppDispatch();
 
-  // Focus the sensitive
+  // Sensitive handling
   const isSensitive = useAppSelector((state) => !!state.compose.get('spoiler'));
   useEffect(() => {
     if (!isSensitive) {
-      textAreaRef.current?.focus();
+      dispatch(requestComposerFocus());
     }
-  }, [isSensitive]);
+  }, [isSensitive, dispatch]);
 
-  // Sensitive toggles
   const onSensitiveChange = useCallback(() => {
     dispatch(changeComposeSpoilerness());
   }, [dispatch]);
@@ -188,17 +160,29 @@ function useHandlers(redirectOnSuccess?: boolean) {
       [dispatch],
     );
 
-  // Submit status
+  const onEmojiPick: OnEmojiPick = useCallback(
+    (emoji) => {
+      const position = getComposerTextarea()?.selectionStart ?? 0;
+      const beforePosition = text[position - 1];
+      const needsSpace =
+        'custom' in emoji &&
+        !!emoji.custom &&
+        !!beforePosition &&
+        !allowedAroundShortCode.includes(beforePosition);
+      dispatch(insertEmojiCompose(position, emoji, needsSpace));
+    },
+    [dispatch, text],
+  );
 
+  // Submit status
   const canSubmit = useAppSelector(selectComposeCanSubmit);
   const onSubmit = useCallback(
     (event?: React.SubmitEvent) => {
-      if (!canSubmit) {
+      if (!canSubmit || event?.defaultPrevented) {
         return;
       }
       dispatch(
-        submitCompose({
-          textareaValue: textAreaRef.current?.value,
+        submitComposer({
           redirectOnSuccess,
         }),
       );
@@ -210,85 +194,10 @@ function useHandlers(redirectOnSuccess?: boolean) {
     [canSubmit, dispatch, redirectOnSuccess],
   );
 
-  // Text changes
-
-  const onChange: React.ChangeEventHandler<HTMLTextAreaElement> = useCallback(
-    (event) => {
-      dispatch(changeCompose(event.target.value));
-    },
-    [dispatch],
-  );
-  const onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> =
-    useCallback(
-      (event) => {
-        if (
-          event.key.toLowerCase() === 'enter' &&
-          (event.ctrlKey || event.metaKey)
-        ) {
-          onSubmit();
-          event.preventDefault();
-        }
-        blurOnEscape(event);
-      },
-      [onSubmit],
-    );
-  const onPaste: React.ClipboardEventHandler = useCallback(
-    (event) => {
-      if (event.clipboardData.files.length === 1) {
-        event.preventDefault();
-      }
-      dispatch(processPasteOrDrop(event.clipboardData));
-    },
-    [dispatch],
-  );
-  const onDrop: React.DragEventHandler = useCallback(
-    (event) => {
-      if (event.dataTransfer.files.length === 1) {
-        event.preventDefault();
-      }
-      dispatch(processPasteOrDrop(event.dataTransfer));
-    },
-    [dispatch],
-  );
-
-  // Suggestions
-
-  const onSuggestionsFetchRequested = useCallback(
-    (token: string) => {
-      dispatch(fetchComposeSuggestions(token));
-    },
-    [dispatch],
-  );
-  const onSuggestionsClearRequested = useCallback(() => {
-    dispatch(clearComposeSuggestions());
-  }, [dispatch]);
-  const onSuggestionSelected: SuggestSelectedHandler = useCallback(
-    (position, token, suggestion) => {
-      dispatch(selectComposeSuggestion(position, token, suggestion));
-    },
-    [dispatch],
-  );
-
   return {
-    textAreaRef,
     onSubmit,
-    onChange,
-    onKeyDown,
-    onPaste,
-    onDrop,
+    onEmojiPick,
     onSensitiveChange,
     onSensitiveTextChange,
-    onSuggestionsFetchRequested,
-    onSuggestionsClearRequested,
-    onSuggestionSelected,
   };
-}
-
-function blurOnEscape(event: React.KeyboardEvent<HTMLTextAreaElement>) {
-  if (
-    ['esc', 'escape'].includes(event.key.toLowerCase()) &&
-    event.target instanceof HTMLTextAreaElement
-  ) {
-    event.target.blur();
-  }
 }

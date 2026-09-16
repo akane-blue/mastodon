@@ -1,12 +1,13 @@
 import { length } from 'stringz';
 
 import type { ApiMediaAttachmentJSON } from '@/mastodon/api_types/media_attachments';
+import { immutableListToSuggestions } from '@/mastodon/components/autosuggest/utils';
 import type { StatusVisibility } from '@/mastodon/models/status';
+import type { ComposeType } from '@/mastodon/reducers/slices/composer';
 import { createAppSelector } from '@/mastodon/store';
+import { DAY, MINUTE } from '@/mastodon/utils/time';
 
 import { countableText } from '../util/counter';
-
-export type ComposeType = 'post' | 'message' | 'reply';
 
 export const selectComposePrivacy = createAppSelector(
   [
@@ -21,15 +22,20 @@ export const selectComposeType = createAppSelector(
     (state) => state.compose.get('in_reply_to') as string | null,
     selectComposePrivacy,
   ],
-  (inReplyToId, privacy) => {
-    let type: ComposeType = 'post';
-    if (inReplyToId) {
-      type = 'reply';
-    } else if (privacy === 'direct') {
-      type = 'message';
+  (inReplyToId, privacy): ComposeType => {
+    if (inReplyToId && privacy === 'direct') {
+      return 'replyPrivate';
     }
 
-    return type;
+    if (privacy === 'direct') {
+      return 'message';
+    }
+
+    if (inReplyToId) {
+      return 'reply';
+    }
+
+    return 'post';
   },
 );
 
@@ -45,38 +51,12 @@ export const selectComposeCharsCount = createAppSelector(
   (maxChars, text, spoilerText) => {
     const allText = (countableText(text) as string) + spoilerText;
     return {
-      text: allText,
-      current: length(allText),
+      text,
+      allText,
       max: maxChars ?? 500,
+      current: length(allText),
     };
   },
-);
-
-export const selectComposeCanSubmit = createAppSelector(
-  [
-    (state) => !!state.compose.get('is_submitting'),
-    (state) => !!state.compose.get('is_uploading'),
-    (state) => !!state.compose.get('is_changing_upload'),
-    selectComposeCharsCount,
-  ],
-  (isSubmitting, isUploading, isChangingUpload, { current, max }) =>
-    !isSubmitting && !isUploading && !isChangingUpload && current <= max,
-);
-
-export const selectComposeState = createAppSelector(
-  [(state) => state.compose, selectComposeType, selectComposeCanSubmit],
-  (compose, type, canSubmit) => ({
-    type,
-    text: compose.get('text') as string,
-    sensitive: !!compose.get('spoiler'),
-    sensitiveText: compose.get('spoiler_text') as string,
-    lang: compose.get('language') as string,
-    suggestions: compose.get(
-      'suggestions',
-    ) as unknown as Immutable.List<unknown>,
-    canSubmit,
-    isSubmitting: !!compose.get('is_submitting'),
-  }),
 );
 
 export const selectComposeHasAttachments = createAppSelector(
@@ -99,7 +79,120 @@ export const selectComposeHasAttachments = createAppSelector(
   },
 );
 
-export type ComposeAttachment = ApiMediaAttachmentJSON & {
+export const selectComposeCanSubmit = createAppSelector(
+  [
+    (state) => !!state.compose.get('is_submitting'),
+    (state) => !!state.compose.get('is_uploading'),
+    (state) => !!state.compose.get('is_changing_upload'),
+    selectComposeHasAttachments,
+    selectComposeCharsCount,
+  ],
+  (
+    isSubmitting,
+    isUploading,
+    isChangingUpload,
+    { hasAttachments, hasPoll, quotedStatusId },
+    { text, max },
+  ) =>
+    !isSubmitting &&
+    !isUploading &&
+    !isChangingUpload &&
+    text.trim().length <= max &&
+    (hasAttachments || hasPoll || quotedStatusId || text.trim().length > 0),
+);
+
+export const selectComposeMentions = createAppSelector(
+  [
+    (state) => state.accounts_map,
+    (state) => state.compose.get('text') as string,
+    (state) => state.server.server.item?.domain,
+  ],
+  (accountsMap, text, localDomain) => {
+    const accounts = new Set<string>();
+    const potentialAccounts = text.matchAll(
+      /(?<!:\/\/[^\s]+)@(?<username>[a-zA-Z0-9_.-]+)(?<domain>@[a-zA-Z0-9_.-]+)?/g,
+    );
+    for (const match of potentialAccounts) {
+      const { username, domain } = match.groups ?? {};
+      if (!username) {
+        continue;
+      }
+      const account =
+        domain && domain !== localDomain ? `${username}@${domain}` : username;
+      if (accountsMap[account]) {
+        accounts.add(accountsMap[account]);
+      }
+    }
+    return [...accounts];
+  },
+);
+
+export const selectComposeSensitive = createAppSelector(
+  [
+    (state) => !!state.compose.get('spoiler'),
+    (state) => state.compose.get('spoiler_text'),
+  ],
+  (sensitive, text) => ({
+    sensitive,
+    sensitiveText: typeof text === 'string' ? text : '',
+  }),
+);
+
+export const PER_LINE = 8;
+export const LINES = 2;
+const DEFAULTS = [
+  '+1',
+  'grinning',
+  'kissing_heart',
+  'heart_eyes',
+  'laughing',
+  'stuck_out_tongue_winking_eye',
+  'sweat_smile',
+  'joy',
+  'yum',
+  'disappointed',
+  'thinking_face',
+  'weary',
+  'sob',
+  'sunglasses',
+  'heart',
+  'ok_hand',
+];
+
+export const selectFrequentlyUsedEmoji = createAppSelector(
+  [
+    (state) =>
+      state.settings.get('frequentlyUsedEmojis') as
+        | Immutable.Map<string, number>
+        | undefined,
+  ],
+  (emojiCounters) => {
+    if (!emojiCounters) {
+      return DEFAULTS;
+    }
+    let emojis = emojiCounters
+      .toArray()
+      .sort((a, b) => a[1] - b[1])
+      .reverse()
+      .slice(0, PER_LINE * LINES)
+      .map(([emoji]) => emoji);
+
+    if (emojis.length < DEFAULTS.length) {
+      const uniqueDefaults = DEFAULTS.filter(
+        (emoji) => !emojis.includes(emoji),
+      );
+      emojis = emojis.concat(
+        uniqueDefaults.slice(0, DEFAULTS.length - emojis.length),
+      );
+    }
+
+    return emojis;
+  },
+);
+
+export type ComposeAttachment<
+  TAttachment extends ApiMediaAttachmentJSON = ApiMediaAttachmentJSON,
+> = TAttachment & {
   file?: File;
   unattached: boolean;
 };
@@ -119,20 +212,51 @@ export const selectComposeAttachments = createAppSelector(
   },
 );
 
+export const selectComposeAttachment = createAppSelector(
+  [selectComposeAttachments, (_, id?: string) => id],
+  (attachments, id) => {
+    if (!id) {
+      return null;
+    }
+    return attachments.find((attachment) => attachment.id === id) ?? null;
+  },
+);
+
 export const selectComposePoll = createAppSelector(
   [
     (state) =>
       state.compose.get('poll') as Immutable.Map<string, unknown> | null,
+    (state) => state.server.server.item?.configuration.polls,
   ],
-  (rawPoll) => {
+  (rawPoll, rawConfig) => {
+    const config = {
+      maxOptions: rawConfig?.max_options ?? 4,
+      maxCharacters: rawConfig?.max_characters_per_option ?? 50,
+      minExpiration: rawConfig?.min_expiration ?? 5 * MINUTE,
+      maxExpiration: rawConfig?.max_expiration ?? 30 * DAY,
+    };
     if (rawPoll === null) {
-      return null;
+      return {
+        options: [],
+        expiresIn: DAY,
+        multiple: false,
+        ...config,
+      };
     }
 
     return {
       options: (rawPoll.get('options') as Immutable.List<string>).toArray(),
       expiresIn: Number(rawPoll.get('expires_in')),
       multiple: !!rawPoll.get('multiple'),
+      ...config,
     };
   },
+);
+
+export const selectSuggestions = createAppSelector(
+  [
+    (state) =>
+      state.compose.get('suggestions') as unknown as Immutable.List<unknown>,
+  ],
+  (list) => immutableListToSuggestions(list),
 );

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { createContext, createElement, use, useCallback, useMemo } from 'react';
 
 import { defineMessages, useIntl } from 'react-intl';
 
@@ -11,13 +11,28 @@ import { openModal } from '@/mastodon/actions/modal';
 import { toggleStatusSpoilers } from '@/mastodon/actions/statuses';
 import { useExpandedStatus } from '@/mastodon/hooks/useStatus';
 import { useToggle } from '@/mastodon/hooks/useToggle';
-import type { ExpandedStatusShape } from '@/mastodon/models/status';
+import type {
+  AccountStatusShape,
+  ExpandedStatusShape,
+  StatusShape,
+} from '@/mastodon/models/status';
 import { selectStatusFilters } from '@/mastodon/selectors/filters';
 import { useAppSelector, useAppDispatch } from '@/mastodon/store';
+import type { OnElementHandler } from '@/mastodon/utils/html';
 
 import { FOCUS_TARGET } from '../navigation_focus_target';
 
+import { useElementHandledLink } from './handled_link';
 import type { StatusContextType } from './types';
+
+export const StatusContext = createContext<{
+  id?: string | null;
+  contextType?: StatusContextType;
+}>({});
+
+export function useStatusContext() {
+  return use(StatusContext);
+}
 
 const messages = defineMessages({
   quote_noun: {
@@ -35,11 +50,11 @@ const messages = defineMessages({
 export function useStatusHandlers({
   status,
   contextType,
-  onClick,
+  onOpen,
 }: {
   status?: ExpandedStatusShape;
   contextType?: StatusContextType;
-  onClick?: () => void;
+  onOpen?: () => void;
 }) {
   const matchedFilters = useAppSelector((state) =>
     selectStatusFilters(state, { contextType, statusId: status?.id }),
@@ -91,10 +106,10 @@ export function useStatusHandlers({
   // Navigation handlers
   const history = useHistory();
 
-  const onOpen = useCallback(
+  const onOpenCallback = useCallback(
     (newTab = false) => {
-      if (onClick || !status) {
-        onClick?.();
+      if (onOpen || !status) {
+        onOpen?.();
         return;
       }
 
@@ -108,7 +123,7 @@ export function useStatusHandlers({
         history.push(path, { focusTarget: FOCUS_TARGET.POST });
       }
     },
-    [history, onClick, status],
+    [history, onOpen, status],
   );
 
   const onOpenClick: React.MouseEventHandler = useCallback(
@@ -116,27 +131,15 @@ export function useStatusHandlers({
       event.preventDefault();
 
       if (event.button === 0 && !(event.ctrlKey || event.metaKey)) {
-        onOpen();
+        onOpenCallback();
       } else if (
         event.button === 1 ||
         (event.button === 0 && (event.ctrlKey || event.metaKey))
       ) {
-        onOpen(true);
+        onOpenCallback(true);
       }
     },
-    [onOpen],
-  );
-
-  const onHeaderClick: React.MouseEventHandler = useCallback(
-    (event) => {
-      // Only handle clicks on the empty space above the content
-      if (event.target !== event.currentTarget && event.detail >= 1) {
-        return;
-      }
-
-      onOpenClick(event);
-    },
-    [onOpenClick],
+    [onOpenCallback],
   );
 
   const acct = status?.account.acct;
@@ -186,9 +189,10 @@ export function useStatusHandlers({
       onOpenClick,
       onExpandedToggle,
       onFilterToggle,
-      onHeaderClick,
       onMention,
-      onOpen,
+      onOpen: () => {
+        onOpenCallback();
+      },
       onOpenMedia,
       onOpenProfile,
       onToggleHidden,
@@ -202,9 +206,8 @@ export function useStatusHandlers({
       handlerFactory,
       onExpandedToggle,
       onFilterToggle,
-      onHeaderClick,
       onMention,
-      onOpen,
+      onOpenCallback,
       onOpenClick,
       onOpenMedia,
       onOpenProfile,
@@ -260,3 +263,50 @@ export function useTextForScreenReader({
     return values.join(', ');
   }, [intl, isQuote, reblogAcct, status]);
 }
+
+export function useHandlersForStatus(
+  status?: Pick<
+    StatusShape | ExpandedStatusShape,
+    'account' | 'mentions' | 'tagged_collections'
+  > | null,
+) {
+  const hrefToMention = useCallback(
+    (href: string) => status?.mentions.find((item) => item.url === href),
+    [status?.mentions],
+  );
+  const hrefToCollectionId = useCallback(
+    (href: string) =>
+      status?.tagged_collections.find((item) => item.url === href)?.id,
+    [status?.tagged_collections],
+  );
+  return useElementHandledLink({
+    hashtagAccountId:
+      typeof status?.account === 'string' ? status.account : status?.account.id,
+    hrefToCollectionId,
+    hrefToMention,
+  });
+}
+
+export const onStatusLinksDisabled: OnElementHandler<AccountStatusShape> = (
+  element,
+  { key, href },
+  children,
+  status,
+) => {
+  // If this is a paragraph with just a link and it matches the card, don't add it.
+  if (
+    element instanceof HTMLParagraphElement &&
+    element.children.length === 1 &&
+    element.firstChild instanceof HTMLAnchorElement &&
+    element.firstChild.href === status.card?.url
+  ) {
+    return null;
+  } else if (element instanceof HTMLAnchorElement) {
+    if (href === status.card?.url) {
+      return null;
+    }
+    // Just use createElement instead of making the whole file JSX.
+    return createElement('strong', { key: key as string }, children);
+  }
+  return undefined;
+};

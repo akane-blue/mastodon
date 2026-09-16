@@ -1,130 +1,102 @@
 import type React from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback } from 'react';
 
-import { FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { TranslateIcon } from '@phosphor-icons/react';
+import { MagnifyingGlassIcon } from '@phosphor-icons/react';
 
 import { changeComposeLanguage } from '@/mastodon/actions/compose';
-import { IconButton } from '@/mastodon/components/button/redesign';
-import { Dropdown } from '@/mastodon/components/dropdown/redesign';
-import type { PopoverChildProps } from '@/mastodon/components/popover';
-import { Popover } from '@/mastodon/components/popover';
+import { CaretIcon } from '@/mastodon/components/button/redesign';
+import { TextInput } from '@/mastodon/components/form_fields/redesign';
+import {
+  Menu,
+  MenuItem,
+  MenuList,
+  MenuTrigger,
+} from '@/mastodon/components/menu';
 import { useAppDispatch, useAppSelector } from '@/mastodon/store';
 
-import { LanguageDropdownMenu } from '../components/language_dropdown';
-
+import { useLanguageList } from './hooks';
 import classes from './styles.module.scss';
 
+const messages = defineMessages({
+  searchPlaceholder: {
+    id: 'compose.language.search',
+    defaultMessage: 'Search languages...',
+  },
+});
+
 export const LanguageButton: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const [trigger, setTrigger] = useState<HTMLElement | null>(null);
-  const activeElementRef = useRef<HTMLElement | null>(null);
+  const langCode = useAppSelector(
+    (state) => state.compose.get('language') as string,
+  );
 
-  const handleMouseDown = useCallback(() => {
-    if (!open && document.activeElement instanceof HTMLElement) {
-      activeElementRef.current = document.activeElement;
-    }
-  }, [open]);
+  return (
+    <Menu>
+      <MenuTrigger size='sm' trailingIcon={CaretIcon}>
+        {langCode.toLocaleUpperCase()}
+      </MenuTrigger>
 
-  const handleToggle = useCallback(() => {
-    if (open && activeElementRef.current)
-      activeElementRef.current.focus({ preventScroll: true });
+      <MenuList
+        placement='bottom-end'
+        className={classes.languageMenu}
+        maxWidth={280}
+      >
+        <LanguageDropdown />
+      </MenuList>
+    </Menu>
+  );
+};
 
-    setOpen(!open);
-  }, [open]);
+export const LanguageDropdown = () => {
+  const { languages, onSearch } = useLanguageList();
 
-  const handleClose = useCallback(() => {
-    if (open && activeElementRef.current)
-      activeElementRef.current.focus({ preventScroll: true });
+  const dispatch = useAppDispatch();
+  const handleChange: React.MouseEventHandler<HTMLButtonElement> = useCallback(
+    (event) => {
+      const newLanguage = event.currentTarget.dataset.language;
+      if (newLanguage) {
+        dispatch(changeComposeLanguage(newLanguage));
+      }
+    },
+    [dispatch],
+  );
 
-    setOpen(false);
-  }, [open]);
+  const intl = useIntl();
+  const handleSearch: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      onSearch(event.target.value);
+    },
+    [onSearch],
+  );
 
   return (
     <>
-      <IconButton
-        icon={TranslateIcon}
-        size='sm'
-        ref={setTrigger}
-        aria-expanded={open}
-        onClick={handleToggle}
-        onMouseDown={handleMouseDown}
-      >
-        <FormattedMessage
-          id='compose.language.change'
-          defaultMessage='Change language'
-        />
-      </IconButton>
+      <TextInput
+        type='search'
+        onChange={handleSearch}
+        placeholder={intl.formatMessage(messages.searchPlaceholder)}
+        icon={MagnifyingGlassIcon}
+      />
+      <div className={classes.languageList}>
+        {languages.map((lang) => (
+          <MenuItem
+            key={lang[0]}
+            onClick={handleChange}
+            data-language={lang[0]}
+            className={classes.languageItem}
+          >
+            <strong>{lang[2]}</strong>&nbsp;<span>({lang[1]})</span>
+          </MenuItem>
+        ))}
 
-      <Popover
-        isOpen={open}
-        onClose={handleClose}
-        offset={4}
-        placement='bottom-end'
-        reference={trigger}
-      >
-        {({ props }) => <LanguageDropdown {...props} onClose={handleClose} />}
-      </Popover>
+        {languages.length === 0 && (
+          <FormattedMessage
+            id='compose.language.not-found'
+            defaultMessage='No language found'
+          />
+        )}
+      </div>
     </>
   );
 };
-
-export const LanguageDropdown: React.FC<
-  PopoverChildProps & { onClose: () => void }
-> = ({ onClose, ...props }) => {
-  const language = useAppSelector(
-    (state) => state.compose.get('language') as string,
-  );
-  const guess = useLanguageGuess();
-
-  const dispatch = useAppDispatch();
-  const handleChange = useCallback(
-    (newLanguage: string) => {
-      dispatch(changeComposeLanguage(newLanguage));
-      onClose();
-    },
-    [dispatch, onClose],
-  );
-
-  return (
-    <Dropdown {...props} className={classes.languageMenu} maxWidth={280}>
-      <LanguageDropdownMenu
-        value={language}
-        guess={guess}
-        onChange={handleChange}
-        onClose={onClose}
-      />
-    </Dropdown>
-  );
-};
-
-function useLanguageGuess() {
-  const text = useAppSelector((state) => state.compose.get('text') as string);
-  const [guess, setGuess] = useState('');
-
-  useEffect(() => {
-    void import('../util/language_detection').then(({ debouncedGuess }) => {
-      if (text.length > 20) {
-        debouncedGuess(text, setGuess);
-      } else {
-        debouncedGuess.cancel();
-      }
-    });
-  }, [text]);
-
-  // Keeping track of the previous render's text length here
-  // to be able to reset the guess when the text length drops
-  // below the threshold needed to make a guess
-  const isLongText = text.length > 20;
-  const [wasLongText, setWasLongText] = useState(() => isLongText);
-  if (wasLongText !== isLongText) {
-    setWasLongText(isLongText);
-
-    if (wasLongText) {
-      setGuess('');
-    }
-  }
-
-  return guess;
-}

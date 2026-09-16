@@ -15,15 +15,10 @@ import {
   createAppThunk,
 } from '@/mastodon/store/typed_functions';
 
-import type { ApiStatusJSON } from '../api_types/statuses';
+import { isRedesignEnabled } from '../utils/environment';
 
 import { showAlert } from './alerts';
-import {
-  changeCompose,
-  focusCompose,
-  submitCompose as submitComposeApi,
-  uploadCompose,
-} from './compose';
+import { changeCompose, focusCompose, uploadCompose } from './compose';
 import { importFetchedStatuses } from './importer';
 import { openModal } from './modal';
 
@@ -154,6 +149,10 @@ export const changeUploadCompose = createDataLoadingThunk(
   },
 );
 
+export const rearrangeComposeAttachments = createAction<string[]>(
+  'compose/rearrangeAttachments',
+);
+
 export const quoteCompose = createAppThunk(
   'compose/quoteComposeStatus',
   (status: Status, { dispatch }) => {
@@ -172,6 +171,8 @@ export const quoteComposeByStatus = createAppThunk(
       ['dismissed_banners', 'quote/quiet_post_hint'],
       false,
     );
+
+    const statusId = status.get('id') as string;
 
     if (composeState.get('id')) {
       dispatch(showAlert({ message: messages.quoteErrorEdit }));
@@ -203,6 +204,17 @@ export const quoteComposeByStatus = createAppThunk(
         openModal({
           modalType: 'CONFIRM_QUIET_QUOTE',
           modalProps: { status },
+        }),
+      );
+    } else if (
+      composeState.get('in_reply_to') &&
+      statusId &&
+      isRedesignEnabled()
+    ) {
+      dispatch(
+        openModal({
+          modalType: 'COMPOSER_ADD_QUOTE',
+          modalProps: { statusId },
         }),
       );
     } else {
@@ -285,68 +297,33 @@ export const setDragUploadEnabled = createAction<boolean>(
   'compose/setDragUploadEnabled',
 );
 
-export const submitCompose = createAppThunk(
+export const addPollOption = createAppThunk(
+  'compose/addPollOption',
+  (_arg, { getState }) => ({
+    maxOptions:
+      getState().server.server.item?.configuration.polls.max_options ?? 4,
+  }),
+);
+
+export const updatePollOption = createAppThunk(
+  'compose/updatePollOption',
   (
-    {
-      textareaValue = '',
-      redirectOnSuccess,
-    }: { textareaValue?: string; redirectOnSuccess?: boolean },
-    { getState, dispatch },
+    arg: {
+      index: number;
+      text: string;
+    },
+    { getState },
   ) => {
-    if (
-      textareaValue &&
-      (getState().compose.get('text') as string) !== textareaValue
-    ) {
-      dispatch(changeCompose(textareaValue));
-    }
-
-    const { compose, meta, statuses, settings } = getState();
-    const privacy = compose.get('privacy') as StatusVisibility;
-    const missingAltText = (
-      compose.get('media_attachments') as unknown as Immutable.List<
-        Immutable.Map<string, string>
-      >
-    ).some(
-      (media) =>
-        ['image', 'gifv'].includes(media.get('type') ?? '') &&
-        (media.get('description') ?? '').length === 0,
-    );
-    const me = meta.get('me') as string | null;
-    const quotedStatusId = compose.get('quoted_status_id') as string | null;
-    const quoteToPrivate =
-      !!quotedStatusId &&
-      privacy === 'private' &&
-      statuses.getIn([quotedStatusId, 'account']) !== me &&
-      !settings.getIn(['dismissed_banners', PRIVATE_QUOTE_MODAL_ID]);
-
-    if (
-      !!meta.get('missing_alt_text_modal') &&
-      missingAltText &&
-      privacy !== 'direct'
-    ) {
-      dispatch(
-        openModal({
-          modalType: 'CONFIRM_MISSING_ALT_TEXT',
-          modalProps: {},
-        }),
-      );
-    } else if (quoteToPrivate) {
-      dispatch(
-        openModal({
-          modalType: 'CONFIRM_PRIVATE_QUOTE_NOTIFY',
-          modalProps: {},
-        }),
-      );
-    } else {
-      dispatch(
-        submitComposeApi((status: ApiStatusJSON) => {
-          if (redirectOnSuccess) {
-            window.location.assign(status.url);
-          }
-        }),
-      );
-    }
+    return {
+      ...arg,
+      maxOptions:
+        getState().server.server.item?.configuration.polls.max_options ?? 4,
+    };
   },
+);
+
+export const deletePollOption = createAction<{ index: number }>(
+  'compose/deletePollOption',
 );
 
 const urlLikeRegex = /^https?:\/\/[^\s]+\/[^\s]+$/i;
