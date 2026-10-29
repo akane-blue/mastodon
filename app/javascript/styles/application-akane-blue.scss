@@ -2,8 +2,11 @@
 @use 'mastodon/mixins';
 @use 'fonts/roboto';
 @use 'fonts/roboto-mono';
+@use 'fonts/inter';
+@use 'fonts/cal-sans-ui';
 
 @use 'mastodon/reset';
+@use 'mastodon/tokens';
 @use 'mastodon/theme-akane-blue';
 @use 'mastodon/basics';
 @use 'mastodon/branding';
