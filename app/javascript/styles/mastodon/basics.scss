@@ -208,6 +208,14 @@ button {
   }
 }
 
+// Native <select> popups on Windows use the select's background colour,
+// which is translucent (`--color-bg-secondary`), making options unreadable.
+select option,
+select optgroup {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
 .app-holder {
   &,
   & > div,
