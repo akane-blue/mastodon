@@ -1,0 +1,4 @@
+// Let multi-column columns grow to share the remaining window width equally
+html.mod-wider-column {
+  --column-flex-grow: 1;
+}

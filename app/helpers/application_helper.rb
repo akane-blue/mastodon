@@ -185,6 +185,7 @@ module ApplicationHelper
     output << (current_account&.user&.setting_reduce_motion ? 'reduce-motion' : 'no-reduce-motion')
     output << 'rtl' if locale_direction == 'rtl'
     output << 'mod-reduce-column-radius' if current_account&.user&.setting_reduce_column_radius
+    output << 'mod-wider-column' if current_account&.user&.setting_wider_column
     output.compact_blank.join(' ')
   end
 

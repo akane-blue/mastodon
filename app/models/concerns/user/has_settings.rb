@@ -186,4 +186,8 @@ module User::HasSettings
   def setting_reduce_column_radius
     settings['web.mod_reduce_column_radius']
   end
+
+  def setting_wider_column
+    settings['web.mod_wider_column']
+  end
 end
