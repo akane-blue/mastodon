@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { Helmet } from '@unhead/react/helmet';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import ImmutablePureComponent from 'react-immutable-pure-component';
+import { ImmutablePureComponent } from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 
 import { debounce } from 'lodash';
@@ -23,7 +23,7 @@ import { ColumnHeader } from '@/mastodon/components/column_header';
 
 
 const messages = defineMessages({
-  heading: { id: 'column.mutes', defaultMessage: 'Muted users' },
+  heading: { id: 'column.muted_accounts', defaultMessage: 'Muted Accounts' },
 });
 
 const mapStateToProps = state => ({

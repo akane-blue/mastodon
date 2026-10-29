@@ -4,7 +4,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { Helmet } from '@unhead/react/helmet';
 
-import ImmutablePureComponent from 'react-immutable-pure-component';
+import { ImmutablePureComponent } from 'react-immutable-pure-component';
 
 import InfoIcon from '@/material-icons/400-24px/info.svg?react';
 import { Column } from '@/mastodon/components/column';
@@ -66,7 +66,13 @@ class KeyboardShortcuts extends ImmutablePureComponent {
               </tr>
               <tr>
                 <td><kbd>f</kbd></td>
-                <td><FormattedMessage id='keyboard_shortcuts.favourite' defaultMessage='to favorite' /></td>
+                <td>
+                  {isRedesignEnabled() ? (
+                    <FormattedMessage id='keyboard_shortcuts.like' defaultMessage='Like post' />
+                  ) : (
+                    <FormattedMessage id='keyboard_shortcuts.favourite' defaultMessage='to favorite' />
+                  )}
+                </td>
               </tr>
               <tr>
                 <td><kbd>b</kbd></td>
@@ -170,7 +176,13 @@ class KeyboardShortcuts extends ImmutablePureComponent {
               </tr>
               <tr>
                 <td><kbd>g</kbd>+<kbd>f</kbd></td>
-                <td><FormattedMessage id='keyboard_shortcuts.favourites' defaultMessage='to open favorites list' /></td>
+                <td>
+                  {isRedesignEnabled() ? (
+                    <FormattedMessage id='keyboard_shortcuts.liked_posts' defaultMessage='Open liked posts' />
+                  ) : (
+                    <FormattedMessage id='keyboard_shortcuts.favourites' defaultMessage='to open favorites list' />
+                  )}
+                </td>
               </tr>
               <tr>
                 <td><kbd>g</kbd>+<kbd>u</kbd></td>

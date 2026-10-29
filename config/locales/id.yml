@@ -797,8 +797,6 @@ id:
     warning_presets:
       add_new: Tambah baru
       delete: Hapus
-      edit_preset: Sunting preset peringatan
-      empty: Anda belum mendefinisikan peringatan apapun.
     webhooks:
       add_new: Tambah titik akhir
       delete: Hapus
@@ -856,7 +854,6 @@ id:
     remove: Hapus tautan alias
   appearance:
     animations_and_accessibility: Animasi dan aksesibilitas
-    discovery: Jelajah
     localization:
       body: Mastodon diterjemahkan oleh sukarelawan.
       guide_link: https://crowdin.com/project/mastodon
@@ -944,7 +941,6 @@ id:
   deletes:
     challenge_not_passed: Informasi yang Anda masukkan salah
     confirm_password: Masukkan kata sandi sekarang untuk memverifikasi identitas Anda
-    confirm_username: Masukkan nama pengguna untuk mengonfirmasi prosedur
     proceed: Hapus akun
     success_msg: Akun Anda berhasil dihapus
     warning:
@@ -1320,7 +1316,6 @@ id:
     appearance: Tampilan
     authorized_apps: Apl yang diizinkan
     back: Kembali ke Mastodon
-    delete: Penghapusan akun
     development: Pengembangan
     edit_profile: Ubah profil
     featured_tags: Tagar unggulan

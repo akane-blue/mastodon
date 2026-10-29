@@ -809,8 +809,6 @@ ku:
     warning_presets:
       add_new: Yeka nû tevlî bike
       delete: Jê bibe
-      edit_preset: Hişyariyên pêşsazkirî serrast bike
-      empty: Te hin tu hişyariyên pêşsazkirî destnîşan nekirine.
     webhooks:
       add_new: Xala dawîbûnê tevlî bike
       delete: Jê bibe
@@ -869,7 +867,6 @@ ku:
     remove: Girêdana nûçikê rake
   appearance:
     animations_and_accessibility: Anîmasyon û gihînî
-    discovery: Vedîtin
     localization:
       body: Mastodon ji aliyê xêrxwazan tê wergerandin.
       guide_link: https://crowdin.com/project/mastodon
@@ -958,7 +955,6 @@ ku:
   deletes:
     challenge_not_passed: Zanyariyên ku te nivîsandî ne rast in
     confirm_password: Borînpeyva xwe ya heyî binivîsine da ku nasnameya xwe piştrast bikî
-    confirm_username: Navê bikarhêneriyê xwe binivîse da ku pêvajoyê piştrast bikî
     proceed: Ajimêr jê bibe
     success_msg: Ajimêra te bi serkeftî hate jêbirin
     warning:
@@ -1342,7 +1338,6 @@ ku:
     appearance: Xuyang
     authorized_apps: Rayedarê sepanan
     back: Vegere bo Mastodon
-    delete: Jêbirina ajimêr
     development: Pêşdebir
     edit_profile: Profîlê serrast bike
     featured_tags: Hashtagên bijarte

@@ -316,7 +316,6 @@ ast:
         follow_recommendations: Recomendación de cuentes
         profile_directory: Direutoriu de perfiles
         public_timelines: Llinies de tiempu públiques
-        publish_statistics: Espublizamientu d'estadístiques
         title: Descubrimientu
         trends: Tendencies
       domain_blocks:
@@ -430,7 +429,6 @@ ast:
     empty: Nun tienes nengún nomatu.
   appearance:
     animations_and_accessibility: Animaciones y accesibilidá
-    discovery: Descubrimientu
     localization:
       body: Mastodon tradúcenlu voluntarios,
       guide_link: https://crowdin.com/project/mastodon

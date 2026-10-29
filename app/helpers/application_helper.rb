@@ -161,19 +161,16 @@ module ApplicationHelper
     tag.meta(content: content, property: property)
   end
 
-  WEBUI_STYLES = {
-    'default' => '',
-    'compact' => 'compact-padding',
-    'legacy' => 'legacy-style',
-  }.freeze
+  def html_attributes(theme: nil)
+    theme ||= current_theme
 
-  def html_attributes
     base = {
       lang: I18n.locale,
       class: html_classes,
       'data-contrast': contrast.parameterize,
       'data-color-scheme': page_color_scheme.parameterize,
-    }
+      'data-theme-color': page_theme_color(theme)&.parameterize,
+    }.compact
 
     base[:'data-system-theme'] = 'true' if page_color_scheme == 'auto'
 
@@ -186,9 +183,6 @@ module ApplicationHelper
     output << 'system-font' if current_account&.user&.setting_system_font_ui
     output << 'custom-scrollbars' unless current_account&.user&.setting_system_scrollbars_ui
     output << (current_account&.user&.setting_reduce_motion ? 'reduce-motion' : 'no-reduce-motion')
-    output << 'bigger-publish' if current_account&.user&.setting_bigger_publish
-    output << WEBUI_STYLES[current_account&.user&.setting_webui_styles]
-    output << 'reverse-nav' if current_account&.user&.setting_reverse_nav
     output << 'rtl' if locale_direction == 'rtl'
     output.compact_blank.join(' ')
   end

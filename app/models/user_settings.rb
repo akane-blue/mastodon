@@ -16,7 +16,10 @@ class UserSettings
   setting :default_sensitive, default: false
   setting :default_privacy, default: nil, in: %w(public unlisted private)
   setting :default_quote_policy, default: 'public', in: %w(public followers nobody)
+  setting :default_spoiler_field, default: false
   setting :email_subscriptions, default: false
+  setting :display_own_boosts, default: false
+  setting :display_own_posts, default: true
 
   setting_inverse_alias :indexable, :noindex
 
@@ -37,15 +40,12 @@ class UserSettings
     setting :expand_content_warnings, default: false
     setting :display_media, default: 'default', in: %w(hide_all default show_all)
     setting :auto_play, default: false
-    setting :mod_bigger_publish, default: false
-    setting :mod_wider_column, default: false
-    setting :mod_webui_styles, default: 'default', in: %w(default compact legacy)
-    setting :mod_reverse_nav, default: false
     setting :hide_translate_button, default: false
     setting :crop_attachment_thumbnails_on_timeline, default: false
     setting :emoji_style, default: 'auto', in: %w(auto native twemoji)
     setting :color_scheme, default: 'auto', in: %w(auto light dark)
     setting :contrast, default: 'auto', in: %w(auto high)
+    setting :theme_color, default: 'indigo' # TODO: dynamic inclusion checking?
   end
 
   namespace :notification_emails do
@@ -61,6 +61,7 @@ class UserSettings
     setting :appeal, default: true
     setting :software_updates, default: 'critical', in: %w(none critical patch all)
     setting :end_of_support, default: true
+    setting :moderation_suggestions, default: true
   end
 
   namespace :interactions do
