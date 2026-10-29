@@ -251,6 +251,7 @@ ja:
         setting_hide_translate_button: 翻訳ボタンを非表示にする
         setting_missing_alt_text_modal: 代替テキストなしでメディアを投稿する前に警告する
         setting_quick_boosting: クイックブーストの有効化
+        setting_reduce_column_radius: カラムの角丸を控えめにする
         setting_reduce_motion: アニメーションの動きを減らす
         setting_system_font_ui: システムのデフォルトフォントを使う
         setting_system_scrollbars_ui: システムのデフォルトのスクロールバーを使う
