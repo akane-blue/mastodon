@@ -15,6 +15,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/mastodon/store';
 
 import { ComposeAttachments } from './components/attachments';
+import { ContentWarningButton } from './components/content_warning_button';
 import { ComposeFooter } from './components/footer';
 import { ComposeFormHeader } from './components/header';
 import { ComposeHints } from './components/hints';
@@ -77,6 +78,8 @@ export const ComposeForm: React.FC<
         <ComposeVisibility className={classes.flexGrowWrap} />
 
         <LanguageButton />
+
+        <ContentWarningButton />
 
         <ComposeSettingsMenu />
       </div>
