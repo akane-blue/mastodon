@@ -1961,6 +1961,20 @@ ja:
     recovery_codes_regenerated: リカバリーコードが再生成されました
     recovery_instructions_html: 携帯電話を紛失した場合、以下の内どれかのリカバリーコードを使用してアカウントへアクセスすることができます。<strong>リカバリーコードは大切に保全してください。</strong>たとえば印刷してほかの重要な書類と一緒に保管することができます。
     webauthn: セキュリティキー
+  unsubscriptions:
+    notification_emails:
+      favourite: お気に入り通知メール
+      follow: フォロー通知メール
+      follow_request: フォローリクエストメール
+      mention: メンション通知メール
+      reblog: ブースト通知メール
+    show:
+      action: 購読解除
+      email_subscription:
+        title: "%{name}の購読を解除しますか？"
+      user:
+        confirmation_html: "今後%{domain}からの%{type}を受け取ることはありません。"
+        title: "%{type}の購読を解除しますか？"
   user_mailer:
     announcement_published:
       description: "%{domain}の管理者からの告知："
