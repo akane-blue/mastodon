@@ -1372,6 +1372,10 @@ ja:
       your_appeal_rejected: 申し立ては拒否されました
   edit_profile:
     other: その他
+    privacy_redesign_body: フォロー中のユーザーとフォロワーの表示は、プロフィールから直接選択できるようになりました。
+    redesign_body: プロフィールの編集は、プロフィールから直接アクセスできるようになりました。
+    redesign_button: 移動する
+    redesign_title: 新しいプロフィール編集を体験しましょう
   emoji_styles:
     auto: 自動
     native: ネイティブ
