@@ -43,6 +43,14 @@ module User::HasSettings
     settings['web.delete_modal']
   end
 
+  def setting_display_own_boosts
+    settings['display_own_boosts']
+  end
+
+  def setting_display_own_posts
+    settings['display_own_posts']
+  end
+
   def setting_reduce_motion
     settings['web.reduce_motion']
   end
@@ -61,6 +69,10 @@ module User::HasSettings
 
   def setting_theme
     settings['theme']
+  end
+
+  def setting_theme_color
+    settings['web.theme_color']
   end
 
   def setting_color_scheme
@@ -127,6 +139,10 @@ module User::HasSettings
     settings['default_quote_policy'] || 'public'
   end
 
+  def setting_default_spoiler_field
+    settings['default_spoiler_field']
+  end
+
   def allows_report_emails?
     settings['notification_emails.report']
   end
@@ -157,22 +173,6 @@ module User::HasSettings
 
   def hide_all_media?
     settings['web.display_media'] == 'hide_all'
-  end
-
-  def setting_bigger_publish
-    settings['web.mod_bigger_publish']
-  end
-
-  def setting_wider_column
-    settings['web.mod_wider_column']
-  end
-
-  def setting_webui_styles
-    settings['web.mod_webui_styles']
-  end
-
-  def setting_reverse_nav
-    settings['web.mod_reverse_nav']
   end
 
   def setting_hide_translate_button

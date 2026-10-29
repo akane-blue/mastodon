@@ -48,6 +48,10 @@ class Form::AdminSettings
     landing_page
     wrapstodon
     email_footer_text
+    opt_in_server_directory
+    opt_in_server_recommendation
+    postpone_confirmation_emails
+    theme_color
   ).freeze
 
   INTEGER_KEYS = %i(
@@ -70,8 +74,10 @@ class Form::AdminSettings
     noindex
     require_invite_text
     captcha_enabled
-    authorized_fetch
+    opt_in_server_directory
+    opt_in_server_recommendation
     wrapstodon
+    postpone_confirmation_emails
   ).freeze
 
   UPLOAD_KEYS = %i(
@@ -85,10 +91,6 @@ class Form::AdminSettings
     custom_css
   ).freeze
 
-  OVERRIDEN_SETTINGS = {
-    authorized_fetch: :authorized_fetch_mode?,
-  }.freeze
-
   UPLOAD_MIME_TYPES = %w(image/jpeg image/png image/gif image/webp).freeze
 
   DESCRIPTION_LIMIT = 200
@@ -97,6 +99,7 @@ class Form::AdminSettings
   FEED_ACCESS_MODES = %w(public authenticated disabled).freeze
   ALTERNATE_FEED_ACCESS_MODES = %w(public authenticated).freeze
   LANDING_PAGE = %w(trends overview local_feed about).freeze
+  AUTHORIZED_FETCH_MODES = %w(none actors all).freeze
 
   attr_accessor(*KEYS)
 
@@ -124,8 +127,6 @@ class Form::AdminSettings
 
       stored_value = if UPLOAD_KEYS.include?(key)
                        SiteUpload.where(var: key).first_or_initialize(var: key)
-                     elsif OVERRIDEN_SETTINGS.include?(key)
-                       public_send(OVERRIDEN_SETTINGS[key])
                      else
                        Setting.public_send(key)
                      end
@@ -141,6 +142,10 @@ class Form::AdminSettings
     rescue Mastodon::DimensionsValidationError => e
       errors.add(key.to_sym, e.message)
     end
+  end
+
+  def authorized_fetch
+    authorized_fetch_mode
   end
 
   def save

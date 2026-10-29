@@ -116,6 +116,10 @@ code {
     }
 
     &.radio_buttons {
+      &:not(:has(.radio)) {
+        display: none;
+      }
+
       .radio {
         margin-bottom: 15px;
 
@@ -280,7 +284,7 @@ code {
   }
 
   strong {
-    font-weight: 500;
+    font-weight: bold;
 
     @each $lang in $cjk-langs {
       &:lang(#{$lang}) {
@@ -297,7 +301,7 @@ code {
         font-family: inherit;
         font-size: 14px;
         color: var(--color-text-primary);
-        font-weight: 500;
+        font-weight: bold;
         min-width: 150px;
         flex: 0 0 auto;
       }
@@ -322,7 +326,7 @@ code {
       display: block;
       margin-bottom: 8px;
       overflow-wrap: break-word;
-      font-weight: 500;
+      font-weight: bold;
     }
 
     .hint {
@@ -384,12 +388,8 @@ code {
 
     input {
       box-sizing: content-box;
-      width: 32px;
+      width: unset;
       flex: 0;
-
-      &:last-child {
-        width: 64px;
-      }
     }
   }
 
@@ -609,7 +609,7 @@ code {
 
     .error {
       display: block;
-      font-weight: 500;
+      font-weight: bold;
       color: var(--color-text-error);
       margin-top: 4px;
     }
@@ -653,7 +653,7 @@ code {
     text-align: center;
     box-sizing: border-box;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: bold;
     outline: 0;
 
     &:last-child {
@@ -684,6 +684,34 @@ code {
       &:active,
       &:focus {
         background: var(--color-bg-error-base-hover);
+      }
+    }
+
+    &.secondary {
+      color: var(--color-text-brand);
+      background: transparent;
+      border: 1px solid transparent;
+      border-color: var(--color-border-brand);
+
+      &:active,
+      &:focus,
+      &:hover {
+        border-color: var(--color-border-brand);
+        color: var(--color-text-brand);
+        background-color: transparent;
+        text-decoration: none;
+      }
+
+      &:disabled {
+        border-color: var(--color-text-disabled);
+        color: var(--color-text-disabled);
+
+        &:active,
+        &:focus,
+        &:hover {
+          border-color: var(--color-text-disabled);
+          color: var(--color-text-disabled);
+        }
       }
     }
   }
@@ -917,7 +945,7 @@ code {
   }
 
   strong {
-    font-weight: 500;
+    font-weight: bold;
 
     @each $lang in $cjk-langs {
       &:lang(#{$lang}) {
@@ -1014,7 +1042,7 @@ code {
 
   strong {
     color: var(--color-text-primary);
-    font-weight: 500;
+    font-weight: bold;
 
     @each $lang in $cjk-langs {
       &:lang(#{$lang}) {
@@ -1029,7 +1057,7 @@ code {
     color: var(--color-text-primary);
     font-size: 17px;
     line-height: 22px;
-    font-weight: 500;
+    font-weight: bold;
     margin-bottom: 30px;
   }
 
@@ -1222,7 +1250,7 @@ code {
       flex: 1 1 auto;
 
       &__title {
-        font-weight: 500;
+        font-weight: bold;
       }
 
       &__type {
@@ -1339,7 +1367,7 @@ code {
   .label {
     position: absolute;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: bold;
     color: var(--color-text-primary);
     padding-top: 10px;
     text-align: center;
@@ -1532,5 +1560,11 @@ code {
         height: 20px;
       }
     }
+  }
+}
+
+.full_width_form {
+  .button {
+    width: 100%;
   }
 }

@@ -1,0 +1,27 @@
+@mixin palette {
+  // Grey (blue-tinted)
+  --color-grey-50: hsl(205, 10%, 98%);
+  --color-grey-100: hsl(205, 10%, 94%);
+  --color-grey-200: hsl(205, 10%, 85%);
+  --color-grey-300: hsl(205, 10%, 75%);
+  --color-grey-400: hsl(205, 10%, 60%);
+  --color-grey-500: hsl(205, 11%, 50%);
+  --color-grey-600: hsl(205, 12%, 40%);
+  --color-grey-700: hsl(205, 13%, 30%);
+  --color-grey-800: hsl(205, 14%, 20%);
+  --color-grey-900: hsl(205, 15%, 15%);
+  --color-grey-950: hsl(205, 15%, 10%);
+
+  // Akane blue
+  --color-akane-blue-50: hsl(205, 100%, 97%);
+  --color-akane-blue-100: hsl(205, 100%, 94%);
+  --color-akane-blue-200: hsl(205, 96%, 89%);
+  --color-akane-blue-300: hsl(205, 96%, 82%);
+  --color-akane-blue-400: hsl(205, 91%, 74%);
+  --color-akane-blue-500: hsl(205, 85%, 67%);
+  --color-akane-blue-600: hsl(205, 76%, 59%);
+  --color-akane-blue-700: hsl(205, 59%, 51%);
+  --color-akane-blue-800: hsl(205, 49%, 41%);
+  --color-akane-blue-900: hsl(205, 43%, 34%);
+  --color-akane-blue-950: hsl(205, 41%, 20%);
+}

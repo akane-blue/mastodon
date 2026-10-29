@@ -1,2 +1,9 @@
-default: styles/application.scss
+default:
+  path: styles/application.scss
+  colors:
+    - indigo
+    - lime
+    - pink
+    - orange
+    - cyan
 akane-blue: styles/application-akane-blue.scss

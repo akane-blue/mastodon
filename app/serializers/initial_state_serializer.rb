@@ -42,6 +42,7 @@ class InitialStateSerializer < ActiveModel::Serializer
       store[:default_sensitive] = object_account_user.setting_default_sensitive
       store[:default_language]  = object_account_user.preferred_posting_language
       store[:default_quote_policy] = object_account_user.setting_default_quote_policy
+      store[:default_spoiler_field] = object_account_user.setting_default_spoiler_field
     end
 
     store[:text] = object.text if object.text
@@ -138,12 +139,11 @@ class InitialStateSerializer < ActiveModel::Serializer
       use_blurhash: object_account_user.setting_use_blurhash,
       use_pending_items: object_account_user.setting_use_pending_items,
       show_trends: Setting.trends && object_account_user.setting_trends,
-      webui_styles: object_account_user.setting_webui_styles,
-      wider_column: object_account_user.setting_wider_column,
       hide_translate_button: object_account_user.setting_hide_translate_button,
       crop_attachment_thumbnails_on_timeline: object_account_user.setting_crop_attachment_thumbnails_on_timeline,
-      reverse_nav: object_account_user.setting_reverse_nav,
       emoji_style: object_account_user.settings['web.emoji_style'],
+      display_own_boosts: object_account_user.setting_display_own_boosts,
+      display_own_posts: object_account_user.setting_display_own_posts,
       wrapstodon: wrapstodon,
     }
   end

@@ -38,9 +38,11 @@ RSpec.describe 'UnsubscriptionsController' do
     it 'shows unsubscribe form' do
       expect(response).to have_http_status(200)
 
-      expect(response.body).to include(
-        I18n.t('unsubscriptions.show.action')
-      )
+      expect(response.body)
+        .to include(I18n.t('unsubscriptions.show.action'))
+        .and include(I18n.t('unsubscriptions.notification_emails.follow'))
+        .and include(Rails.configuration.x.local_domain)
+        .and not_include('%{')
     end
   end
 
@@ -58,9 +60,9 @@ RSpec.describe 'UnsubscriptionsController' do
     it 'shows confirmation page' do
       expect(response).to have_http_status(200)
 
-      expect(response.body).to include(
-        I18n.t('unsubscriptions.create.title')
-      )
+      expect(response.body)
+        .to include(I18n.t('unsubscriptions.create.title'))
+        .and include(I18n.t('unsubscriptions.notification_emails.follow'))
     end
 
     it 'updates notification settings' do

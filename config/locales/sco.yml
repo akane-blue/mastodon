@@ -802,8 +802,6 @@ sco:
     warning_presets:
       add_new: Add new
       delete: Delete
-      edit_preset: Edit warnin preset
-      empty: Ye huvnae definit onie warnin presets yit.
     webhooks:
       add_new: Add enpynt
       delete: Delete
@@ -862,7 +860,6 @@ sco:
     remove: Unlink alias
   appearance:
     animations_and_accessibility: Animations an accessibility
-    discovery: Discovery
     localization:
       body: Mastodon is translatit bi volunteers.
       guide_link: https://crowdin.com/project/mastodon
@@ -948,7 +945,6 @@ sco:
   deletes:
     challenge_not_passed: The information ye pit in wisnae correct
     confirm_password: Pit in yer current passwird fir tae verify yer identity
-    confirm_username: Pit in yer uisernemm fir tae confirm the procedure
     proceed: Delete accoont
     success_msg: Yer accoont wis successfully deletit
     warning:
@@ -1332,7 +1328,6 @@ sco:
     appearance: Appearance
     authorized_apps: Authorized apps
     back: Back tae Mastodon
-    delete: Accoont deletion
     development: Development
     edit_profile: Edit profile
     featured_tags: Featured hashtags

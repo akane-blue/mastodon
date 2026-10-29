@@ -7,6 +7,14 @@ ja:
     hosted_on: Mastodon hosted on %{domain}
     title: このサーバーについて
   accounts:
+    api_errors:
+      2fa_required: 二段階認証が設定されていないとアカウントを使用できません
+      account_deleted: あなたのアカウントは削除されました
+      account_suspended: あなたのアカウントは停止されています
+      login_disabled: あなたのアカウントは現在無効化されています
+      memorial: あなたのアカウントは追悼アカウント化されました
+      pending_approval: あなたのアカウントは現在承認待ちです
+      pending_confirmation: あなたのアカウントには確認済みのメールアドレスがありません
     errors:
       cannot_be_added_to_collections: このアカウントはコレクションに追加できません。
     followers:
@@ -60,9 +68,11 @@ ja:
       custom: カスタム
       delete: データを削除する
       deleted: 削除済み
+      deletion_irreversible: このアカウントのデータは取り消せない形で削除されました。
       demote: 降格
       destroyed_msg: "%{username}さんのデータは完全に削除されるよう登録されました"
       disable: 無効化
+      disable_sign_in_token: セキュリティコードチャレンジを一時的に無効化
       disable_sign_in_token_auth: メールトークン認証を無効化
       disable_two_factor_authentication: 二要素認証を無効にする
       disabled: 無効
@@ -75,6 +85,9 @@ ja:
       enable_sign_in_token_auth: メールトークン認証を有効化
       enabled: 有効
       enabled_msg: "%{username}の無効化を解除しました"
+      follow_recommendations:
+        suppress: おすすめフォローに表示しない
+        suppressed: 非表示
       followers: フォロワー数
       follows: フォロー数
       header: ヘッダー
@@ -469,6 +482,9 @@ ja:
       resolved_dns_records_hint_html: 入力されたドメイン名のMXレコードから以下のドメインが解決されました。MXレコードが指すドメインはメールの送受信において重要な役割をもっています。MXレコードのドメインをブロックすると、見た目のドメインが異なるメールアドレスからの登録であっても、そのドメイン名から解決されるMXレコードのドメインが同じ場合はブロックの対象になります。<strong>大手のメールプロバイダをブロックしないように注意してください。</strong>
       resolved_through_html: "%{domain}を通して解決しました"
       title: メールドメインブロック
+    email_subscriptions:
+      accounts:
+        account: アカウント
     export_domain_allows:
       new:
         title: ドメイン許可をインポート
@@ -508,8 +524,6 @@ ja:
           description: FASPから登録を受け取りました。自分で登録していないなら拒否してください。自分で登録した場合は、登録を確定する前に名前と鍵のフィンガープリントを慎重に比較してください。
           reject: 拒否
           title: FASP登録を確認
-        save: 保存
-        select_capabilities: 機能選択
         sign_in: サインイン
         status: ステータス
         title: フェディバース補助サービスプロバイダ
@@ -826,10 +840,8 @@ ja:
       discovery:
         follow_recommendations: おすすめフォロー
         preamble: 必ずしも知っている人がMastodonに居ない新規ユーザーに定着してもらうには、興味深いコンテンツを表示することが役に立ちます。あなたのサーバーの種々のディスカバリー機能の動作を設定してください。
-        privacy: プライバシー
         profile_directory: ディレクトリ
         public_timelines: 公開タイムライン
-        publish_statistics: 統計情報を公開する
         title: 見つける
         trends: トレンド
       domain_blocks:
@@ -856,7 +868,6 @@ ja:
         warning_hint: モデレーションチームがスパムや悪意のある登録を迅速に処理できる自信がない限り、サインアップを承認制にすることをお勧めします。
       security:
         authorized_fetch: 連合サーバーによる署名なしでの情報取得を拒否する
-        authorized_fetch_hint: ほかの連合サーバーから受け付けるリクエストに署名を必須にすることで、ユーザーによるブロックおよびドメインブロック両方の効果をより強力にします。ただし連合の処理コストが増えてパフォーマンス面で不利になるほか、このサーバーから送られた反応が届く範囲が狭まったり、連合における互換性の問題を招く可能性もあります。また、この機能は公開投稿やプロフィールへのアクセスをブロックした相手から完全に遮断できるものではありません。
         authorized_fetch_overridden_hint: この設定は環境変数で指定されているため、ここでは変更できません。
         federation_authentication: 連合に署名を必須にする
       title: サーバー設定
@@ -1101,9 +1112,6 @@ ja:
     warning_presets:
       add_new: 追加
       delete: 削除
-      edit_preset: プリセット警告文を編集
-      empty: まだプリセット警告文が作成されていません。
-      title: プリセット警告文
     webhooks:
       add_new: エンドポイントを追加
       delete: 削除
@@ -1174,7 +1182,6 @@ ja:
     animations_and_accessibility: アニメーションとアクセシビリティー
     boosting_preferences: ブースト設定
     boosting_preferences_info_html: "<strong>Tip:</strong> 設定に関係なく、<kbd>Shift</kbd> を押しながら %{icon} Boostアイコンを<kbd>クリック</kbd>すると、すぐにブーストされます。"
-    discovery: 見つける
     localization:
       body: Mastodonは有志によって翻訳されています。
       guide_link: https://ja.crowdin.com/project/mastodon
@@ -1320,7 +1327,6 @@ ja:
   deletes:
     challenge_not_passed: 入力された情報は正しくありません
     confirm_password: 本人確認のため、現在のパスワードを入力してください
-    confirm_username: 確認のためユーザー名を入力してください
     proceed: アカウントを削除する
     success_msg: アカウントは正常に削除されました
     warning:
@@ -1366,6 +1372,10 @@ ja:
       your_appeal_rejected: 申し立ては拒否されました
   edit_profile:
     other: その他
+    privacy_redesign_body: フォロー中のユーザーとフォロワーの表示は、プロフィールから直接選択できるようになりました。
+    redesign_body: プロフィールの編集は、プロフィールから直接アクセスできるようになりました。
+    redesign_button: 移動する
+    redesign_title: 新しいプロフィール編集を体験しましょう
   emoji_styles:
     auto: 自動
     native: ネイティブ
@@ -1809,7 +1819,6 @@ ja:
     appearance: 外観
     authorized_apps: 認証済みアプリ
     back: Mastodonに戻る
-    delete: アカウントの削除
     development: 開発
     edit_profile: プロフィールを編集
     export: エクスポート
@@ -1952,6 +1961,20 @@ ja:
     recovery_codes_regenerated: リカバリーコードが再生成されました
     recovery_instructions_html: 携帯電話を紛失した場合、以下の内どれかのリカバリーコードを使用してアカウントへアクセスすることができます。<strong>リカバリーコードは大切に保全してください。</strong>たとえば印刷してほかの重要な書類と一緒に保管することができます。
     webauthn: セキュリティキー
+  unsubscriptions:
+    notification_emails:
+      favourite: お気に入り通知メール
+      follow: フォロー通知メール
+      follow_request: フォローリクエストメール
+      mention: メンション通知メール
+      reblog: ブースト通知メール
+    show:
+      action: 購読解除
+      email_subscription:
+        title: "%{name}の購読を解除しますか？"
+      user:
+        confirmation_html: "今後%{domain}からの%{type}を受け取ることはありません。"
+        title: "%{type}の購読を解除しますか？"
   user_mailer:
     announcement_published:
       description: "%{domain}の管理者からの告知："
