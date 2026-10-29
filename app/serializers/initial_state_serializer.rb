@@ -140,6 +140,7 @@ class InitialStateSerializer < ActiveModel::Serializer
       use_pending_items: object_account_user.setting_use_pending_items,
       show_trends: Setting.trends && object_account_user.setting_trends,
       hide_translate_button: object_account_user.setting_hide_translate_button,
+      sidebar_composer: object_account_user.setting_sidebar_composer,
       crop_attachment_thumbnails_on_timeline: object_account_user.setting_crop_attachment_thumbnails_on_timeline,
       emoji_style: object_account_user.settings['web.emoji_style'],
       display_own_boosts: object_account_user.setting_display_own_boosts,

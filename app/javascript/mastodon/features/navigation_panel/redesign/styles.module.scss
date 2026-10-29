@@ -13,7 +13,7 @@
   // to ensure focused elements are scrolled into view
   // as needed.
   --header-height: 80px;
-  --footer-height: 180px;
+  --footer-height: var(--nav-footer-height, 180px);
 
   scroll-padding-block: var(--header-height) var(--footer-height);
 
@@ -39,7 +39,7 @@
   display: flex;
   flex-direction: column;
   justify-content: end;
-  padding: var(--space-6);
+  padding: var(--nav-footer-padding, var(--space-6));
   padding-top: 0;
   background-color: var(--navigation-background-color);
 

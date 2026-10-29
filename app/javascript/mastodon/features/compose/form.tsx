@@ -34,6 +34,7 @@ interface ComposeFormProps {
   className?: string;
   noMinimize?: boolean;
   redirectOnSuccess?: boolean;
+  closeOnEscape?: boolean;
 }
 
 export const ComposeForm: React.FC<
@@ -44,6 +45,7 @@ export const ComposeForm: React.FC<
   className,
   noMinimize,
   redirectOnSuccess,
+  closeOnEscape = true,
   ...props
 }) => {
   const type = useAppSelector(selectComposeType);
@@ -51,6 +53,7 @@ export const ComposeForm: React.FC<
   const { onEmojiPick, onSubmit } = useComposeHandlers({
     redirectOnSuccess,
     headless,
+    closeOnEscape,
   });
 
   const titleId = useId();
@@ -111,9 +114,11 @@ const allowedAroundShortCode =
 function useComposeHandlers({
   redirectOnSuccess,
   headless,
+  closeOnEscape,
 }: {
   redirectOnSuccess?: boolean;
   headless?: boolean;
+  closeOnEscape?: boolean;
 }) {
   const text = useAppSelector((state) => state.compose.get('text') as string);
 
@@ -141,13 +146,15 @@ function useComposeHandlers({
       return;
     }
 
-    document.addEventListener('keydown', escapeComposer);
+    if (closeOnEscape) {
+      document.addEventListener('keydown', escapeComposer);
+    }
     window.addEventListener('beforeunload', closePage);
     return () => {
       document.removeEventListener('keydown', escapeComposer);
       window.removeEventListener('beforeunload', closePage);
     };
-  }, [dispatch, headless, isComposerChanged, isModalOpen]);
+  }, [dispatch, headless, closeOnEscape, isComposerChanged, isModalOpen]);
 
   const onEmojiPick: OnEmojiPick = useCallback(
     (emoji) => {

@@ -194,4 +194,8 @@ module User::HasSettings
   def setting_square_avatars
     settings['web.mod_square_avatars']
   end
+
+  def setting_sidebar_composer
+    settings['web.mod_sidebar_composer']
+  end
 end

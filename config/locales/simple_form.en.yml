@@ -69,6 +69,7 @@ en:
         setting_display_media_show_all: Show all media without warning, including media marked as sensitive
         setting_emoji_style: How to display emojis. "Auto" will try using native emoji, but falls back to Twemoji for legacy browsers.
         setting_quick_boosting_html: When enabled, clicking on the %{boost_icon} Boost icon will immediately boost instead of opening the boost/quote dropdown menu. Relocates the quoting action to the %{options_icon} (Options) menu.
+        setting_sidebar_composer: In the multi-column layout, keeps the composer open in the left sidebar in place of the New Post button, and makes the navigation more compact.
         setting_use_blurhash: Gradients are based on the colors of the hidden visuals but obfuscate any details
         setting_use_pending_items: Hide timeline updates behind a click instead of automatically scrolling the feed
         setting_wider_column: Equalize column widths to fit window or display
@@ -276,6 +277,7 @@ en:
         setting_quick_boosting: Enable quick boosting
         setting_reduce_column_radius: Use subtler rounded corners on columns
         setting_reduce_motion: Reduce motion in animations
+        setting_sidebar_composer: Show composer in the sidebar
         setting_split_default_privacy_discoverable: Make my posts discoverable in public feed & search results
         setting_square_avatars: Show profile pictures as rounded squares
         setting_system_font_ui: Use system's default font
