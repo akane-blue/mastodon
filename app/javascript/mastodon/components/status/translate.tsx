@@ -3,7 +3,10 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { TranslateIcon } from '@phosphor-icons/react';
 
 import { useIdentity } from '@/mastodon/identity_context';
-import { languages as preloadedLanguages } from '@/mastodon/initial_state';
+import {
+  hideTranslateButton,
+  languages as preloadedLanguages,
+} from '@/mastodon/initial_state';
 import type { AnyStatusShape } from '@/mastodon/models/status';
 import { useAppSelector } from '@/mastodon/store';
 
@@ -24,6 +27,7 @@ export const TranslateButton: React.FC<{
   const { translation } = status;
 
   if (
+    hideTranslateButton ||
     !signedIn ||
     !['public', 'unlisted'].includes(status.visibility) ||
     status.search_index?.trim().length === 0 ||

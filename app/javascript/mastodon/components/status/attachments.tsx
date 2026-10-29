@@ -18,7 +18,10 @@ import type { DeployPictureInPictureCallback } from '@/mastodon/actions/picture_
 import { deployPictureInPicture } from '@/mastodon/actions/picture_in_picture';
 import { CollectionPreviewCard } from '@/mastodon/features/collections/components/collection_preview_card';
 import { useExpandedStatus } from '@/mastodon/hooks/useStatus';
-import { displayMedia } from '@/mastodon/initial_state';
+import {
+  cropAttachmentThumbnailsOnTimeline,
+  displayMedia,
+} from '@/mastodon/initial_state';
 import type {
   MediaAttachment,
   MediaAttachmentShape,
@@ -99,6 +102,7 @@ type TMediaGallery = React.ComponentClass<
     lang?: string;
     visible?: boolean;
     autoplay?: boolean;
+    standalone?: boolean;
     matchedFilters?: (string | null | undefined)[];
     cacheWidth?: () => void;
     defaultWidth?: number;
@@ -242,6 +246,17 @@ const MediaAttachments: React.FC<{
     aspectRatio = '16 / 9';
   }
 
+  // Detailed view always shows the full-size media, like the legacy `standalone` gallery
+  const isStandalone = contextType === 'detailed';
+  if (
+    cropAttachmentThumbnailsOnTimeline &&
+    !isStandalone &&
+    restAttachments.length === 0 &&
+    !isMediaAttachmentOfType(attachment, 'audio')
+  ) {
+    aspectRatio = '16 / 9';
+  }
+
   if (pictureInPicture.inUse) {
     return <PictureInPicturePlaceholder aspectRatio={aspectRatio} />;
   }
@@ -310,6 +325,7 @@ const MediaAttachments: React.FC<{
         onOpenMedia={handleOpenMedia}
         onToggleVisibility={handleToggleMediaVisibility}
         visible={showMedia}
+        standalone={isStandalone}
       />
     </MediaAttachmentWrapper>
   );
