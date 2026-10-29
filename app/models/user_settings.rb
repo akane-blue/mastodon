@@ -44,6 +44,7 @@ class UserSettings
     setting :crop_attachment_thumbnails_on_timeline, default: false
     setting :mod_reduce_column_radius, default: false
     setting :mod_wider_column, default: false
+    setting :mod_square_avatars, default: false
     setting :emoji_style, default: 'auto', in: %w(auto native twemoji)
     setting :color_scheme, default: 'auto', in: %w(auto light dark)
     setting :contrast, default: 'auto', in: %w(auto high)

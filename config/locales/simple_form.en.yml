@@ -277,6 +277,7 @@ en:
         setting_reduce_column_radius: Use subtler rounded corners on columns
         setting_reduce_motion: Reduce motion in animations
         setting_split_default_privacy_discoverable: Make my posts discoverable in public feed & search results
+        setting_square_avatars: Show profile pictures as rounded squares
         setting_system_font_ui: Use system's default font
         setting_system_scrollbars_ui: Use system's default scrollbar
         setting_theme: Site theme

@@ -1,0 +1,6 @@
+// Restore the rounded-square profile pictures of the pre-redesign UI.
+// `.account` is listed too because some views override the variable on it.
+html.mod-square-avatars,
+html.mod-square-avatars .account {
+  --avatar-border-radius: 8px;
+}

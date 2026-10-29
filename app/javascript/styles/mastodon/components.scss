@@ -2985,7 +2985,7 @@ a.account__display-name {
 
   .account__avatar {
     margin-inline-end: 5px;
-    border-radius: 50%;
+    border-radius: var(--avatar-border-radius);
   }
 
   strong {
