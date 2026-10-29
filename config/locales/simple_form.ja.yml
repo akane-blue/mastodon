@@ -65,6 +65,7 @@ ja:
         setting_display_media_hide_all: メディアを常に隠す
         setting_display_media_show_all: メディアを常に表示する
         setting_emoji_style: 絵文字の表示方法。「自動」の場合、可能ならネイティブの絵文字を使用し、レガシーなブラウザではTwemojiで代替します。
+        setting_favourite_style: ハートのアイコンを星に、「いいね」の表記を「お気に入り」に切り替えます
         setting_quick_boosting_html: 有効にすると、%{boost_icon} ブーストアイコンのクリックで即座にブーストされます。ブースト/引用ドロップダウンは開きません。引用アクションは %{options_icon} (オプション) メニューに移されます。
         setting_sidebar_composer: マルチカラム表示のとき、左のサイドバーの「新しい投稿」ボタンの位置に投稿欄を常に表示し、ナビゲーションをコンパクトにします
         setting_use_blurhash: ぼかしはメディアの色を元に生成されますが、細部は見えにくくなっています
@@ -249,6 +250,7 @@ ja:
         setting_display_own_posts: 自分の投稿をタイムラインに表示する
         setting_emoji_style: 絵文字スタイル
         setting_expand_spoilers: 閲覧注意としてマークされた投稿を常に展開する
+        setting_favourite_style: 「お気に入り」表記と星アイコンを使う
         setting_hide_network: 繋がりを隠す
         setting_hide_translate_button: 翻訳ボタンを非表示にする
         setting_missing_alt_text_modal: 代替テキストなしでメディアを投稿する前に警告する

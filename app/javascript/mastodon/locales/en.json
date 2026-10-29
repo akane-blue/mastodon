@@ -792,6 +792,7 @@
   "explore.trending_links": "News",
   "explore.trending_statuses": "Posts",
   "explore.trending_tags": "Hashtags",
+  "favourite_style.favourited_by": "Favorited by",
   "featured_tags.more_items": "+{count}",
   "featured_tags.suggestions": "Lately you’ve posted about {items}. Add these as featured hashtags?",
   "featured_tags.suggestions.add": "Add",
