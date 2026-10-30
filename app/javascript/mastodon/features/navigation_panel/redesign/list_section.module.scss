@@ -3,7 +3,7 @@
 @use './navigation_link.module.scss' as navigation-link;
 
 .root {
-  padding-top: var(--space-4);
+  padding-top: var(--nav-list-section-spacing, var(--space-4));
 
   :any-link {
     color: inherit;

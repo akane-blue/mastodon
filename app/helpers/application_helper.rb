@@ -187,6 +187,7 @@ module ApplicationHelper
     output << 'mod-reduce-column-radius' if current_account&.user&.setting_reduce_column_radius
     output << 'mod-wider-column' if current_account&.user&.setting_wider_column
     output << 'mod-square-avatars' if current_account&.user&.setting_square_avatars
+    output << 'mod-sidebar-composer' if current_account&.user&.setting_sidebar_composer
     output.compact_blank.join(' ')
   end
 

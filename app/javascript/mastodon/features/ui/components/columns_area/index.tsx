@@ -8,6 +8,7 @@ import {
   RedesignMobileNavigation,
   SlideOutNavigation,
 } from '@/mastodon/features/navigation_panel/redesign/mobile_nav';
+import { useIsSidebarComposerActive } from '@/mastodon/features/navigation_panel/redesign/sidebar_composer';
 import { Footer } from 'mastodon/features/custom_homepage/components/footer';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
@@ -23,6 +24,7 @@ export const ColumnsArea: React.FC<{
   ref?: React.Ref<HTMLDivElement>;
 }> = ({ children, minimalShell, singleColumn, ref }) => {
   const isMobile = useBreakpoint('openable');
+  const isSidebarComposerActive = useIsSidebarComposerActive();
 
   if (minimalShell) {
     return (
@@ -60,7 +62,7 @@ export const ColumnsArea: React.FC<{
         <RedesignNavigationPanel multiColumn />
       </div>
       {isMobile && <SlideOutNavigation multiColumn />}
-      <ComposeButton />
+      {!isSidebarComposerActive && <ComposeButton />}
       <MultiColumnContent>{children}</MultiColumnContent>
 
       <Column className={multiColClasses.discoveryColumn}>

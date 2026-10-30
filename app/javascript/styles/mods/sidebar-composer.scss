@@ -1,0 +1,12 @@
+// Compact the multi-column navigation so the sidebar composer has room
+html.mod-sidebar-composer body.layout-multiple-columns {
+  --nav-header-spacing: var(--space-4);
+  --nav-link-gap: var(--space-half);
+  --nav-link-padding-block: calc(var(--space-1) + var(--space-half));
+  --nav-link-min-height: 32px;
+  --nav-list-section-spacing: var(--space-2);
+  --nav-footer-padding: var(--space-4);
+
+  // Sticky footer now also holds the composer (capped at 50vh)
+  --nav-footer-height: calc(50vh + 180px);
+}

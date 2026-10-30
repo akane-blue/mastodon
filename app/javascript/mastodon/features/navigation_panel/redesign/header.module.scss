@@ -9,9 +9,10 @@
 
   // We're distributing the bottom spacing between padding and margin so that
   // not too much of it overlaps the navigation links when scrolled down
-  --half-bottom-spacing: calc(var(--space-6) / 2);
+  --half-bottom-spacing: calc(var(--nav-header-spacing, var(--space-6)) / 2);
 
-  padding: var(--space-6) var(--space-5) var(--half-bottom-spacing);
+  padding: var(--nav-header-spacing, var(--space-6)) var(--space-5)
+    var(--half-bottom-spacing);
   margin-bottom: var(--half-bottom-spacing);
   background: var(--navigation-background-color);
 

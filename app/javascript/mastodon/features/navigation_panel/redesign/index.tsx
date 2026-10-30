@@ -54,6 +54,10 @@ import { NavigationHeader } from './header';
 import { ListSection } from './list_section';
 import { DisabledAccountBanner, LoggedOutInfo } from './logged_out_info';
 import { NavigationLink } from './navigation_link';
+import {
+  SidebarComposer,
+  useIsSidebarComposerActive,
+} from './sidebar_composer';
 import classes from './styles.module.scss';
 
 const messages = defineMessages({
@@ -163,6 +167,10 @@ export const RedesignNavigationPanel: React.FC<{
     dispatch(closeNavigation());
     dispatch(openNewComposer({ type: 'post' }));
   }, [dispatch]);
+
+  const isSidebarComposerActive = useIsSidebarComposerActive();
+  const showSidebarComposer =
+    isSidebarComposerActive && multiColumn && mode === 'static';
 
   const { customFeeds } = useCustomFeeds();
   const { followedHashtags } = useFollowedHashtags();
@@ -279,20 +287,24 @@ export const RedesignNavigationPanel: React.FC<{
           </ul>
 
           <footer className={classes.footer} data-stuck={!isScrolledToBottom}>
-            <div className={classes.newPostButton}>
-              <Button
-                leadingIcon={PenNibIcon}
-                onClick={openComposer}
-                variant='solid'
-                color='accent'
-                size='md'
-              >
-                <FormattedMessage
-                  id='tabs_bar.publish'
-                  defaultMessage='New Post'
-                />
-              </Button>
-            </div>
+            {showSidebarComposer ? (
+              <SidebarComposer />
+            ) : (
+              <div className={classes.newPostButton}>
+                <Button
+                  leadingIcon={PenNibIcon}
+                  onClick={openComposer}
+                  variant='solid'
+                  color='accent'
+                  size='md'
+                >
+                  <FormattedMessage
+                    id='tabs_bar.publish'
+                    defaultMessage='New Post'
+                  />
+                </Button>
+              </div>
+            )}
 
             {(mode !== 'slide-out' || multiColumn) && (
               <>
