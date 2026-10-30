@@ -144,7 +144,9 @@ export const RedesignNavigationPanel: React.FC<{
   siteName?: string;
   /**
    * In 'slide-out' mode (used on smaller viewport sizes), some
-   * menu items are hidden and the design is tweaked slightly
+   * menu items are hidden and the design is tweaked slightly.
+   * In the multi-column layout these items are kept, as there is
+   * no mobile bottom navigation providing them.
    */
   mode?: 'static' | 'slide-out';
   multiColumn?: boolean;
@@ -292,7 +294,7 @@ export const RedesignNavigationPanel: React.FC<{
               </Button>
             </div>
 
-            {mode !== 'slide-out' && (
+            {(mode !== 'slide-out' || multiColumn) && (
               <>
                 <ul className={classes.footerNav}>
                   <NavigationLink

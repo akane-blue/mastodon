@@ -4,6 +4,9 @@
   --multi-column-navigation-width: 320px;
   --multi-column-gap: var(--space-1);
 
+  // Used by the slide-out navigation
+  --navigation-width: var(--multi-column-navigation-width);
+
   // This grid definition is shared with the composer
   --columns-area-grid-columns: minmax(0, var(--multi-column-navigation-width))
     minmax(0, 600px) minmax(0, 1fr);

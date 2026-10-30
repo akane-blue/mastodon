@@ -3220,9 +3220,12 @@ a.account__display-name {
   height: 100%;
 
   @media (max-width: #{$mobile-menu-breakpoint - 1}) {
-    padding-bottom: calc(
-      var(--mobile-bottom-nav-height) - var(--last-content-item-border-width)
-    );
+    // The mobile bottom navigation is only rendered in the single-column layout
+    .layout-single-column & {
+      padding-bottom: calc(
+        var(--mobile-bottom-nav-height) - var(--last-content-item-border-width)
+      );
+    }
   }
 }
 

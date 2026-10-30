@@ -4,7 +4,10 @@ import { Column } from '@/mastodon/components/column';
 import { ComposeButton } from '@/mastodon/features/compose/trigger';
 import { DiscoveryPanel } from '@/mastodon/features/discovery_panel';
 import { RedesignNavigationPanel } from '@/mastodon/features/navigation_panel/redesign';
-import { RedesignMobileNavigation } from '@/mastodon/features/navigation_panel/redesign/mobile_nav';
+import {
+  RedesignMobileNavigation,
+  SlideOutNavigation,
+} from '@/mastodon/features/navigation_panel/redesign/mobile_nav';
 import { Footer } from 'mastodon/features/custom_homepage/components/footer';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
@@ -56,6 +59,7 @@ export const ColumnsArea: React.FC<{
       <div className={multiColClasses.navigationWrapper}>
         <RedesignNavigationPanel multiColumn />
       </div>
+      {isMobile && <SlideOutNavigation multiColumn />}
       <ComposeButton />
       <MultiColumnContent>{children}</MultiColumnContent>
 
