@@ -150,7 +150,7 @@
 .textareaMirror {
   @include mixins.type-body;
 
-  padding: var(--space-1);
+  padding: var(--space-2) var(--space-3);
 
   // Prevent automatic page zoom in Safari when focusing
   // text fields with font-sizes below 16px
@@ -315,7 +315,7 @@ textarea.textarea {
 
 .replyAvatar {
   margin-inline-end: var(--space-2);
-  border-radius: var(--radius-round);
+  border-radius: var(--avatar-border-radius);
   overflow: hidden;
 }
 

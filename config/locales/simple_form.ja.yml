@@ -254,6 +254,7 @@ ja:
         setting_quick_boosting: クイックブーストの有効化
         setting_reduce_column_radius: カラムの角丸を控えめにする
         setting_reduce_motion: アニメーションの動きを減らす
+        setting_square_avatars: アイコンを角丸四角で表示する
         setting_system_font_ui: システムのデフォルトフォントを使う
         setting_system_scrollbars_ui: システムのデフォルトのスクロールバーを使う
         setting_theme: サイトテーマ

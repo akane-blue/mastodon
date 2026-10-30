@@ -186,6 +186,7 @@ module ApplicationHelper
     output << 'rtl' if locale_direction == 'rtl'
     output << 'mod-reduce-column-radius' if current_account&.user&.setting_reduce_column_radius
     output << 'mod-wider-column' if current_account&.user&.setting_wider_column
+    output << 'mod-square-avatars' if current_account&.user&.setting_square_avatars
     output.compact_blank.join(' ')
   end
 

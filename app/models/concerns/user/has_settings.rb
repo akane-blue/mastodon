@@ -190,4 +190,8 @@ module User::HasSettings
   def setting_wider_column
     settings['web.mod_wider_column']
   end
+
+  def setting_square_avatars
+    settings['web.mod_square_avatars']
+  end
 end
