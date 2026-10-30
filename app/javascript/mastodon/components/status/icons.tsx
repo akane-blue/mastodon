@@ -2,10 +2,10 @@ import {
   ArrowsClockwiseIcon,
   BookmarkSimpleIcon,
   ChatCircleIcon,
-  HeartIcon,
   QuotesIcon,
 } from '@phosphor-icons/react';
 
+import { LikeIcon } from '@/mastodon/mod/favourite_style';
 import { isRedesignEnabled } from '@/mastodon/utils/environment';
 import BookmarkLegacyIcon from '@/material-icons/400-24px/bookmark-fill.svg?react';
 import BookmarkBorderLegacyIcon from '@/material-icons/400-24px/bookmark.svg?react';
@@ -36,10 +36,10 @@ export const StatusBoostActiveIcon = isRedesignEnabled()
   ? BoostActiveIcon
   : BoostActiveLegacyIcon;
 export const StatusLikeIcon = isRedesignEnabled()
-  ? HeartIcon
+  ? LikeIcon
   : StarBorderLegacyIcon;
 export const StatusLikeActiveIcon = isRedesignEnabled()
-  ? iconWeight(HeartIcon, 'fill')
+  ? iconWeight(LikeIcon, 'fill')
   : StarLegacyIcon;
 export const StatusBookmarkIcon = isRedesignEnabled()
   ? BookmarkSimpleIcon

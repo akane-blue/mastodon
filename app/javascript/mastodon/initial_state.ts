@@ -26,6 +26,7 @@ interface InitialStateMeta {
   expand_spoilers?: boolean;
   hide_translate_button: boolean;
   sidebar_composer?: boolean;
+  favourite_style?: boolean;
   limited_federation_mode: boolean;
   locale: string;
   mascot: string | null;
@@ -143,6 +144,7 @@ export const searchEnabled = getMeta('search_enabled');
 export const trendsEnabled = getMeta('trends_enabled');
 export const showTrends = getMeta('show_trends');
 export const sidebarComposer = getMeta('sidebar_composer');
+export const favouriteStyle = getMeta('favourite_style');
 export const singleUserMode = getMeta('single_user_mode');
 export const source_url = getMeta('source_url');
 export const localLiveFeedAccess = getMeta('local_live_feed_access');

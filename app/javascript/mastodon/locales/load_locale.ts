@@ -1,5 +1,7 @@
 import { Semaphore } from 'async-mutex';
 
+import { applyFavouriteStyle } from '@/mastodon/mod/favourite_style';
+
 import type { LocaleData } from './global_locale';
 import { isLocaleLoaded, setLocale } from './global_locale';
 
@@ -30,6 +32,6 @@ export async function loadLocale() {
 
     const { default: localeData } = await localeFile();
 
-    setLocale({ messages: localeData, locale });
+    setLocale({ messages: await applyFavouriteStyle(localeData), locale });
   });
 }
