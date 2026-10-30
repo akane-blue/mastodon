@@ -357,9 +357,13 @@ const MediaAttachmentWrapper: React.FC<{
       className={classes.galleryWrapper}
     >
       {!visible && !statusHidden && (
+        // The whole overlay reveals the media on click. Keyboard users reach
+        // the button below, whose click bubbles up to this handler.
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
         <div
           className={classes.gallerySpoiler}
           data-interactive-post-content='true'
+          onClick={onToggle}
         >
           {mediaFilters.length > 0 && (
             <FormattedMessage
@@ -372,7 +376,7 @@ const MediaAttachmentWrapper: React.FC<{
               }}
             />
           )}
-          <Button size='sm' variant='solid' onClick={onToggle}>
+          <Button size='sm' variant='solid'>
             <FormattedMessage
               id='content_warning.media.show_short'
               defaultMessage='Show media'

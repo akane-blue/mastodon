@@ -41,7 +41,7 @@
   z-index: 10;
   display: grid;
   place-content: center;
-  cursor: auto;
+  cursor: pointer;
 
   > p {
     @include mixins.type-body-compact;

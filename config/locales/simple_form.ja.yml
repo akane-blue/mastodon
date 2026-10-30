@@ -68,6 +68,7 @@ ja:
         setting_quick_boosting_html: 有効にすると、%{boost_icon} ブーストアイコンのクリックで即座にブーストされます。ブースト/引用ドロップダウンは開きません。引用アクションは %{options_icon} (オプション) メニューに移されます。
         setting_use_blurhash: ぼかしはメディアの色を元に生成されますが、細部は見えにくくなっています
         setting_use_pending_items: 新着があってもタイムラインを自動的にスクロールしないようにします
+        setting_wider_column: ウィンドウやディスプレイの幅に合わせてカラムの幅を等分します
         username: アルファベット大文字と小文字、数字、アンダーバー「_」が使えます
         whole_word: キーワードまたはフレーズが英数字のみの場合、単語全体と一致する場合のみ適用されるようになります
       domain_allow:
@@ -251,6 +252,7 @@ ja:
         setting_hide_translate_button: 翻訳ボタンを非表示にする
         setting_missing_alt_text_modal: 代替テキストなしでメディアを投稿する前に警告する
         setting_quick_boosting: クイックブーストの有効化
+        setting_reduce_column_radius: カラムの角丸を控えめにする
         setting_reduce_motion: アニメーションの動きを減らす
         setting_system_font_ui: システムのデフォルトフォントを使う
         setting_system_scrollbars_ui: システムのデフォルトのスクロールバーを使う
@@ -258,6 +260,7 @@ ja:
         setting_unfollow_modal: フォローを解除する前に確認ダイアログを表示する
         setting_use_blurhash: 非表示のメディアを色付きのぼかしで表示する
         setting_use_pending_items: 手動更新モード
+        setting_wider_column: より幅広なカラムを使用する
         severity: 重大性
         sign_in_token_attempt: セキュリティコード
         title: タイトル
