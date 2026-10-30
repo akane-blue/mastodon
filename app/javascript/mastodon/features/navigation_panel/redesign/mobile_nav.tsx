@@ -156,7 +156,13 @@ export const RedesignMobileNavigation: React.FC = () => {
 
 const MENU_WIDTH = 320;
 
-const SlideOutNavigation: React.FC = () => {
+export const SlideOutNavigation: React.FC<{
+  /**
+   * In the multi-column layout there is no mobile bottom navigation,
+   * so the slide-out menu needs to include its items
+   */
+  multiColumn?: boolean;
+}> = ({ multiColumn }) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -269,7 +275,7 @@ const SlideOutNavigation: React.FC = () => {
       inert={!isOpen}
     >
       <animated.div className={classes.slideOut} {...bind()} style={{ x }}>
-        <RedesignNavigationPanel mode='slide-out' />
+        <RedesignNavigationPanel mode='slide-out' multiColumn={multiColumn} />
       </animated.div>
     </div>
   );
