@@ -7,11 +7,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  max-height: 30vh;
   padding-bottom: var(--space-2);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
 }
 
 .item {
@@ -40,9 +36,6 @@
 
   &:focus-visible {
     outline: var(--outline-focus-default);
-
-    // Keep the outline inside the scrollable list so it is not clipped
-    outline-offset: -2px;
   }
 }
 
