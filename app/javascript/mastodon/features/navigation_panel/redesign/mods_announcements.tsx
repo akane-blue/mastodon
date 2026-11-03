@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -18,11 +18,16 @@ type ModAnnouncementItems = Record<string, ModAnnouncementItem>;
 const ANNOUNCEMENTS_URL = '/announcements.json';
 const POLLING_INTERVAL = 2 * 60 * 1000;
 
-// Shared across mounts so that remounting the sidebar does not flash an
-// empty list or refetch the whole file
+// The announcements are shown in more than one place (e.g. the sidebar and the
+// slide-out menu), so a single polling loop is shared between all of them
 let cachedItems: ModAnnouncementItems = {};
 let lastModified: string | undefined;
 let isCacheControlled = false;
+
+const listeners = new Set<() => void>();
+let pollingTimer: ReturnType<typeof setTimeout> | undefined;
+// Bumped when polling stops, so that responses still in flight are dropped
+let pollingGeneration = 0;
 
 const deleteServiceWorkerCache = async () => {
   // Files in /system/ are cached by the service worker
@@ -66,6 +71,44 @@ const fetchAnnouncements = async () => {
   }
 };
 
+const poll = async () => {
+  const generation = pollingGeneration;
+  const data = await fetchAnnouncements();
+
+  if (generation !== pollingGeneration) {
+    return;
+  }
+
+  if (data) {
+    cachedItems = data;
+    listeners.forEach((listener) => {
+      listener();
+    });
+  }
+
+  pollingTimer = setTimeout(() => void poll(), POLLING_INTERVAL);
+};
+
+const subscribe = (listener: () => void) => {
+  listeners.add(listener);
+
+  if (listeners.size === 1) {
+    void poll();
+  }
+
+  return () => {
+    listeners.delete(listener);
+
+    if (listeners.size === 0) {
+      pollingGeneration++;
+      clearTimeout(pollingTimer);
+      pollingTimer = undefined;
+    }
+  };
+};
+
+const getSnapshot = () => cachedItems;
+
 const ModAnnouncement: React.FC<{ item: ModAnnouncementItem }> = ({ item }) => {
   const { body, icon, href } = item;
 
@@ -104,37 +147,11 @@ const ModAnnouncement: React.FC<{ item: ModAnnouncementItem }> = ({ item }) => {
 
 /**
  * Server-specific announcements read from `/announcements.json`, which maps
- * keys to `{ body, icon?, href? }` items. Polled every two minutes.
+ * keys to `{ body, icon?, href? }` items. Polled every two minutes while at
+ * least one instance is mounted.
  */
 export const ModsAnnouncements: React.FC = () => {
-  const [items, setItems] = useState(cachedItems);
-
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    let cancelled = false;
-
-    const refresh = async () => {
-      const data = await fetchAnnouncements();
-
-      if (cancelled) {
-        return;
-      }
-
-      if (data) {
-        cachedItems = data;
-        setItems(data);
-      }
-
-      timer = setTimeout(() => void refresh(), POLLING_INTERVAL);
-    };
-
-    void refresh();
-
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-    };
-  }, []);
+  const items = useSyncExternalStore(subscribe, getSnapshot);
 
   const entries = Object.entries(items);
 

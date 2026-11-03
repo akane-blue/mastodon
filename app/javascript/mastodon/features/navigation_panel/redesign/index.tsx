@@ -316,7 +316,7 @@ export const RedesignNavigationPanel: React.FC<{
                 </div>
               )}
 
-              {mode === 'static' && <ModsAnnouncements />}
+              <ModsAnnouncements />
             </SidebarFooterTop>
 
             {(mode !== 'slide-out' || multiColumn) && (
