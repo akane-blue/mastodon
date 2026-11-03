@@ -1,6 +1,9 @@
 @use '@/styles/mastodon/mixins';
 
 .list {
+  // Long announcements must not widen the sidebar, whose width otherwise
+  // follows the max-content width of its contents
+  contain: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
