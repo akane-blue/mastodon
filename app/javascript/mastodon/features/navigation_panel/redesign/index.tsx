@@ -53,6 +53,8 @@ import { NavigationAccountCardAndMenu } from './account_card_and_menu';
 import { NavigationHeader } from './header';
 import { ListSection } from './list_section';
 import { DisabledAccountBanner, LoggedOutInfo } from './logged_out_info';
+import { ModsAnnouncements } from './mods_announcements';
+import announcementsClasses from './mods_announcements.module.scss';
 import { NavigationLink } from './navigation_link';
 import {
   SidebarComposer,
@@ -287,24 +289,28 @@ export const RedesignNavigationPanel: React.FC<{
           </ul>
 
           <footer className={classes.footer} data-stuck={!isScrolledToBottom}>
-            {showSidebarComposer ? (
-              <SidebarComposer />
-            ) : (
-              <div className={classes.newPostButton}>
-                <Button
-                  leadingIcon={PenNibIcon}
-                  onClick={openComposer}
-                  variant='solid'
-                  color='accent'
-                  size='md'
-                >
-                  <FormattedMessage
-                    id='tabs_bar.publish'
-                    defaultMessage='New Post'
-                  />
-                </Button>
-              </div>
-            )}
+            <div className={announcementsClasses.footerTop}>
+              {showSidebarComposer ? (
+                <SidebarComposer />
+              ) : (
+                <div className={classes.newPostButton}>
+                  <Button
+                    leadingIcon={PenNibIcon}
+                    onClick={openComposer}
+                    variant='solid'
+                    color='accent'
+                    size='md'
+                  >
+                    <FormattedMessage
+                      id='tabs_bar.publish'
+                      defaultMessage='New Post'
+                    />
+                  </Button>
+                </div>
+              )}
+
+              {mode === 'static' && <ModsAnnouncements />}
+            </div>
 
             {(mode !== 'slide-out' || multiColumn) && (
               <>
