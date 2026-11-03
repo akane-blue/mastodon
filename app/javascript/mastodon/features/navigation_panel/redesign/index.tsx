@@ -2,6 +2,8 @@ import { useCallback, useEffect } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
+import classNames from 'classnames';
+
 import type { Map as ImmutableMap } from 'immutable';
 
 import {
@@ -54,12 +56,12 @@ import { NavigationHeader } from './header';
 import { ListSection } from './list_section';
 import { DisabledAccountBanner, LoggedOutInfo } from './logged_out_info';
 import { ModsAnnouncements } from './mods_announcements';
-import announcementsClasses from './mods_announcements.module.scss';
 import { NavigationLink } from './navigation_link';
 import {
   SidebarComposer,
   useIsSidebarComposerActive,
 } from './sidebar_composer';
+import { SidebarFooterTop, useSidebarFooterFallback } from './sidebar_footer';
 import classes from './styles.module.scss';
 
 const messages = defineMessages({
@@ -173,6 +175,7 @@ export const RedesignNavigationPanel: React.FC<{
   const isSidebarComposerActive = useIsSidebarComposerActive();
   const showSidebarComposer =
     isSidebarComposerActive && multiColumn && mode === 'static';
+  const { footerRef, footerClassName } = useSidebarFooterFallback();
 
   const { customFeeds } = useCustomFeeds();
   const { followedHashtags } = useFollowedHashtags();
@@ -288,8 +291,12 @@ export const RedesignNavigationPanel: React.FC<{
             )}
           </ul>
 
-          <footer className={classes.footer} data-stuck={!isScrolledToBottom}>
-            <div className={announcementsClasses.footerTop}>
+          <footer
+            ref={footerRef}
+            className={classNames(classes.footer, footerClassName)}
+            data-stuck={!isScrolledToBottom}
+          >
+            <SidebarFooterTop>
               {showSidebarComposer ? (
                 <SidebarComposer />
               ) : (
@@ -310,7 +317,7 @@ export const RedesignNavigationPanel: React.FC<{
               )}
 
               {mode === 'static' && <ModsAnnouncements />}
-            </div>
+            </SidebarFooterTop>
 
             {(mode !== 'slide-out' || multiColumn) && (
               <>
