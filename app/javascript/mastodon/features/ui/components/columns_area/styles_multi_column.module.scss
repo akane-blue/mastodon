@@ -8,7 +8,10 @@
   --navigation-width: var(--multi-column-navigation-width);
 
   // This grid definition is shared with the composer
-  --columns-area-grid-columns: minmax(0, var(--multi-column-navigation-width))
+  --columns-area-grid-columns: minmax(
+      0,
+      var(--mod-navigation-width, var(--multi-column-navigation-width))
+    )
     minmax(0, 600px) minmax(0, 1fr);
   --columns-area-grid-gap: var(--multi-column-gap);
 
@@ -19,7 +22,10 @@
   gap: var(--multi-column-gap);
   padding-inline-end: var(--multi-column-gap);
   overflow-x: auto;
-  scroll-padding-inline-start: var(--multi-column-navigation-width);
+  scroll-padding-inline-start: var(
+    --mod-navigation-width,
+    var(--multi-column-navigation-width)
+  );
 
   &:focus-visible {
     // Scrollable elements are made focusable by some browsers, this adds
