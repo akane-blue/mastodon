@@ -16,6 +16,7 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { MultiColumnContent } from './multi_column_content';
 import classes from './styles.module.scss';
 import multiColClasses from './styles_multi_column.module.scss';
+import { useWiderColumnNavigation } from './wider_column';
 
 export const ColumnsArea: React.FC<{
   singleColumn?: boolean;
@@ -25,6 +26,7 @@ export const ColumnsArea: React.FC<{
 }> = ({ children, minimalShell, singleColumn, ref }) => {
   const isMobile = useBreakpoint('openable');
   const isSidebarComposerActive = useIsSidebarComposerActive();
+  const { navigationRef, navigationClassName } = useWiderColumnNavigation();
 
   if (minimalShell) {
     return (
@@ -58,7 +60,13 @@ export const ColumnsArea: React.FC<{
 
   return (
     <main ref={ref} className={multiColClasses.root}>
-      <div className={multiColClasses.navigationWrapper}>
+      <div
+        ref={navigationRef}
+        className={classNames(
+          multiColClasses.navigationWrapper,
+          navigationClassName,
+        )}
+      >
         <RedesignNavigationPanel multiColumn />
       </div>
       {isMobile && <SlideOutNavigation multiColumn />}
