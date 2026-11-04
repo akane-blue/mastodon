@@ -147,6 +147,10 @@
       background-color: var(--color-bg-error-base);
       transition: none;
     }
+
+    @media (forced-colors: active) {
+      border: 1px solid transparent;
+    }
   }
 
   &:disabled,
@@ -5092,6 +5096,10 @@ a.status-card {
   transition: all 100ms linear;
   transition-property: transform, opacity;
   color: var(--color-text-secondary);
+
+  @media (forced-colors: active) {
+    color: CanvasText;
+  }
 }
 
 .search__icon.icon-search {
@@ -5109,6 +5117,10 @@ a.status-card {
   width: 20px;
   height: 20px;
   border-radius: 100%;
+
+  svg {
+    pointer-events: none;
+  }
 
   &::-moz-focus-inner {
     border: 0;
@@ -6959,15 +6971,20 @@ a.status-card {
       background: rgb(from var(--color-text-on-media) r g b / 35%);
       border-radius: 4px;
       display: block;
+      box-sizing: border-box;
       position: absolute;
       height: 4px;
       inset-inline-start: 0;
       top: 50%;
       transform: translate(0, -50%);
+
+      // Outline for Windows forced-colors mode:
+      border: 1px solid transparent;
     }
 
     &__current {
       display: block;
+      box-sizing: border-box;
       position: absolute;
       height: 4px;
       border-radius: 4px;
@@ -6975,9 +6992,13 @@ a.status-card {
       top: 50%;
       transform: translate(0, -50%);
       background: var(--color-text-on-media);
+
+      // Outline for Windows forced-colors mode:
+      border: 1px solid transparent;
     }
 
     &__handle {
+      box-sizing: border-box;
       position: absolute;
       z-index: 3;
       border-radius: 50%;
@@ -6990,6 +7011,9 @@ a.status-card {
       background: var(--color-text-on-media);
       box-shadow: 1px 2px 6px var(--color-shadow-primary);
       opacity: 0;
+
+      // Outline for Windows forced-colors mode:
+      border: 1px solid transparent;
 
       .no-reduce-motion & {
         transition: opacity 100ms linear;
@@ -7038,10 +7062,14 @@ a.status-card {
     &__buffer {
       display: block;
       position: absolute;
+      box-sizing: border-box;
       height: 4px;
       border-radius: 4px;
       top: 14px;
       background: var(--color-text-on-media);
+
+      // Outline for Windows forced-colors mode:
+      border: 1px solid transparent;
     }
 
     &__buffer {
@@ -7053,12 +7081,16 @@ a.status-card {
       z-index: 3;
       opacity: 0;
       border-radius: 50%;
+      box-sizing: border-box;
       width: 12px;
       height: 12px;
       top: 10px;
       margin-inline-start: -6px;
       background: var(--color-text-on-media);
       box-shadow: 1px 2px 6px var(--color-shadow-primary);
+
+      // Outline for Windows forced-colors mode:
+      border: 1px solid transparent;
 
       .no-reduce-motion & {
         transition: opacity 0.1s ease;
@@ -7206,6 +7238,14 @@ a.status-card {
         border-radius: 4px 4px 0 0;
         background: var(--color-text-brand);
       }
+
+      @media (forced-colors: active) {
+        &::before {
+          display: none;
+        }
+
+        border-bottom: 3px solid ButtonBorder;
+      }
     }
   }
 
@@ -7284,6 +7324,10 @@ a.status-card {
   width: calc(100% - 4px);
   height: calc(100% - 4px);
   background: var(--color-text-brand);
+
+  @media (forced-colors: active) {
+    background-color: Highlight;
+  }
 }
 
 .check-box {
@@ -8009,12 +8053,6 @@ noscript {
     width: 100%;
     margin-bottom: 0;
   }
-
-  .search__icon {
-    top: 12px;
-    inset-inline-end: 12px;
-    color: var(--color-text-tertiary);
-  }
 }
 
 .explore__search-results {
@@ -8635,9 +8673,9 @@ noscript {
 .dismissable-banner,
 .warning-banner {
   position: relative;
-  margin: 10px;
-  margin-bottom: 5px;
-  border-radius: 8px;
+  margin: var(--space-4);
+  margin-bottom: var(--space-1);
+  border-radius: var(--radius-4);
   border: 1px solid var(--color-border-brand-soft);
   background: var(--color-bg-brand-softest);
   overflow: hidden;
@@ -8654,15 +8692,14 @@ noscript {
   }
 
   &__message {
+    @include type-body;
+
     flex: 1 1 auto;
-    padding: 15px;
-    font-size: 15px;
-    line-height: 22px;
-    font-weight: bold;
+    padding: var(--space-4);
     color: var(--color-text-primary);
 
     p {
-      margin-bottom: 15px;
+      margin-bottom: var(--space-4);
 
       &:last-child {
         margin-bottom: 0;
@@ -8670,21 +8707,20 @@ noscript {
     }
 
     h1 {
+      @include type-heading-sm;
+
       color: var(--color-text-brand);
-      font-size: 22px;
-      line-height: 33px;
-      font-weight: 700;
-      margin-bottom: 15px;
+      margin-bottom: var(--space-2);
     }
 
     &__actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: var(--space-1);
 
       &__wrapper {
         display: flex;
-        margin-top: 30px;
+        margin-top: var(--space-7);
       }
 
       .button {
