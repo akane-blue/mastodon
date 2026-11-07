@@ -15,18 +15,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-image:
+  build:
     # Secrets are not available to pull requests from forks, so only build PRs from this repository
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    name: Build docker image for mastodon
+    name: Build docker image for ${{ matrix.name }}
     runs-on: ubuntu-latest
+    strategy:
+      # Keep building the other image even if one of them fails
+      fail-fast: false
+      matrix:
+        include:
+          - name: mastodon
+            file: Dockerfile
+            repo_secret: REGISTRY_REPO
+          - name: streaming
+            file: streaming/Dockerfile
+            repo_secret: REGISTRY_REPO_STREAMING
     steps:
       -
         name: Docker meta
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_REPO }}
+          images: ${{ secrets.REGISTRY_SERVER }}/${{ secrets[matrix.repo_secret] }}
           tags: |
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
             type=ref,event=branch
@@ -45,52 +56,11 @@ jobs:
         name: Checkout
         uses: actions/checkout@v7
       -
-        name: Build mastodon image
+        name: Build ${{ matrix.name }} image
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  build-streaming:
-    # Secrets are not available to pull requests from forks, so only build PRs from this repository
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    name: Build docker image for streaming
-    runs-on: ubuntu-latest
-    steps:
-      -
-        name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v6
-        with:
-          images: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_REPO_STREAMING }}
-          tags: |
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
-            type=ref,event=branch
-            type=ref,event=pr
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-      -
-        name: Login to Docker Registry
-        uses: docker/login-action@v4
-        with:
-          registry: ${{ secrets.REGISTRY_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_TOKEN }}
-      -
-        name: Checkout
-        uses: actions/checkout@v7
-      -
-        name: Build streaming image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: streaming/Dockerfile
+          file: ${{ matrix.file }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
