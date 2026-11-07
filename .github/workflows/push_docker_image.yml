@@ -9,6 +9,11 @@ on:
       - hota/**
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      no-cache:
+        description: Build without the cache (e.g. to pick up base image and package updates)
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -62,6 +67,8 @@ jobs:
           context: .
           file: ${{ matrix.file }}
           push: true
+          # Only set by workflow_dispatch; inputs are empty for push and pull_request events
+          no-cache: ${{ inputs.no-cache == true }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           # Give each image its own cache scope so that the two builds do not overwrite each other's cache
