@@ -198,4 +198,8 @@ module User::HasSettings
   def setting_sidebar_composer
     settings['web.mod_sidebar_composer']
   end
+
+  def setting_bigger_publish
+    settings['web.mod_bigger_publish']
+  end
 end

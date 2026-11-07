@@ -23,6 +23,7 @@ import {
 
 import classes from '../styles.module.scss';
 
+import biggerPublishClasses from './mods_bigger_publish.module.scss';
 import {
   selectComposeAttachments,
   selectComposeCharsCount,
@@ -78,7 +79,12 @@ export const ComposeFooter: React.FC<{ onEmojiPick: OnEmojiPick }> = ({
         />
       </IconButton>
 
-      <div className={classes.flexGrowWrap}>
+      <div
+        className={classNames(
+          classes.flexGrowWrap,
+          biggerPublishClasses.wrapper,
+        )}
+      >
         <span
           className={classNames(
             classes.counter,
@@ -98,6 +104,7 @@ export const ComposeFooter: React.FC<{ onEmojiPick: OnEmojiPick }> = ({
           color='accent'
           type='submit'
           loading={isSubmitting}
+          className={biggerPublishClasses.button}
         >
           {publishText}
         </Button>
