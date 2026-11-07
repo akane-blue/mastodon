@@ -3,11 +3,21 @@ on:
   push:
     branches:
       - hota/**
+  # Build images for pull requests targeting our branches (tagged as pr-<number>)
+  pull_request:
+    branches:
+      - hota/**
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-image:
+    # Secrets are not available to pull requests from forks, so only build PRs from this repository
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     name: Build docker image for mastodon
     runs-on: ubuntu-latest
     steps:
@@ -18,8 +28,9 @@ jobs:
         with:
           images: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_REPO }}
           tags: |
-            type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
             type=ref,event=branch
+            type=ref,event=pr
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -49,6 +60,8 @@ jobs:
           cache-to: type=gha,mode=max
 
   build-streaming:
+    # Secrets are not available to pull requests from forks, so only build PRs from this repository
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     name: Build docker image for streaming
     runs-on: ubuntu-latest
     steps:
@@ -59,8 +72,9 @@ jobs:
         with:
           images: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_REPO_STREAMING }}
           tags: |
-            type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
             type=ref,event=branch
+            type=ref,event=pr
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
