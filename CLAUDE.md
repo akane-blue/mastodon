@@ -77,6 +77,7 @@ upstream のマージでコンフリクトを減らし、独自の変更を見�
   - CSS だけで切り替えられる設定は、`ApplicationHelper#html_classes` で `<html>` に `mod-*` クラスを付けます。
   - JS の分岐が要る設定は、initial_state 経由で渡します。
 - 新しい翻訳キーは、なるべく増やさないようにします。既存のキーで足りるなら、そちらを使います。
+- **ワークフローの `uses:` を足したり変えたりしたとき**は、`gh actions-lock --no-narrow` を実行し、`.github/workflows/actions.lock` も同じ PR でコミットします。lockfile がズレたワークフローは `startup_failure` で起動せず、PR のチェック一覧にも出ないので、ビルドが走っていないことに気づきにくいためです。
 
 ## よく使うチェック
 
