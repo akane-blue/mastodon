@@ -7,10 +7,18 @@
     display: contents;
   }
 
+  // Same size as the pre-redesign bigger publish button
   .button {
     flex-basis: 100%;
-    min-height: 56px;
-    padding-block: var(--space-3);
-    font-size: var(--fs-18);
+    padding-block: var(--space-6);
+    font-size: 24px;
+
+    // A bit smaller in narrow composers such as the sidebar one, where the
+    // full size would overwhelm the rest of the form
+    @container (width < 300px) {
+      min-height: 64px;
+      padding-block: var(--space-4);
+      font-size: var(--fs-20);
+    }
   }
 }
