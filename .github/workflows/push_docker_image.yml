@@ -77,4 +77,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           # Give each image its own cache scope so that the two builds do not overwrite each other's cache
           cache-from: type=gha,scope=${{ matrix.name }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+          # Only our branches write the cache; pull requests read it from their base branch to save cache storage
+          cache-to: ${{ startsWith(github.ref, 'refs/heads/hota/') && format('type=gha,mode=max,scope={0}', matrix.name) || '' }}
