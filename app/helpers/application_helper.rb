@@ -188,6 +188,7 @@ module ApplicationHelper
     output << 'mod-wider-column' if current_account&.user&.setting_wider_column
     output << 'mod-square-avatars' if current_account&.user&.setting_square_avatars
     output << 'mod-sidebar-composer' if current_account&.user&.setting_sidebar_composer
+    output << 'mod-bigger-publish' if current_account&.user&.setting_bigger_publish
     output.compact_blank.join(' ')
   end
 
