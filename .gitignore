@@ -78,8 +78,12 @@ docker-compose.override.yml
 /.github/*
 
 # but we want to use our GitHub Actions
+# (git cannot re-include a file whose parent directory is excluded, so re-include the directory first)
+!/.github/workflows/
+/.github/workflows/*
 !/.github/workflows/actionlint.yml
 !/.github/workflows/push_docker_image.yml
+!/.github/workflows/actions.lock
 # Ignore local-only rspec configuration
 .rspec-local
 
