@@ -7,10 +7,16 @@
   --base-color-fg-on-accent: var(--color-white);
   --base-color-fg-accent: var(--color-akane-blue-600);
   --base-color-bg-accent: var(--color-akane-blue-700);
-  --base-color-danger: var(--color-red-800);
+  --base-color-danger: var(--color-akane-red-700);
   --base-highlight-strength: 8%;
 
   @include utils.high-contrast {
     --base-color-bg-accent: var(--color-akane-blue-800);
+    --base-color-danger: var(--color-akane-red-800);
   }
+}
+
+@mixin tokens {
+  --color-bg-error-soft: var(--color-akane-red-100); // legacy
+  --color-bg-error-softest: var(--color-akane-red-50); // legacy
 }

@@ -24,4 +24,18 @@
   --color-akane-blue-800: hsl(205, 49%, 41%);
   --color-akane-blue-900: hsl(205, 43%, 34%);
   --color-akane-blue-950: hsl(205, 41%, 20%);
+
+  // Akane red: same saturation/lightness curve as akane blue, so danger
+  // colors sit at the same weight as the accent.
+  --color-akane-red-50: hsl(355, 100%, 97%);
+  --color-akane-red-100: hsl(355, 100%, 94%);
+  --color-akane-red-200: hsl(355, 96%, 89%);
+  --color-akane-red-300: hsl(355, 96%, 82%);
+  --color-akane-red-400: hsl(355, 91%, 74%);
+  --color-akane-red-500: hsl(355, 85%, 67%);
+  --color-akane-red-600: hsl(355, 76%, 59%);
+  --color-akane-red-700: hsl(355, 59%, 51%);
+  --color-akane-red-800: hsl(355, 49%, 41%);
+  --color-akane-red-900: hsl(355, 43%, 34%);
+  --color-akane-red-950: hsl(355, 41%, 20%);
 }

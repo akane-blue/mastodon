@@ -7,7 +7,7 @@
   --base-color-fg-on-accent: var(--color-white);
   --base-color-fg-accent: var(--color-akane-blue-500);
   --base-color-bg-accent: var(--color-akane-blue-700);
-  --base-color-danger: var(--color-red-300);
+  --base-color-danger: var(--color-akane-red-400);
   --base-highlight-strength: 8%;
 
   @include utils.high-contrast {
@@ -17,4 +17,21 @@
 
 @mixin tokens {
   --color-border-brand-soft: var(--color-grey-800); // legacy
+
+  // Mirror the accent: a lighter tone for text, a mid tone with white text
+  // for filled backgrounds, instead of upstream's pastel fill with dark text.
+  --color-bg-error-base: var(--color-akane-red-700);
+  --color-text-on-error-base: var(--color-white);
+  --color-bg-error-base-hover: color-mix(
+    in srgb,
+    var(--color-bg-error-base),
+    var(--color-text-on-error-base) 10%
+  );
+  --color-bg-error-soft: var(--color-akane-red-900); // legacy
+  --color-bg-error-softest: var(--color-akane-red-950); // legacy
+  --color-border-error: var(--base-color-danger); // legacy
+
+  @include utils.high-contrast {
+    --color-bg-error-base: var(--color-akane-red-800);
+  }
 }
