@@ -1,8 +1,10 @@
 import React from 'react';
+
 import { useHistory } from 'react-router';
 
-interface Props
-  extends React.PropsWithChildren<React.HTMLAttributes<HTMLAnchorElement>> {
+interface Props extends React.PropsWithChildren<
+  React.HTMLAttributes<HTMLAnchorElement>
+> {
   className?: string;
   href?: string;
   to: string;
@@ -27,7 +29,7 @@ const Permalink: React.FC<Props> = (inProps) => {
 
   return (
     <a
-      target="_blank"
+      target='_blank'
       href={href}
       onClick={linkClickHandler}
       {...props}

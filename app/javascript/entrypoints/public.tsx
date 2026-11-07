@@ -13,6 +13,7 @@ import axios from 'axios';
 import { on } from 'delegated-events';
 import { throttle } from 'lodash';
 
+import { WordmarkLogo } from '@/mastodon/components/logo';
 import { determineEmojiMode } from '@/mastodon/features/emoji/mode';
 import { updateHtmlWithEmoji } from '@/mastodon/features/emoji/render';
 import type { InitialState } from '@/mastodon/initial_state';
@@ -24,7 +25,6 @@ import { assetHost } from '@/mastodon/utils/config';
 import { getNestedProperty } from '@/mastodon/utils/objects';
 import { isDarkMode } from '@/mastodon/utils/theme';
 import { formatTime } from '@/mastodon/utils/time';
-import { WordmarkLogo } from '@/mastodon/components/logo';
 
 import 'cocoon-js-vanilla';
 

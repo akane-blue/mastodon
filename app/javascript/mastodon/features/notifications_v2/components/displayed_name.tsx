@@ -1,5 +1,5 @@
-import { useAppSelector } from 'mastodon/store';
 import Permalink from 'mastodon/components/permalink';
+import { useAppSelector } from 'mastodon/store';
 
 export const DisplayedName: React.FC<{
   accountIds: string[];

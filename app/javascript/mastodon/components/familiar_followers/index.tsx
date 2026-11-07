@@ -5,11 +5,11 @@ import classNames from 'classnames';
 import { Avatar } from '@/mastodon/components/avatar';
 import { AvatarGroup } from '@/mastodon/components/avatar_group';
 import { LinkedDisplayName } from '@/mastodon/components/display_name';
+import Permalink from '@/mastodon/components/permalink';
 import type { Account } from '@/mastodon/models/account';
 
 import classes from './styles.module.scss';
 import { useFetchFamiliarFollowers } from './use_fetch_familiar_followers';
-import Permalink from '@/mastodon/components/permalink';
 
 const FamiliarFollowersReadout: React.FC<{ familiarFollowers: Account[] }> = ({
   familiarFollowers,
