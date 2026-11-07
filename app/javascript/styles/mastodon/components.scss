@@ -94,7 +94,6 @@
   }
 
   &--destructive {
-
     &:active,
     &:focus,
     &:hover {
@@ -136,7 +135,6 @@
     }
 
     &.button--destructive {
-
       &:active,
       &:focus,
       &:hover {
@@ -692,7 +690,7 @@ body > [data-popover-placement] {
     text-decoration: none;
   }
 
-  >span {
+  > span {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1009,7 +1007,7 @@ body > [data-popover-placement] {
     overflow: hidden;
     position: relative;
 
-    &>div {
+    & > div {
       float: left;
       position: relative;
       box-sizing: border-box;
@@ -1076,15 +1074,15 @@ a .account__avatar {
 }
 
 .avatar-group--compact {
-  &> :not(:first-child) {
+  & > :not(:first-child) {
     margin-inline-start: -12px;
   }
 
-  &> :first-child {
+  & > :first-child {
     transform: rotate(-4deg);
   }
 
-  &> :nth-child(2) {
+  & > :nth-child(2) {
     transform: rotate(-2deg);
   }
 
@@ -1205,7 +1203,6 @@ a.account__display-name {
 }
 
 .muted {
-
   .status__content,
   .status__content p,
   .status__content a {
@@ -1243,7 +1240,7 @@ a.account__display-name {
     white-space: nowrap;
     overflow: hidden;
 
-    &>div {
+    & > div {
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -1306,7 +1303,7 @@ a.account__display-name {
     color: var(--color-text-favourite-highlight);
   }
 
-  >span {
+  > span {
     display: inline;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1323,14 +1320,14 @@ a.account__display-name {
 
 .no-reduce-motion .icon-button.star-icon {
   &.activate {
-    &>.icon {
+    & > .icon {
       animation: spring-rotate-in 1s linear;
       transform-origin: 50% 52%;
     }
   }
 
   &.deactivate {
-    &>.icon {
+    & > .icon {
       animation: spring-rotate-out 1s linear;
       transform-origin: 50% 52%;
     }
@@ -1447,7 +1444,7 @@ a.account__display-name {
   cursor: default;
   gap: 10px;
 
-  .column>& {
+  .column > & {
     padding: 15px;
   }
 
@@ -1947,8 +1944,7 @@ a.account__display-name {
     }
   }
 
-  .columns-area>div {
-
+  .columns-area > div {
     .column,
     .drawer {
       padding-inline-start: 5px;
@@ -2044,8 +2040,7 @@ a.account__display-name {
   }
 
   .layout-single-column {
-
-    .column>.scrollable,
+    .column > .scrollable,
     .tabs-bar__wrapper .column-header,
     .tabs-bar__wrapper .column-back-button,
     .column-search-header {
@@ -2066,7 +2061,7 @@ a.account__display-name {
   }
 }
 
-@media screen and (width <=759px) {
+@media screen and (width <= 759px) {
   .columns-area__panels__main {
     width: 100%;
   }
@@ -2120,7 +2115,7 @@ a.account__display-name {
   }
 }
 
-@media screen and (width >=760px) {
+@media screen and (width >= 760px) {
   .ui__navigation-bar {
     display: none;
   }
@@ -2142,7 +2137,7 @@ a.account__display-name {
     line-height: 16px;
     color: var(--color-text-tertiary);
 
-    @container (width >=400px) {
+    @container (width >= 400px) {
       padding-inline-start: 60px;
     }
   }
@@ -2272,7 +2267,7 @@ a.account__display-name {
     color: var(--color-text-secondary);
   }
 
-  @media screen and (width >=600px) {
+  @media screen and (width >= 600px) {
     padding: 40px;
   }
 }
@@ -2501,7 +2496,7 @@ a.account__display-name {
   display: none;
   contain: content;
 
-  >img {
+  > img {
     display: block;
     object-fit: contain;
     object-position: bottom left;
@@ -2511,7 +2506,7 @@ a.account__display-name {
     user-select: none;
   }
 
-  @media screen and (height >=640px) {
+  @media screen and (height >= 640px) {
     display: block;
   }
 }
@@ -2853,7 +2848,6 @@ a.status-card {
   &:hover,
   &:focus,
   &:active {
-
     .status-card__title,
     .status-card__host,
     .status-card__author,
@@ -2870,7 +2864,6 @@ a.status-card {
   &:hover,
   &:focus,
   &:active {
-
     .status-card__title,
     .status-card__host,
     .status-card__author,
@@ -2957,7 +2950,7 @@ a.status-card {
   background: var(--color-bg-secondary);
   position: relative;
 
-  &>.icon {
+  & > .icon {
     width: 18px;
     height: 18px;
     position: absolute;
@@ -3029,7 +3022,7 @@ a.status-card {
   border-end-start-radius: 0;
 }
 
-.status-card.expanded>a {
+.status-card.expanded > a {
   width: 100%;
 }
 
@@ -3386,7 +3379,6 @@ a.status-card {
 }
 
 .column-header__setting-btn {
-
   &:hover,
   &:focus {
     color: var(--color-text-secondary);
@@ -3394,7 +3386,7 @@ a.status-card {
   }
 }
 
-.column-header__collapsible__extra+.column-header__setting-btn {
+.column-header__collapsible__extra + .column-header__setting-btn {
   padding-top: 5px;
 }
 
@@ -3682,7 +3674,7 @@ a.status-card {
   }
 
   .app-form__toggle {
-    &__toggle>div {
+    &__toggle > div {
       border: 0;
     }
   }
@@ -3721,7 +3713,7 @@ a.status-card {
         background: var(--color-bg-secondary);
       }
 
-      @media screen and (width <=600px) {
+      @media screen and (width <= 600px) {
         font-size: 16px;
       }
     }
@@ -3841,7 +3833,7 @@ a.status-card {
   align-items: center;
   justify-content: center;
 
-  &>span {
+  & > span {
     max-width: 500px;
   }
 
@@ -4076,7 +4068,7 @@ a.status-card {
         border: 1px solid var(--color-border-primary);
         color: var(--color-text-secondary);
 
-        @media screen and (width <=600px) {
+        @media screen and (width <= 600px) {
           font-size: 16px;
           line-height: 24px;
           letter-spacing: 0.5px;
@@ -4374,7 +4366,7 @@ a.status-card {
   }
 
   .account:last-child,
-  &>div:last-child .status {
+  & > div:last-child .status {
     border-bottom: 0;
   }
 }
@@ -5081,7 +5073,7 @@ a.status-card {
     font-weight: 700;
     margin-bottom: 15px;
 
-    @media screen and (height <=800px) {
+    @media screen and (height <= 800px) {
       font-size: 22px;
     }
   }
@@ -5173,7 +5165,7 @@ a.status-card {
       border-bottom: 0;
     }
 
-    &>.poll__option__text {
+    & > .poll__option__text {
       font-size: 13px;
       color: var(--color-text-primary);
 
@@ -5224,7 +5216,7 @@ a.status-card {
     margin-bottom: 16px;
     gap: 8px;
 
-    &>span {
+    & > span {
       display: block;
       font-size: 14px;
       font-weight: bold;
@@ -5580,12 +5572,12 @@ a.status-card {
   }
 
   &--layout-2 {
-    &>.media-gallery__item:nth-child(1) {
+    & > .media-gallery__item:nth-child(1) {
       border-end-end-radius: 0;
       border-start-end-radius: 0;
     }
 
-    &>.media-gallery__item:nth-child(2) {
+    & > .media-gallery__item:nth-child(2) {
       border-start-start-radius: 0;
       border-end-start-radius: 0;
     }
@@ -5594,18 +5586,18 @@ a.status-card {
   &--layout-3 {
     min-height: calc(64px * 2 + 8px);
 
-    &>.media-gallery__item:nth-child(1) {
+    & > .media-gallery__item:nth-child(1) {
       border-end-end-radius: 0;
       border-start-end-radius: 0;
     }
 
-    &>.media-gallery__item:nth-child(2) {
+    & > .media-gallery__item:nth-child(2) {
       border-start-start-radius: 0;
       border-end-start-radius: 0;
       border-end-end-radius: 0;
     }
 
-    &>.media-gallery__item:nth-child(3) {
+    & > .media-gallery__item:nth-child(3) {
       border-start-start-radius: 0;
       border-end-start-radius: 0;
       border-start-end-radius: 0;
@@ -5615,26 +5607,26 @@ a.status-card {
   &--layout-4 {
     min-height: calc(64px * 2 + 8px);
 
-    &>.media-gallery__item:nth-child(1) {
+    & > .media-gallery__item:nth-child(1) {
       border-end-end-radius: 0;
       border-start-end-radius: 0;
       border-end-start-radius: 0;
     }
 
-    &>.media-gallery__item:nth-child(2) {
+    & > .media-gallery__item:nth-child(2) {
       border-start-start-radius: 0;
       border-end-start-radius: 0;
       border-end-end-radius: 0;
     }
 
-    &>.media-gallery__item:nth-child(3) {
+    & > .media-gallery__item:nth-child(3) {
       border-start-start-radius: 0;
       border-start-end-radius: 0;
       border-end-start-radius: 0;
       border-end-end-radius: 0;
     }
 
-    &>.media-gallery__item:nth-child(4) {
+    & > .media-gallery__item:nth-child(4) {
       border-start-start-radius: 0;
       border-end-start-radius: 0;
       border-start-end-radius: 0;
@@ -5766,7 +5758,6 @@ a.status-card {
 
 .detailed,
 .fullscreen {
-
   .video-player__volume__current,
   .video-player__volume::before {
     bottom: 27px;
@@ -5853,12 +5844,10 @@ a.status-card {
     position: absolute;
     inset: 0 0 auto;
     height: 24px;
-    z-index: 1;
-    /* Ensure this renders on top of audio player controls */
+    z-index: 1; /* Ensure this renders on top of audio player controls */
   }
 
   &.inactive {
-
     .video-player__seek,
     .audio-player__controls,
     .video-player__controls {
@@ -5904,7 +5893,6 @@ a.status-card {
   }
 
   @container audio-player (max-width: 400px) {
-
     .video-player__time,
     .player-button.video-player__download__icon {
       display: none;
@@ -6001,7 +5989,6 @@ a.status-card {
   }
 
   &.inactive {
-
     video,
     .video-player__controls {
       visibility: hidden;
@@ -6629,7 +6616,7 @@ noscript {
   overflow: hidden;
   white-space: nowrap;
 
-  >span {
+  > span {
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -7629,7 +7616,7 @@ noscript {
     }
   }
 
-  figure>* {
+  figure > * {
     margin-top: 0;
     margin-bottom: 0;
   }
@@ -7666,7 +7653,7 @@ noscript {
     margin-bottom: 0.5em;
   }
 
-  ol>li {
+  ol > li {
     counter-increment: list-counter;
 
     &::before {
@@ -7676,7 +7663,7 @@ noscript {
     }
   }
 
-  ul>li::before {
+  ul > li::before {
     content: '';
     position: absolute;
     background-color: var(--color-text-secondary);
@@ -7687,30 +7674,30 @@ noscript {
     inset-inline-start: 0.25em;
   }
 
-  ul>li,
-  ol>li {
+  ul > li,
+  ol > li {
     position: relative;
     padding-inline-start: 1.75em;
   }
 
-  &>ul>li p {
+  & > ul > li p {
     margin-top: 0.75em;
     margin-bottom: 0.75em;
   }
 
-  &>ul>li>*:first-child {
+  & > ul > li > *:first-child {
     margin-top: 1.25em;
   }
 
-  &>ul>li>*:last-child {
+  & > ul > li > *:last-child {
     margin-bottom: 1.25em;
   }
 
-  &>ol>li>*:first-child {
+  & > ol > li > *:first-child {
     margin-top: 1.25em;
   }
 
-  &>ol>li>*:last-child {
+  & > ol > li > *:last-child {
     margin-bottom: 1.25em;
   }
 
@@ -7764,29 +7751,29 @@ noscript {
     margin-bottom: 3em;
   }
 
-  hr+* {
+  hr + * {
     margin-top: 0;
   }
 
-  h2+* {
+  h2 + * {
     margin-top: 0;
   }
 
-  h3+* {
+  h3 + * {
     margin-top: 0;
   }
 
-  h4+*,
-  h5+*,
-  h6+* {
+  h4 + *,
+  h5 + *,
+  h6 + * {
     margin-top: 0;
   }
 
-  &> :first-child {
+  & > :first-child {
     margin-top: 0;
   }
 
-  &> :last-child {
+  & > :last-child {
     margin-bottom: 0;
   }
 }
@@ -7987,7 +7974,7 @@ noscript {
       margin-bottom: 20px;
     }
 
-    @media screen and (width <=600px) {
+    @media screen and (width <= 600px) {
       display: block;
 
       h4 {
@@ -8421,7 +8408,7 @@ noscript {
           gap: var(--space-1);
           align-items: center;
 
-          &>* {
+          & > * {
             max-width: 100%;
           }
 
@@ -8726,7 +8713,6 @@ noscript {
         }
 
         @container (width < 350px) {
-
           time,
           &-separator {
             display: none;
@@ -9066,7 +9052,7 @@ noscript {
           white-space: nowrap;
           color: var(--color-text-success);
 
-          &>span {
+          & > span {
             overflow: hidden;
             text-overflow: ellipsis;
           }
