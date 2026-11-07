@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
@@ -17,14 +17,24 @@ export const quoteMediaSpoilerContainerClass = classes.container;
 /**
  * Whether the media of a quoted post is shown, following the same
  * `display_media` rules as the attachments of a regular post.
+ * Only media that starts hidden can be hidden again, so quotes of
+ * non-sensitive media look the same as before.
  */
 export function useQuoteMediaVisibility(sensitive: boolean) {
-  const [visible, { onTrue }] = useToggle(
+  const [shownByDefault] = useState(
     () =>
       displayMedia === 'show_all' ||
       (displayMedia !== 'hide_all' && !sensitive),
   );
-  return [visible, onTrue] as const;
+  const [showMedia, { onTrue: onShowMedia, onFalse: onHideMedia }] =
+    useToggle(shownByDefault);
+
+  return {
+    showMedia,
+    canHideMedia: !shownByDefault,
+    onShowMedia,
+    onHideMedia,
+  };
 }
 
 /**
@@ -84,6 +94,35 @@ export const QuoteMediaSpoiler: React.FC<{ onReveal: () => void }> = ({
           id='content_warning.media.show_short'
           defaultMessage='Show media'
         />
+      </Button>
+    </div>
+  );
+};
+
+export const QuoteMediaHideButton: React.FC<{ onHide: () => void }> = ({
+  onHide,
+}) => {
+  // Keep the click from opening the quoted post or the notification.
+  const handleClick = useCallback(
+    (event: React.MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      onHide();
+    },
+    [onHide],
+  );
+
+  // Same look as the hide button of a regular post's media gallery
+  return (
+    <div className={classes.hideButton} data-color-scheme='dark'>
+      <Button
+        contrastOnMedia
+        size='xs'
+        variant='solid'
+        className='media-gallery__actions__pill'
+        onClick={handleClick}
+      >
+        <FormattedMessage id='media_gallery.hide' defaultMessage='Hide' />
       </Button>
     </div>
   );

@@ -53,6 +53,7 @@ import {
 } from './hooks';
 import classes from './quote.module.scss';
 import {
+  QuoteMediaHideButton,
   QuoteMediaImage,
   QuoteMediaSpoiler,
   quoteMediaSpoilerContainerClass,
@@ -229,7 +230,8 @@ const QuotedStatusBody: React.FC<{
 
     return formatter.format({ hours, minutes, seconds });
   }, [mainAttachment?.meta?.original?.duration]);
-  const [showMedia, onShowMedia] = useQuoteMediaVisibility(status.sensitive);
+  const { showMedia, canHideMedia, onShowMedia, onHideMedia } =
+    useQuoteMediaVisibility(status.sensitive);
 
   const poll = useAppSelector((state) => state.polls[status.poll ?? '']);
   const inReplyToAccount = useAppSelector((state) =>
@@ -321,7 +323,13 @@ const QuotedStatusBody: React.FC<{
       )}
 
       {mainAttachment?.type === 'video' && (
-        <div className={classNames(classes.media, classes.mediaSingle)}>
+        <div
+          className={classNames(
+            classes.media,
+            classes.mediaSingle,
+            canHideMedia && quoteMediaSpoilerContainerClass,
+          )}
+        >
           <QuoteMediaImage
             linkStatus={linkStatus}
             hidden={!showMedia}
@@ -338,6 +346,10 @@ const QuotedStatusBody: React.FC<{
 
             {!showMedia && <QuoteMediaSpoiler onReveal={onShowMedia} />}
           </QuoteMediaImage>
+
+          {showMedia && canHideMedia && (
+            <QuoteMediaHideButton onHide={onHideMedia} />
+          )}
         </div>
       )}
 
@@ -347,9 +359,7 @@ const QuotedStatusBody: React.FC<{
             classes.media,
             imageAttachments.length === 1 && classes.mediaSingle,
             imageAttachments.length > 1 && classes.mediaGrid,
-            !showMedia &&
-              imageAttachments.length > 1 &&
-              quoteMediaSpoilerContainerClass,
+            canHideMedia && quoteMediaSpoilerContainerClass,
           )}
           data-number={imageAttachments.length}
         >
@@ -372,6 +382,10 @@ const QuotedStatusBody: React.FC<{
 
           {!showMedia && imageAttachments.length > 1 && (
             <QuoteMediaSpoiler onReveal={onShowMedia} />
+          )}
+
+          {showMedia && canHideMedia && (
+            <QuoteMediaHideButton onHide={onHideMedia} />
           )}
         </div>
       )}
