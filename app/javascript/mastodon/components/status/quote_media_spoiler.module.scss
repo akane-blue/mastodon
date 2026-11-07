@@ -1,0 +1,27 @@
+.container {
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+
+  // Stay above the extended clickable area of the card's primary link
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+
+.hiddenImage {
+  max-height: 260px;
+}
+
+// The start corner, because a single image is aligned to the start and
+// may be narrower than the media container it is positioned against.
+.hideButton {
+  position: absolute;
+  top: var(--space-2);
+  inset-inline-start: var(--space-2);
+  z-index: 2;
+}

@@ -51,8 +51,14 @@ import {
   useStatusContext,
   useStatusHandlers,
 } from './hooks';
-import { StatusGalleryImage, StatusImage } from './image';
 import classes from './quote.module.scss';
+import {
+  QuoteMediaHideButton,
+  QuoteMediaImage,
+  QuoteMediaSpoiler,
+  quoteMediaSpoilerContainerClass,
+  useQuoteMediaVisibility,
+} from './quote_media_spoiler';
 import { accountStatusLinkProps, statusLink } from './utils';
 
 type StatusQuoteProps = TQuotedStatus & { parentId: string };
@@ -224,7 +230,8 @@ const QuotedStatusBody: React.FC<{
 
     return formatter.format({ hours, minutes, seconds });
   }, [mainAttachment?.meta?.original?.duration]);
-  const sensitive = status.sensitive;
+  const { showMedia, canHideMedia, onShowMedia, onHideMedia } =
+    useQuoteMediaVisibility(status.sensitive);
 
   const poll = useAppSelector((state) => state.polls[status.poll ?? '']);
   const inReplyToAccount = useAppSelector((state) =>
@@ -272,7 +279,6 @@ const QuotedStatusBody: React.FC<{
   }
 
   const text = (status.translation?.contentHtml ?? status.contentHtml).trim();
-  const ImageComp = linkStatus ? StatusGalleryImage : StatusImage;
 
   return (
     <>
@@ -317,12 +323,19 @@ const QuotedStatusBody: React.FC<{
       )}
 
       {mainAttachment?.type === 'video' && (
-        <div className={classNames(classes.media, classes.mediaSingle)}>
-          <ImageComp
+        <div
+          className={classNames(
+            classes.media,
+            classes.mediaSingle,
+            canHideMedia && quoteMediaSpoilerContainerClass,
+          )}
+        >
+          <QuoteMediaImage
+            linkStatus={linkStatus}
+            hidden={!showMedia}
             statusId={status.id}
             className={classes.image}
             attachment={mainAttachment}
-            sensitive={sensitive}
             aria-label={mainAttachment.description}
           >
             <div className={classes.videoDuration}>
@@ -330,7 +343,13 @@ const QuotedStatusBody: React.FC<{
 
               {duration}
             </div>
-          </ImageComp>
+
+            {!showMedia && <QuoteMediaSpoiler onReveal={onShowMedia} />}
+          </QuoteMediaImage>
+
+          {showMedia && canHideMedia && (
+            <QuoteMediaHideButton onHide={onHideMedia} />
+          )}
         </div>
       )}
 
@@ -340,20 +359,34 @@ const QuotedStatusBody: React.FC<{
             classes.media,
             imageAttachments.length === 1 && classes.mediaSingle,
             imageAttachments.length > 1 && classes.mediaGrid,
+            canHideMedia && quoteMediaSpoilerContainerClass,
           )}
           data-number={imageAttachments.length}
         >
           {imageAttachments.map((attachment) => (
-            <ImageComp
+            <QuoteMediaImage
+              linkStatus={linkStatus}
+              hidden={!showMedia}
               showAlt
               statusId={status.id}
               className={classes.image}
               attachment={attachment}
-              sensitive={sensitive}
               key={attachment.id}
               aria-label={attachment.description}
-            />
+            >
+              {!showMedia && imageAttachments.length === 1 && (
+                <QuoteMediaSpoiler onReveal={onShowMedia} />
+              )}
+            </QuoteMediaImage>
           ))}
+
+          {!showMedia && imageAttachments.length > 1 && (
+            <QuoteMediaSpoiler onReveal={onShowMedia} />
+          )}
+
+          {showMedia && canHideMedia && (
+            <QuoteMediaHideButton onHide={onHideMedia} />
+          )}
         </div>
       )}
     </>
