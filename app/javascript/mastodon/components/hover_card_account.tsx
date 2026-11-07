@@ -21,6 +21,7 @@ import { ShortNumber } from 'mastodon/components/short_number';
 import { domain } from 'mastodon/initial_state';
 import { getAccountHidden } from 'mastodon/selectors/accounts';
 import { useAppSelector, useAppDispatch } from 'mastodon/store';
+
 import Permalink from './permalink';
 
 export const HoverCardAccount = forwardRef<
@@ -75,7 +76,11 @@ export const HoverCardAccount = forwardRef<
     >
       {account ? (
         <>
-          <Permalink href={account.url} to={`/@${account.acct}`} className='hover-card__name'>
+          <Permalink
+            href={account.url}
+            to={`/@${account.acct}`}
+            className='hover-card__name'
+          >
             <Avatar
               account={isSuspendedOrHidden ? undefined : account}
               size={46}

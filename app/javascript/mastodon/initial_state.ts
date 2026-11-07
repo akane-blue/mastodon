@@ -117,7 +117,9 @@ export const activityApiEnabled = getMeta('activity_api_enabled');
 export const advancedLayout = getMeta('advanced_layout');
 export const autoPlayGif = getMeta('auto_play_gif');
 export const boostModal = getMeta('boost_modal');
-export const cropAttachmentThumbnailsOnTimeline = getMeta('crop_attachment_thumbnails_on_timeline');
+export const cropAttachmentThumbnailsOnTimeline = getMeta(
+  'crop_attachment_thumbnails_on_timeline',
+);
 export const quickBoosting = getMeta('quick_boosting');
 export const deleteModal = getMeta('delete_modal');
 export const missingAltTextModal = getMeta('missing_alt_text_modal');
