@@ -85,8 +85,8 @@
     color 200ms;
 
   &[aria-expanded='true'] {
-    color: var(--color-text-inverted);
-    background-color: var(--color-bg-inverted);
+    color: var(--mod-color-text-on-selected, var(--color-text-inverted));
+    background-color: var(--mod-color-bg-selected, var(--color-bg-inverted));
   }
 }
 

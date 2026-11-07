@@ -19,4 +19,14 @@
 @mixin tokens {
   --color-bg-error-soft: var(--color-akane-red-100); // legacy
   --color-bg-error-softest: var(--color-akane-red-50); // legacy
+
+  // Selected menu items and pressed buttons use the inverted (near-black)
+  // fill upstream. Use a soft accent tint instead, so the light scheme stays
+  // blue without looking like the solid accent (primary) buttons.
+  --mod-color-bg-selected: var(--color-akane-blue-200);
+  --mod-color-text-on-selected: var(--color-akane-blue-950);
+
+  @include utils.high-contrast {
+    --mod-color-bg-selected: var(--color-akane-blue-300);
+  }
 }

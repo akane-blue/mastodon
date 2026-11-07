@@ -114,11 +114,11 @@
 
   &:active:not([aria-disabled='true']),
   .itemActive {
-    background-color: var(--color-bg-inverted);
-    color: var(--color-text-inverted);
+    background-color: var(--mod-color-bg-selected, var(--color-bg-inverted));
+    color: var(--mod-color-text-on-selected, var(--color-text-inverted));
 
     label {
-      color: var(--color-text-inverted);
+      color: var(--mod-color-text-on-selected, var(--color-text-inverted));
     }
   }
 

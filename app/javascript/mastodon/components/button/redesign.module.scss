@@ -138,8 +138,8 @@ a.base {
 
   &.neutral {
     @include active {
-      --bg: var(--color-bg-inverted);
-      --fg: var(--color-text-inverted);
+      --bg: var(--mod-color-bg-selected, var(--color-bg-inverted));
+      --fg: var(--mod-color-text-on-selected, var(--color-text-inverted));
     }
   }
 
@@ -178,8 +178,8 @@ a.base {
   --bg-hover: var(--color-bg-highlight);
 
   @include active {
-    --bg: var(--color-bg-inverted);
-    --fg: var(--color-text-inverted);
+    --bg: var(--mod-color-bg-selected, var(--color-bg-inverted));
+    --fg: var(--mod-color-text-on-selected, var(--color-text-inverted));
   }
 
   &.accent {
