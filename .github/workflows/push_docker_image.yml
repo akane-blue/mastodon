@@ -15,6 +15,10 @@ on:
         type: boolean
         default: false
 
+# The registry is authenticated with its own secrets, so GITHUB_TOKEN only needs to read the repository
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
