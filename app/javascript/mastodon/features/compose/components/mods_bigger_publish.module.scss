@@ -1,0 +1,16 @@
+// Bigger publish button, the redesign counterpart of the pre-redesign
+// `bigger-publish` mod. Only takes effect with `html.mod-bigger-publish`.
+:global(html.mod-bigger-publish) {
+  // Lift the counter and the button into the footer's own wrapping row,
+  // so the button can take a whole row and span the composer's width
+  .wrapper {
+    display: contents;
+  }
+
+  .button {
+    flex-basis: 100%;
+    min-height: 56px;
+    padding-block: var(--space-3);
+    font-size: var(--fs-18);
+  }
+}
