@@ -15,4 +15,5 @@ html:not([data-color-scheme]) {
 
 [data-color-scheme='light'] {
   @include light.base-akane-blue;
+  @include light.tokens;
 }
