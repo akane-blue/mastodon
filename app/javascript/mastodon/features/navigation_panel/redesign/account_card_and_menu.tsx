@@ -7,7 +7,6 @@ import {
   UserIcon,
   GearIcon,
   CirclesFourIcon,
-  HeartIcon,
   BookmarkSimpleIcon,
   UsersThreeIcon,
   ProhibitIcon,
@@ -35,6 +34,7 @@ import {
   MenuList,
   MenuTrigger,
 } from '@/mastodon/components/menu';
+import { StatusLikeIcon } from '@/mastodon/components/status/icons';
 import { useAccount } from '@/mastodon/hooks/useAccount';
 import { useIdentity } from '@/mastodon/identity_context';
 import { useAppDispatch } from '@/mastodon/store';
@@ -129,7 +129,7 @@ export const AccountMenuItems: React.FC<{
         />
       </MenuItemLink>
 
-      <MenuItemLink to='/favourites' icon={HeartIcon}>
+      <MenuItemLink to='/favourites' icon={StatusLikeIcon}>
         <FormattedMessage
           id='navigation_bar.liked_posts'
           defaultMessage='Liked Posts'

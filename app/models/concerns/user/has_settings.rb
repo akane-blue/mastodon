@@ -198,4 +198,8 @@ module User::HasSettings
   def setting_sidebar_composer
     settings['web.mod_sidebar_composer']
   end
+
+  def setting_favourite_style
+    settings['web.mod_favourite_style']
+  end
 end

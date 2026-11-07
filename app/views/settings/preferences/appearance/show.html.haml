@@ -100,6 +100,9 @@
     .fields-group
       = ff.input :'web.mod_sidebar_composer', wrapper: :with_label, label: I18n.t('simple_form.labels.defaults.setting_sidebar_composer'), hint: I18n.t('simple_form.hints.defaults.setting_sidebar_composer')
 
+    .fields-group
+      = ff.input :'web.mod_favourite_style', wrapper: :with_label, recommended: true, label: I18n.t('simple_form.labels.defaults.setting_favourite_style'), hint: I18n.t('simple_form.hints.defaults.setting_favourite_style')
+
     %h2= t 'appearance.animations_and_accessibility'
 
     .fields-group
