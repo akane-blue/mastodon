@@ -1,0 +1,18 @@
+.container {
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+
+  // Stay above the extended clickable area of the card's primary link
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+
+.hiddenImage {
+  max-height: 260px;
+}
