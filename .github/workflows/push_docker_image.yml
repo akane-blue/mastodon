@@ -42,17 +42,14 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
       -
-        name: Checkout akane-blue/mastodon
+        name: Checkout
         uses: actions/checkout@v7
-        with:
-          repository: akane-blue/mastodon
-          path: mastodon
       -
         name: Build mastodon image
         uses: docker/build-push-action@v7
         with:
-          context: mastodon
-          file: mastodon/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -86,17 +83,14 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
       -
-        name: Checkout akane-blue/mastodon
+        name: Checkout
         uses: actions/checkout@v7
-        with:
-          repository: akane-blue/mastodon
-          path: mastodon
       -
         name: Build streaming image
         uses: docker/build-push-action@v7
         with:
-          context: mastodon
-          file: mastodon/streaming/Dockerfile
+          context: .
+          file: streaming/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
