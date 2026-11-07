@@ -2,6 +2,8 @@ import { useCallback, useEffect } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
+import classNames from 'classnames';
+
 import type { Map as ImmutableMap } from 'immutable';
 
 import {
@@ -53,11 +55,13 @@ import { NavigationAccountCardAndMenu } from './account_card_and_menu';
 import { NavigationHeader } from './header';
 import { ListSection } from './list_section';
 import { DisabledAccountBanner, LoggedOutInfo } from './logged_out_info';
+import { ModsAnnouncements } from './mods_announcements';
 import { NavigationLink } from './navigation_link';
 import {
   SidebarComposer,
   useIsSidebarComposerActive,
 } from './sidebar_composer';
+import { SidebarFooterTop, useSidebarFooterFallback } from './sidebar_footer';
 import classes from './styles.module.scss';
 
 const messages = defineMessages({
@@ -171,6 +175,7 @@ export const RedesignNavigationPanel: React.FC<{
   const isSidebarComposerActive = useIsSidebarComposerActive();
   const showSidebarComposer =
     isSidebarComposerActive && multiColumn && mode === 'static';
+  const { footerRef, footerClassName } = useSidebarFooterFallback();
 
   const { customFeeds } = useCustomFeeds();
   const { followedHashtags } = useFollowedHashtags();
@@ -286,25 +291,33 @@ export const RedesignNavigationPanel: React.FC<{
             )}
           </ul>
 
-          <footer className={classes.footer} data-stuck={!isScrolledToBottom}>
-            {showSidebarComposer ? (
-              <SidebarComposer />
-            ) : (
-              <div className={classes.newPostButton}>
-                <Button
-                  leadingIcon={PenNibIcon}
-                  onClick={openComposer}
-                  variant='solid'
-                  color='accent'
-                  size='md'
-                >
-                  <FormattedMessage
-                    id='tabs_bar.publish'
-                    defaultMessage='New Post'
-                  />
-                </Button>
-              </div>
-            )}
+          <footer
+            ref={footerRef}
+            className={classNames(classes.footer, footerClassName)}
+            data-stuck={!isScrolledToBottom}
+          >
+            <SidebarFooterTop>
+              {showSidebarComposer ? (
+                <SidebarComposer />
+              ) : (
+                <div className={classes.newPostButton}>
+                  <Button
+                    leadingIcon={PenNibIcon}
+                    onClick={openComposer}
+                    variant='solid'
+                    color='accent'
+                    size='md'
+                  >
+                    <FormattedMessage
+                      id='tabs_bar.publish'
+                      defaultMessage='New Post'
+                    />
+                  </Button>
+                </div>
+              )}
+
+              <ModsAnnouncements />
+            </SidebarFooterTop>
 
             {(mode !== 'slide-out' || multiColumn) && (
               <>

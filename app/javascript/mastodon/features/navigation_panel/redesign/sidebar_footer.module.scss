@@ -1,0 +1,14 @@
+// Takes over the auto margin that keeps the New Post button (or the sidebar
+// composer) at the top of the footer
+.footerTop {
+  margin-bottom: auto;
+}
+
+// Doubled to win over the footer's own sticky positioning
+.unstuck.unstuck {
+  position: relative;
+
+  &::before {
+    display: none;
+  }
+}
