@@ -5,15 +5,19 @@ import classNames from 'classnames';
 import { useHovering } from 'mastodon/hooks/useHovering';
 import { autoPlayGif } from 'mastodon/initial_state';
 import type { Account, AccountShapeFull } from 'mastodon/models/account';
-import Permalink from './permalink';
 
 import { useAccount } from '../hooks/useAccount';
 
+import Permalink from './permalink';
+
+type AvatarAccount = Pick<
+  Account | AccountShapeFull,
+  'id' | 'acct' | 'avatar' | 'avatar_static'
+> &
+  Partial<Pick<Account | AccountShapeFull, 'url'>>;
+
 interface Props {
-  account?: Pick<
-    Account | AccountShapeFull,
-    'id' | 'acct' | 'avatar' | 'avatar_static' | 'url'
-  >;
+  account?: AvatarAccount;
   alt?: string;
   size?: number | null;
   style?: React.CSSProperties;
@@ -106,4 +110,19 @@ export const AvatarById: React.FC<
 > = ({ accountId, ...otherProps }) => {
   const account = useAccount(accountId);
   return <Avatar account={account} {...otherProps} />;
+};
+
+export const Avatars: React.FC<
+  { accounts: AvatarAccount[]; wrapperClassName?: string } & Omit<
+    Props,
+    'account'
+  >
+> = ({ accounts, wrapperClassName, ...otherProps }) => {
+  return (
+    <div className={wrapperClassName}>
+      {accounts.map((account) => (
+        <Avatar key={account.id} account={account} {...otherProps} />
+      ))}
+    </div>
+  );
 };

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { WarningIcon } from '@phosphor-icons/react';
 
-import { IconButton } from '@/mastodon/components/button/redesign';
+import { IconButton } from '@/mastodon/components/button';
 import { toggleContentWarning } from '@/mastodon/reducers/slices/composer';
 import {
   useAppDispatch,

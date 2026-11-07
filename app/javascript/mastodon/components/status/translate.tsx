@@ -10,7 +10,7 @@ import {
 import type { AnyStatusShape } from '@/mastodon/models/status';
 import { useAppSelector } from '@/mastodon/store';
 
-import { Button } from '../button/redesign';
+import { Button } from '../button';
 
 import classes from './styles.module.scss';
 
