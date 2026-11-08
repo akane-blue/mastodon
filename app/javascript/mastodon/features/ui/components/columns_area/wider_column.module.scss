@@ -15,3 +15,12 @@
     400px
   );
 }
+
+// The discovery column is not shown with the wider column option, so bring
+// back the footer links that the navigation hides in favour of it (see
+// features/discovery_panel/footer_links.module.scss).
+:global(html.mod-wider-column body.layout-multiple-columns)
+  .navigation
+  [data-context='navigation'] {
+  display: flex;
+}
