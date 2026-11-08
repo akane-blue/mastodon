@@ -26,8 +26,12 @@ export const ColumnsArea: React.FC<{
 }> = ({ children, minimalShell, singleColumn, ref }) => {
   const isMobile = useBreakpoint('openable');
   const isSidebarComposerActive = useIsSidebarComposerActive();
-  const { navigationRef, navigationClassName, showDiscoveryColumn } =
-    useWiderColumnNavigation();
+  const {
+    navigationRef,
+    navigationClassName,
+    rootClassName,
+    showDiscoveryColumn,
+  } = useWiderColumnNavigation();
 
   if (minimalShell) {
     return (
@@ -60,7 +64,7 @@ export const ColumnsArea: React.FC<{
   }
 
   return (
-    <main ref={ref} className={multiColClasses.root}>
+    <main ref={ref} className={classNames(multiColClasses.root, rootClassName)}>
       <div
         ref={navigationRef}
         className={classNames(

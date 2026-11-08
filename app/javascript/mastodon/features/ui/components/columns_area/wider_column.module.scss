@@ -1,19 +1,30 @@
-// With the wider column option, the navigation grows like the columns next to
-// it, starting from the same basis as them (copied from the multi-column width
-// in components/column/styles.module.scss), so that all of them end up equally
-// wide. It can still shrink back to its minimum width when the columns
-// overflow.
+// With the wider column option, the navigation is laid out like the columns
+// next to it, as wide as `--mod-column-width` (see wider_column.ts), so that
+// all of them end up equally wide. Until that is measured, it starts from the
+// same basis as the columns (copied from the multi-column width in
+// components/column/styles.module.scss).
 :global(html.mod-wider-column) .navigation {
   --available-width: calc(
     100% - var(--multi-column-navigation-width) - var(--multi-column-gap)
   );
 
-  flex: 1 1 auto;
-  width: clamp(
-    360px,
-    (var(--available-width) / 4 - var(--multi-column-gap)),
-    400px
+  flex: 1 0 auto;
+  width: var(
+    --mod-column-width,
+    clamp(360px, (var(--available-width) / 4 - var(--multi-column-gap)), 400px)
   );
+}
+
+// Snap to the start of a column, so that scrolling never stops with a column
+// cut off at the window edge. Upstream pads the snapport by the navigation
+// width, which would leave the column before the snapped one half in view.
+:global(html.mod-wider-column) .root {
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline-start: 0;
+
+  > * {
+    scroll-snap-align: start;
+  }
 }
 
 // The discovery column is not shown with the wider column option, so bring
