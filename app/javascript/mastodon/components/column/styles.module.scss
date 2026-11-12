@@ -22,10 +22,13 @@
       100% - var(--multi-column-navigation-width) - var(--multi-column-gap)
     );
 
-    width: clamp(
-      360px,
-      (var(--available-width) / 4 - var(--multi-column-gap)),
-      400px
+    width: var(
+      --mod-column-width,
+      clamp(
+        360px,
+        (var(--available-width) / 4 - var(--multi-column-gap)),
+        400px
+      )
     );
     background: var(--color-bg-primary);
   }
