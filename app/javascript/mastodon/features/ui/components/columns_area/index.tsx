@@ -43,7 +43,7 @@ export const ColumnsArea: React.FC<{
   const multiColScrollSensor = useScrollSensor();
   const isSidebarComposerActive =
     useIsSidebarComposerActive(isSidebarCollapsed);
-  const { rootRef, rootClassName } = useWiderColumn();
+  const { rootRef, rootClassName } = useWiderColumn(isSidebarComposerActive);
   const multiColRef = useMergedRefs(ref, rootRef);
 
   if (minimalShell) {
