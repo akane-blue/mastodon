@@ -1,14 +1,17 @@
+import { useCallback } from 'react';
+
 import classNames from 'classnames';
 
-import { Column } from '@/mastodon/components/column';
 import { ComposeButton } from '@/mastodon/features/compose/trigger';
-import { DiscoveryPanel } from '@/mastodon/features/discovery_panel';
-import { RedesignNavigationPanel } from '@/mastodon/features/navigation_panel/redesign';
+import { NavigationPanel } from '@/mastodon/features/navigation_panel';
 import {
-  RedesignMobileNavigation,
+  MobileNavigation,
   SlideOutNavigation,
-} from '@/mastodon/features/navigation_panel/redesign/mobile_nav';
-import { useIsSidebarComposerActive } from '@/mastodon/features/navigation_panel/redesign/sidebar_composer';
+} from '@/mastodon/features/navigation_panel/mobile_nav';
+import { useIsSidebarComposerActive } from '@/mastodon/features/navigation_panel/sidebar_composer';
+import { useScrollSensor } from '@/mastodon/hooks/useScrollSensor';
+import { useStorageState } from '@/mastodon/hooks/useStorage';
+import { useIdentity } from '@/mastodon/identity_context';
 import { Footer } from 'mastodon/features/custom_homepage/components/footer';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
@@ -16,7 +19,6 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { MultiColumnContent } from './multi_column_content';
 import classes from './styles.module.scss';
 import multiColClasses from './styles_multi_column.module.scss';
-import { useWiderColumnNavigation } from './wider_column';
 
 export const ColumnsArea: React.FC<{
   singleColumn?: boolean;
@@ -25,13 +27,25 @@ export const ColumnsArea: React.FC<{
   ref?: React.Ref<HTMLDivElement>;
 }> = ({ children, minimalShell, singleColumn, ref }) => {
   const isMobile = useBreakpoint('openable');
-  const isSidebarComposerActive = useIsSidebarComposerActive();
-  const { navigationRef, navigationClassName } = useWiderColumnNavigation();
+
+  const { accountId } = useIdentity();
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useStorageState<boolean>(
+    'navigation-sidebar-collapsed',
+    singleColumn ? false : true,
+    { prefix: accountId },
+  );
+  const toggleIsCollapsed = useCallback(() => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  }, [isSidebarCollapsed, setIsSidebarCollapsed]);
+
+  const multiColScrollSensor = useScrollSensor();
+  const isSidebarComposerActive =
+    useIsSidebarComposerActive(isSidebarCollapsed);
 
   if (minimalShell) {
     return (
       <div ref={ref} className={classNames(classes.root, classes.rootMinimal)}>
-        {isMobile && <RedesignMobileNavigation />}
+        {isMobile && <MobileNavigation />}
         <div className={classes.main}>
           <div>{children}</div>
 
@@ -43,39 +57,44 @@ export const ColumnsArea: React.FC<{
 
   if (singleColumn) {
     return (
-      <div ref={ref} className={classes.root}>
+      <div
+        ref={ref}
+        className={classes.root}
+        data-collapsed={isSidebarCollapsed}
+      >
         <div className={classes.navigationWrapper}>
-          <RedesignNavigationPanel />
+          <NavigationPanel
+            collapsed={isSidebarCollapsed}
+            onToggleCollapsed={toggleIsCollapsed}
+          />
         </div>
-        {isMobile ? <RedesignMobileNavigation /> : <ComposeButton />}
+        {isMobile ? <MobileNavigation /> : <ComposeButton />}
 
         <main className={classes.main}>{children}</main>
-
-        <div className={classes.discoveryWrapper}>
-          <DiscoveryPanel />
-        </div>
       </div>
     );
   }
 
   return (
-    <main ref={ref} className={multiColClasses.root}>
+    <main
+      ref={ref}
+      className={multiColClasses.root}
+      data-collapsed={isSidebarCollapsed}
+    >
       <div
-        ref={navigationRef}
-        className={classNames(
-          multiColClasses.navigationWrapper,
-          navigationClassName,
-        )}
+        className={multiColClasses.navigationWrapper}
+        data-is-scrolled={!multiColScrollSensor.isInViewport}
       >
-        <RedesignNavigationPanel multiColumn />
+        <NavigationPanel
+          multiColumn
+          collapsed={isSidebarCollapsed}
+          onToggleCollapsed={toggleIsCollapsed}
+        />
       </div>
+      {multiColScrollSensor.sensor}
       {isMobile && <SlideOutNavigation multiColumn />}
       {!isSidebarComposerActive && <ComposeButton />}
       <MultiColumnContent>{children}</MultiColumnContent>
-
-      <Column className={multiColClasses.discoveryColumn}>
-        <DiscoveryPanel />
-      </Column>
     </main>
   );
 };

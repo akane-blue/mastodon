@@ -42,7 +42,6 @@ class InitialStateSerializer < ActiveModel::Serializer
       store[:default_sensitive] = object_account_user.setting_default_sensitive
       store[:default_language]  = object_account_user.preferred_posting_language
       store[:default_quote_policy] = object_account_user.setting_default_quote_policy
-      store[:default_spoiler_field] = object_account_user.setting_default_spoiler_field
     end
 
     store[:text] = object.text if object.text
@@ -145,6 +144,7 @@ class InitialStateSerializer < ActiveModel::Serializer
       emoji_style: object_account_user.settings['web.emoji_style'],
       display_own_boosts: object_account_user.setting_display_own_boosts,
       display_own_posts: object_account_user.setting_display_own_posts,
+      show_stats_in_feed: object_account_user.settings['web.show_stats_in_feed'],
       wrapstodon: wrapstodon,
     }
   end

@@ -16,6 +16,8 @@ html {
   --max-media-height-small: 460px;
   --max-media-height-large: 566px;
   --mobile-bottom-nav-height: calc(58px + var(--space-2));
+  --main-navigation-width: 288px;
+  --main-navigation-width-collapsed: 64px;
 
   // Compensate for column header height when scrolling elements into view
   --current-column-header-height: 52px;
@@ -27,12 +29,12 @@ html {
     --text-x-direction: -1;
   }
 
-  --scroll-fade-height: var(--space-8);
-
-  scroll-padding-top: calc(
-    var(--current-column-header-height) + var(--scroll-fade-height)
-  );
+  scroll-padding-top: calc(var(--current-column-header-height));
   scrollbar-gutter: stable;
+
+  &:has(input:focus, textarea:focus) {
+    scroll-padding-top: 0;
+  }
 
   &:has(.layout-multi-column) {
     --current-column-header-height: 0;
@@ -150,7 +152,7 @@ body {
 
   &.admin {
     padding: 0;
-    background: var(--color-bg-primary);
+    background: var(--color-bg-desktop);
   }
 
   &.error {
@@ -313,6 +315,10 @@ select optgroup {
       transition: none;
     }
   }
+}
+
+.rtl-flip {
+  scale: var(--text-x-direction) 1;
 }
 
 .logo-resources {
