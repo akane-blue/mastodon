@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 import classes from './wider_column.module.scss';
 
@@ -152,12 +152,22 @@ const updateColumnWidth = (root: HTMLElement, matchNavigation: boolean) => {
  * as wide as the columns, up to `MAX_NAVIGATION_WIDTH`, so that the composer
  * gets more room.
  *
+ * `collapsed` tells whether the navigation is collapsed, so that the widths
+ * follow it without waiting for the observers.
+ *
  * Returns a ref for the multi-column root and a class name to add to it.
  */
-export const useWiderColumn = (matchNavigation: boolean) => {
+export const useWiderColumn = (
+  matchNavigation: boolean,
+  collapsed: boolean,
+) => {
   const [root, setRoot] = useState<HTMLElement | null>(null);
 
-  useEffect(() => {
+  // A layout effect that updates right away, so that when the navigation is
+  // expanded or collapsed, the widths for its new width are in place before it
+  // is painted, instead of a frame later when the observers first report.
+  // `collapsed` is only a dependency for that reason.
+  useLayoutEffect(() => {
     if (!root || !isWiderColumnEnabled()) {
       return;
     }
@@ -165,6 +175,8 @@ export const useWiderColumn = (matchNavigation: boolean) => {
     const update = () => {
       updateColumnWidth(root, matchNavigation);
     };
+
+    update();
 
     // The width depends on the window width, on the width of the navigation
     // (which can be collapsed) and on the number of columns, which changes as
@@ -180,7 +192,7 @@ export const useWiderColumn = (matchNavigation: boolean) => {
       root.style.removeProperty('--mod-column-width');
       root.style.removeProperty('--sidebar-width');
     };
-  }, [root, matchNavigation]);
+  }, [root, matchNavigation, collapsed]);
 
   return {
     rootRef: setRoot,
