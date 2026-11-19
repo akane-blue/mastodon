@@ -9,6 +9,7 @@ import {
   SlideOutNavigation,
 } from '@/mastodon/features/navigation_panel/mobile_nav';
 import { useIsSidebarComposerActive } from '@/mastodon/features/navigation_panel/sidebar_composer';
+import { useMergedRefs } from '@/mastodon/hooks/useMergedRefs';
 import { useScrollSensor } from '@/mastodon/hooks/useScrollSensor';
 import { useStorageState } from '@/mastodon/hooks/useStorage';
 import { useIdentity } from '@/mastodon/identity_context';
@@ -19,6 +20,7 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { MultiColumnContent } from './multi_column_content';
 import classes from './styles.module.scss';
 import multiColClasses from './styles_multi_column.module.scss';
+import { useWiderColumn } from './wider_column';
 
 export const ColumnsArea: React.FC<{
   singleColumn?: boolean;
@@ -41,6 +43,11 @@ export const ColumnsArea: React.FC<{
   const multiColScrollSensor = useScrollSensor();
   const isSidebarComposerActive =
     useIsSidebarComposerActive(isSidebarCollapsed);
+  const { rootRef, rootClassName } = useWiderColumn(
+    isSidebarComposerActive,
+    isSidebarCollapsed,
+  );
+  const multiColRef = useMergedRefs(ref, rootRef);
 
   if (minimalShell) {
     return (
@@ -77,8 +84,8 @@ export const ColumnsArea: React.FC<{
 
   return (
     <main
-      ref={ref}
-      className={multiColClasses.root}
+      ref={multiColRef}
+      className={classNames(multiColClasses.root, rootClassName)}
       data-collapsed={isSidebarCollapsed}
     >
       <div

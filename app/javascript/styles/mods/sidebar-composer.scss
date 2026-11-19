@@ -7,4 +7,9 @@ html.mod-sidebar-composer body.layout-multiple-columns {
   // Sticky header now also holds the composer (capped at 50vh) in place of
   // the New Post button
   --nav-header-height: calc(50vh + 280px);
+
+  // Widen the expanded navigation so the composer has room. With the wider
+  // column option, it is widened further to match the columns (see
+  // features/ui/components/columns_area/wider_column.ts).
+  --main-navigation-width: 360px;
 }

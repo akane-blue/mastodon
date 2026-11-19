@@ -1,0 +1,10 @@
+// With the wider column option, snap to the start of a column, so that
+// scrolling never stops with a column cut off at the window edge (see
+// wider_column.ts).
+:global(html.mod-wider-column) .root {
+  scroll-snap-type: x mandatory;
+
+  > * {
+    scroll-snap-align: start;
+  }
+}
