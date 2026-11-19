@@ -13,7 +13,7 @@ shared:
     repository: <%= ENV.fetch('GITHUB_REPOSITORY', 'mastodon/mastodon') %>
     tag: <%= ENV.fetch('SOURCE_TAG', nil) %>
   version:
-    metadata: <%= ENV.fetch('MASTODON_VERSION_METADATA', nil)&.to_json %>
+    metadata: <%= [ENV.fetch('MASTODON_VERSION_METADATA', nil), ENV.fetch('MOD_BUILD_METADATA', nil)].compact_blank.join('.').presence&.to_json %>
     prerelease: <%= ENV.fetch('MASTODON_VERSION_PRERELEASE', nil)&.to_json %>
 test:
   experimental_features: <%= [ENV.fetch('EXPERIMENTAL_FEATURES', nil), 'testing_only'].compact.join(',') %>

@@ -410,6 +410,11 @@ RUN \
 
 # Set the running user for resulting container
 USER mastodon
+
+# mstdn.maud.io: build information appended to MASTODON_VERSION_METADATA (e.g. "pr-123.abcdef0")
+# Declared at the end so that a new value for each commit does not invalidate the cached layers above
+ARG MOD_BUILD_METADATA=""
+ENV MOD_BUILD_METADATA="${MOD_BUILD_METADATA}"
 # Expose default Puma ports
 EXPOSE 3000
 # Set container tini as default entry point
