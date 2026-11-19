@@ -1,13 +1,8 @@
-import { useEffect, useState } from 'react';
-
 import { ComposeForm } from '@/mastodon/features/compose/form';
 import { useBreakpoint } from '@/mastodon/features/ui/hooks/useBreakpoint';
 import { sidebarComposer } from '@/mastodon/initial_state';
 
 import classes from './sidebar_composer.module.scss';
-
-// Height that must stay free for the navigation links below the header
-const MIN_NAVIGATION_ROOM = 150;
 
 /**
  * Whether the composer lives in the multi-column sidebar instead of the
@@ -21,31 +16,45 @@ export const useIsSidebarComposerActive = (collapsed = false) => {
   return !!sidebarComposer && !isOpenable && !collapsed;
 };
 
+const useIsShownInPanel = (
+  multiColumn: boolean | undefined,
+  mode: 'slide-out' | 'static',
+) => {
+  const isActive = useIsSidebarComposerActive();
+
+  return isActive && !!multiColumn && mode === 'static';
+};
+
 /**
- * Takes the place of the New Post button in the navigation header and shows
- * the composer instead while the sidebar composer is active.
+ * Hides the New Post button in the navigation header while the sidebar
+ * composer is shown below the header instead.
  */
 export const SidebarComposerSlot: React.FC<{
   multiColumn?: boolean;
   mode: 'slide-out' | 'static';
   children: React.ReactNode;
 }> = ({ multiColumn, mode, children }) => {
-  const isActive = useIsSidebarComposerActive();
+  const isShown = useIsShownInPanel(multiColumn, mode);
 
-  if (!isActive || !multiColumn || mode !== 'static') {
-    return children;
-  }
-
-  return <SidebarComposer />;
+  return isShown ? null : children;
 };
 
-const SidebarComposer: React.FC = () => {
-  const [wrapper, setWrapper] = useState<HTMLElement | null>(null);
+/**
+ * The composer itself. It is placed below the sticky navigation header, so
+ * it scrolls with the navigation links instead of staying in view.
+ */
+export const SidebarComposer: React.FC<{
+  multiColumn?: boolean;
+  mode: 'slide-out' | 'static';
+}> = ({ multiColumn, mode }) => {
+  const isShown = useIsShownInPanel(multiColumn, mode);
 
-  useStickyHeaderFallback(wrapper);
+  if (!isShown) {
+    return null;
+  }
 
   return (
-    <div ref={setWrapper} className={classes.wrapper}>
+    <div className={classes.wrapper}>
       <ComposeForm
         noMinimize
         closeOnEscape={false}
@@ -53,40 +62,4 @@ const SidebarComposer: React.FC = () => {
       />
     </div>
   );
-};
-
-/**
- * The navigation header sticks to the top of the panel. When the composer
- * makes it so tall that the links below it would be hidden behind it, let it
- * scroll with the rest of the panel instead.
- *
- * The header belongs to upstream, so it is looked up from the composer and
- * marked with a data attribute that React does not manage.
- */
-const useStickyHeaderFallback = (wrapper: HTMLElement | null) => {
-  useEffect(() => {
-    const header = wrapper?.closest('header');
-    const root = header?.parentElement;
-
-    if (!header || !root) {
-      return;
-    }
-
-    const update = () => {
-      const isUnstuck =
-        header.offsetHeight > root.clientHeight - MIN_NAVIGATION_ROOM;
-
-      header.toggleAttribute('data-mod-unstuck', isUnstuck);
-    };
-
-    const observer = new ResizeObserver(update);
-    observer.observe(root);
-    observer.observe(header);
-    update();
-
-    return () => {
-      observer.disconnect();
-      header.removeAttribute('data-mod-unstuck');
-    };
-  }, [wrapper]);
 };
