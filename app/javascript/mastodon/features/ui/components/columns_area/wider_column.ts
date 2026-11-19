@@ -94,10 +94,15 @@ const updateColumnWidth = (root: HTMLElement, matchNavigation: boolean) => {
   // The root makes room for the fixed navigation with its margin, so this
   // width stays the same whatever width the navigation is given. The
   // fractional width is used, as `clientWidth` is rounded and would make the
-  // result depend on the width it sets.
+  // result depend on the width it sets. Unlike `clientWidth`, it includes the
+  // border, which upstream adds to the root while it has keyboard focus.
+  const border =
+    (parseFloat(style.borderInlineStartWidth) || 0) +
+    (parseFloat(style.borderInlineEndWidth) || 0);
   const totalWidth =
     root.getBoundingClientRect().width +
     (parseFloat(style.marginInlineStart) || 0) -
+    border -
     padding;
   const defaultNavigationWidth =
     parseFloat(style.getPropertyValue('--main-navigation-width')) || 0;
