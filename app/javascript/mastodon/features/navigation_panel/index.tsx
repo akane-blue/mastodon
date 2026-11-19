@@ -33,6 +33,7 @@ import { ListSection } from './list_section';
 import { DisabledAccountBanner, LoggedOutInfo } from './logged_out_info';
 import { ModsAnnouncements } from './mods_announcements';
 import { NavigationLink } from './navigation_link';
+import { SidebarComposer } from './sidebar_composer';
 import classes from './styles.module.scss';
 
 const messages = defineMessages({
@@ -129,6 +130,7 @@ const ExpandedNavigationPanel: React.FC<NavigationPanelProps> = ({
         onToggleCollapsed={onToggleCollapsed}
         mode={mode}
       />
+      {signedIn && <SidebarComposer multiColumn={multiColumn} mode={mode} />}
       {signedIn && (
         <>
           {transientSingleColumn && <TransientSingleColumnCallout />}

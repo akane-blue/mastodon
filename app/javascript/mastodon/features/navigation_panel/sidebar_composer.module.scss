@@ -1,22 +1,18 @@
+// Lines the composer up with the navigation links below it
 .wrapper {
+  margin-inline: var(--space-6);
   margin-bottom: var(--space-2);
 }
 
-// Doubled to win over the composer's own root and header styles
+// Doubled to win over the composer's own root and header styles. The composer
+// is not capped in height, since it scrolls with the rest of the panel.
 .composer.composer {
-  max-height: 50vh;
+  // The text area never scrolls on its own here, so let the wheel scroll the
+  // panel even while the pointer is over it
+  --composer-textarea-overscroll-behavior: auto;
+
   padding: var(--space-3);
   border: 1px solid var(--color-border-primary);
   border-radius: var(--composer-radius, var(--radius-4));
   box-shadow: none;
-}
-
-// Set by `useStickyHeaderFallback` on the navigation header. The element
-// selector wins over the header's own sticky positioning.
-:global(header[data-mod-unstuck]) {
-  position: relative;
-
-  &::after {
-    display: none;
-  }
 }
