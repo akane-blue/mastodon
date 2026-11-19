@@ -15,8 +15,13 @@
   justify-content: flex-start;
   gap: var(--multi-column-gap);
   padding-inline-end: var(--multi-column-gap);
-  margin-inline-start: var(--sidebar-width);
   overflow-x: auto;
+
+  // Make room for the fixed navigation only where it is shown (see
+  // `.navigationWrapper` below)
+  @media (min-width: $mobile-menu-breakpoint) {
+    margin-inline-start: var(--sidebar-width);
+  }
 
   &:focus-visible {
     // Scrollable elements are made focusable by some browsers, this adds
