@@ -51,6 +51,15 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
 
+      # Appended to the version string shown by the server, e.g. v4.5.0+maud.pr-123.abcdef0
+      - name: Build metadata
+        id: build-metadata
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          # For pull requests, use the head commit rather than the temporary merge commit
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: echo "value=${PR_NUMBER:+pr-${PR_NUMBER}.}${COMMIT_SHA::7}" >> "$GITHUB_OUTPUT"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
@@ -74,6 +83,8 @@ jobs:
           no-cache: ${{ inputs.no-cache == true }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            MOD_BUILD_METADATA=${{ steps.build-metadata.outputs.value }}
           # Give each image its own cache scope so that the two builds do not overwrite each other's cache
           cache-from: type=gha,scope=${{ matrix.name }}
           # Only hota/master writes the cache; other builds just read it, to save cache storage
