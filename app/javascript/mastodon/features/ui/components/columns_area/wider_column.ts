@@ -34,37 +34,41 @@ const getUpstreamWidth = (contentWidth: number, gap: number) =>
   );
 
 /**
- * Divides `contentWidth` equally among as many whole columns as fit. Each
- * column is at least as wide as upstream would make it, so the columns that
- * don't fit are left entirely beyond the horizontal scroll instead of being
- * cut off at the window edge.
+ * Counts how many whole columns fit into `contentWidth` when each of them is
+ * at least as wide as upstream would make it.
  */
-const divideAmongColumns = (
+const countVisibleColumns = (
   contentWidth: number,
   gap: number,
   columnCount: number,
 ) => {
   const upstreamWidth = getUpstreamWidth(contentWidth, gap);
-  const visibleCount = Math.max(
+
+  return Math.max(
     1,
     Math.min(
       columnCount,
       Math.floor((contentWidth + gap) / (upstreamWidth + gap)),
     ),
   );
-
-  // Rounded down so that rounding never pushes the next column into view
-  return floorToHundredths(
-    (contentWidth - (visibleCount - 1) * gap) / visibleCount,
-  );
 };
 
 /**
+ * Divides `contentWidth` equally among `visibleCount` columns.
+ */
+const divideAmongColumns = (
+  contentWidth: number,
+  gap: number,
+  visibleCount: number,
+) =>
+  // Rounded down so that rounding never pushes the next column into view
+  floorToHundredths((contentWidth - (visibleCount - 1) * gap) / visibleCount);
+
+/**
  * Sets `--mod-column-width` on the multi-column root. With
- * `matchNavigation`, the navigation is counted as a column too, and its width
- * is set as `--sidebar-width`, up to `MAX_NAVIGATION_WIDTH`. The rest is then
- * divided among the columns, which are as wide as the navigation unless it
- * has reached that width.
+ * `matchNavigation`, the navigation shares the width equally with the
+ * columns, and its width is set as `--sidebar-width`, between its default
+ * width and `MAX_NAVIGATION_WIDTH`.
  */
 const updateColumnWidth = (root: HTMLElement, matchNavigation: boolean) => {
   if (!matchNavigation) {
@@ -84,7 +88,11 @@ const updateColumnWidth = (root: HTMLElement, matchNavigation: boolean) => {
     if (contentWidth > 0) {
       root.style.setProperty(
         '--mod-column-width',
-        `${divideAmongColumns(contentWidth, gap, columnCount)}px`,
+        `${divideAmongColumns(
+          contentWidth,
+          gap,
+          countVisibleColumns(contentWidth, gap, columnCount),
+        )}px`,
       );
     }
 
@@ -111,33 +119,35 @@ const updateColumnWidth = (root: HTMLElement, matchNavigation: boolean) => {
     return;
   }
 
-  // The navigation and the columns are at least as wide as upstream would
-  // make the columns next to the navigation at its default width. There is
-  // no gap between the navigation and the first column.
-  const upstreamWidth = getUpstreamWidth(
+  // As many columns are shown as fit next to the navigation at its default
+  // width, which never gets fewer as the window gets wider. The navigation
+  // and these columns then share the width equally, so the navigation is at
+  // least as wide as its default, as the columns fit next to it at that
+  // width. There is no gap between the navigation and the first column.
+  const visibleCount = countVisibleColumns(
     totalWidth - defaultNavigationWidth,
     gap,
+    columnCount,
   );
-  const slotCount = Math.max(
-    2,
-    Math.min(
-      columnCount + 1,
-      Math.floor((totalWidth + 2 * gap) / (upstreamWidth + gap)),
-    ),
-  );
+
   // Rounded down to whole pixels, so that the margin of the root, and with it
   // the width measured next time, stays the same. The columns then share what
   // is left, which also takes up the pixels lost to rounding, so that they are
-  // at most a pixel wider than the navigation.
-  const navigationWidth = Math.min(
-    MAX_NAVIGATION_WIDTH,
-    Math.floor((totalWidth - (slotCount - 2) * gap) / slotCount),
+  // at most a pixel wider than the navigation until it reaches its maximum.
+  const navigationWidth = Math.floor(
+    Math.min(
+      MAX_NAVIGATION_WIDTH,
+      Math.max(
+        defaultNavigationWidth,
+        (totalWidth - (visibleCount - 1) * gap) / (visibleCount + 1),
+      ),
+    ),
   );
 
   root.style.setProperty('--sidebar-width', `${navigationWidth}px`);
   root.style.setProperty(
     '--mod-column-width',
-    `${divideAmongColumns(totalWidth - navigationWidth, gap, columnCount)}px`,
+    `${divideAmongColumns(totalWidth - navigationWidth, gap, visibleCount)}px`,
   );
 };
 
